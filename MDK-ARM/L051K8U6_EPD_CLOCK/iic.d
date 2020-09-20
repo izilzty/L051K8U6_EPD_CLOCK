@@ -22,4 +22,4 @@ l051k8u6_epd_clock/iic.o: ..\Src\USER\iic.c ..\Src\USER\iic.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h ..\Inc\i2c.h \
-  ..\Inc\main.h ..\Src\USER\serial.h
+  ..\Inc\main.h

@@ -29,7 +29,7 @@ static uint8_t i2c_reset(void)
             break;
         }
     }
-    LL_I2C_DeInit(I2C_PORT); /* 释放I2C占用的IO */
+    LL_I2C_DeInit(I2C_PORT); /* 释放I2C */
 
     /* 切换数据IO到开漏输出 */
     LL_GPIO_SetPinMode(I2C_SDA_PORT, I2C_SDA_PIN, LL_GPIO_MODE_OUTPUT);

@@ -24,4 +24,4 @@ l051k8u6_epd_clock/func.o: ..\Src\USER\func.c ..\Src\USER\func.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h \
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h ..\Src\USER\lowpower.h \
   ..\Src\USER\serial.h ..\Src\USER\bkpr.h ..\Src\USER\eeprom.h \
-  ..\Src\USER\epd.h ..\Src\USER\iic.h
+  ..\Src\USER\epd.h ..\Src\USER\iic.h ..\Inc\i2c.h ..\Inc\main.h
