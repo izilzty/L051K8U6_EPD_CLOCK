@@ -52,6 +52,7 @@ static void delay_100ns(volatile uint16_t nsX100)
 static uint8_t spi_send_data(const uint8_t *tx_data, uint16_t data_size)
 {
     uint32_t timeout;
+
     LL_SPI_ClearFlag_OVR(EPD_SPI);
     while (data_size--)
     {
@@ -129,6 +130,7 @@ static void epd_send_data_multi(const uint8_t *data, uint16_t data_size)
 static uint8_t epd_wait_busy(void)
 {
     uint16_t timeout;
+
     LL_GPIO_ResetOutputPin(EPD_LED_PORT, EPD_LED_PIN);
     delay_100ns(10); /* 1us 未要求时间，短暂延时 */
     timeout = EPD_TIMEOUT_MS;
@@ -458,9 +460,7 @@ void EPD_DrawHLine(uint16_t x, uint8_t y, uint16_t x_size, uint8_t width)
     uint8_t j, k, block, height, y_temp, width_temp;
 
     height = (y % 8 + width - 1) / 8 + 1;
-
     EPD_SetWindow(x, y / 8, x_size, height);
-
     for (i = 0; i < x_size; i++)
     {
         y_temp = y;
@@ -498,9 +498,7 @@ void EPD_DrawVLine(uint16_t x, uint8_t y, uint8_t y_size, uint16_t width)
     uint8_t j, k, block, height, y_temp, width_temp;
 
     height = (y % 8 + y_size - 1) / 8 + 1;
-
     EPD_SetWindow(x, y / 8, width, height);
-
     for (i = 0; i < width; i++)
     {
         y_temp = y;

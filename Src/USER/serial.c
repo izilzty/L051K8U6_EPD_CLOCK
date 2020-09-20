@@ -30,6 +30,7 @@ void USART_SendString(const char *tx_char)
 {
     uint8_t *char_ptr;
     uint8_t char_size;
+    
     char_size = 0;
     char_ptr = (uint8_t *)tx_char;
     while (*char_ptr != '\0' && char_size < 255)

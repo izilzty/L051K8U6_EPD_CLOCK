@@ -135,7 +135,6 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
             }
         }
     }
-    
     if (timeout == 0)
     {
         if (i2c_reset() == 0)
