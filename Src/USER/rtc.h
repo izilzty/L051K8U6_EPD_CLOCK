@@ -1,6 +1,10 @@
 #ifndef _RTC_H_
 #define _RTC_H_
 
+#include "main.h"
+
+#include "iic.h"
+
 #define RTC_I2C_ADDR 0xD0
 
 #define RTC_REG_SEC 0x00
@@ -26,10 +30,23 @@
 #define RTC_REG_TPM 0x11
 #define RTC_REG_TPL 0x12
 
-#include "main.h"
+#define RTC_FORMAT_HEX 0
+#define RTC_FORMAT_BCD 1
 
-#include "iic.h"
+struct RTC_Time
+{
+    uint8_t Seconds;
+    uint8_t Minutes;
+    uint8_t Hours;
+    uint8_t Day;
+    uint8_t Date;
+    uint8_t Month;
+    uint8_t Year;
+};
 
 uint8_t RTC_ReadREG(uint8_t reg);
+uint8_t RTC_SetTime24(const struct RTC_Time *time);
+uint8_t RTC_ReadTime24(struct RTC_Time *time);
+float RTC_GetTemp(void);
 
 #endif

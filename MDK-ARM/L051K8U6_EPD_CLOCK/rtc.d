@@ -22,4 +22,5 @@ l051k8u6_epd_clock/rtc.o: ..\Src\USER\rtc.c ..\Src\USER\rtc.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h \
-  ..\Src\USER\iic.h ..\Inc\i2c.h ..\Inc\main.h
+  ..\Src\USER\iic.h ..\Inc\i2c.h ..\Inc\main.h ..\Src\USER\serial.h \
+  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h

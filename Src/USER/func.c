@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 uint8_t ResetInfo;
+struct RTC_Time clock;
 char str_buffer[61];
 
 static void FirstInit(void) /* 系统首次上电、时钟数据丢失、按下了复位按键 初始化 */
@@ -66,12 +67,16 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     case LP_RESET_WKUPSTANDBY:
         UpdateDisplay();
+        OpenMenu();
         break;
     }
 
+    // RTC_SetTime24_BIN(20, 9, 20, 7, 23, 8, 30);
+
     while (1)
     {
-        snprintf(str_buffer, sizeof(str_buffer), "RTC SEC: %x", RTC_ReadREG(RTC_REG_SEC));
+        RTC_ReadTime24(&clock);
+        snprintf(str_buffer, sizeof(str_buffer), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", clock.Year, clock.Month, clock.Date, clock.Day, clock.Hours, clock.Minutes, clock.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
         USART_SendStringRN(str_buffer);
         LL_mDelay(99);
     }
