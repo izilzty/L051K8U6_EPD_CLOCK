@@ -21,4 +21,5 @@ l051k8u6_epd_clock/serial.o: ..\Src\USER\serial.c ..\Src\USER\serial.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h \
-  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h \
+  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h

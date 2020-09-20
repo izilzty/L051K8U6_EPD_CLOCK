@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 
+#define ENABLE_DEBUG_PRINT
+
 #include "lowpower.h"
 #include "serial.h"
 #include "bkpr.h"

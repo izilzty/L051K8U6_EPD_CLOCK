@@ -1,5 +1,7 @@
 ﻿#include "serial.h"
 
+#include <stdio.h>
+
 /**
  * @brief  从串口发送指定大小的数据
  * @param  tx_data  要发送的数据指针
@@ -30,7 +32,7 @@ void USART_SendString(const char *tx_char)
 {
     uint8_t *char_ptr;
     uint8_t char_size;
-    
+
     char_size = 0;
     char_ptr = (uint8_t *)tx_char;
     while (*char_ptr != '\0' && char_size < 255)
@@ -49,4 +51,20 @@ void USART_SendStringRN(const char *tx_char)
 {
     USART_SendString(tx_char);
     USART_SendData((uint8_t *)"\r\n", 2);
+}
+
+void _USART_DebugPrint(const char* file_name, const char *func_name, uint32_t func_line, const char *info_str)
+{
+    char text[11];
+    USART_SendString("\r\n**DEBUG PRINT");
+    USART_SendString("\r\nFILE  : ");
+    USART_SendString(file_name);
+    USART_SendString("\r\nFUNC  : ");
+    USART_SendString(func_name);
+    USART_SendString("\r\nLINE  : ");
+    snprintf(text, sizeof(text), "%d", func_line);
+    USART_SendString(text);
+    USART_SendString("\r\nINFO  : ");
+    USART_SendString(info_str);
+    USART_SendString("\r\n");
 }

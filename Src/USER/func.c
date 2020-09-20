@@ -33,6 +33,7 @@ void Init(void)
         USART_SendStringRN("EXIT STANDBY");
         break;
     }
+    USART_DebugPrint("In Standby");
     LP_EnterStandby();
 }
 
