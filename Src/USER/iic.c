@@ -122,17 +122,6 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
                 return 3;
             }
         }
-        if (timeout == 0)
-        {
-            if (i2c_reset() == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
-        }
     }
     else
     {
@@ -145,16 +134,17 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
                 return 3;
             }
         }
-        if (timeout == 0)
+    }
+    
+    if (timeout == 0)
+    {
+        if (i2c_reset() == 0)
         {
-            if (i2c_reset() == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
+            return 1;
+        }
+        else
+        {
+            return 2;
         }
     }
     return 0;
