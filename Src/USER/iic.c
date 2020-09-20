@@ -19,10 +19,11 @@ static void delay_100ns(volatile uint16_t nsX100)
  */
 static uint8_t i2c_reset(void)
 {
-    uint8_t i;
+    uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
     LL_I2C_Disable(I2C_PORT); /* 软复位 */
-    for (i = 0; i < 10; i++)  /* 等待软复位 */
+    for (timeout = 0; timeout < 10; timeout++) /* 等待软复位 */
     {
         if (LL_I2C_IsEnabled(I2C_PORT) == 0)
         {
@@ -48,15 +49,22 @@ static uint8_t i2c_reset(void)
 
     if (LL_GPIO_IsInputPinSet(I2C_SDA_PORT, I2C_SDA_PIN) == 0) /* 检测I2C是否已释放，如未释放则代表I2C未恢复，继续处理 */
     {
-        for (;;) /* 在时钟线上发送脉冲，用来跳过现有数据 */
+        timeout = I2C_TIMEOUT_MS;
+        systick_tmp = SysTick->CTRL;
+        ((void)systick_tmp);
+        while (timeout != 0) /* 在时钟线上发送脉冲，用来跳过现有数据 */
         {
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+            {
+                timeout -= 1;
+            }
             LL_GPIO_ResetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
             delay_100ns(200);
             LL_GPIO_SetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
             delay_100ns(200);
             if (LL_GPIO_IsInputPinSet(I2C_SDA_PORT, I2C_SDA_PIN) != 0) /* 数据线为高 */
             {
-                i = 0; /* I2C数据线已被释放 */
+                timeout = 0xFFFFFFFF; /* I2C数据线已被释放 */
                 break;
             }
         }
@@ -67,12 +75,12 @@ static uint8_t i2c_reset(void)
     }
     else
     {
-        i = 0; /* I2C数据线已被释放 */
+        timeout = 0xFFFFFFFF; /* I2C数据线已被释放 */
     }
 
     I2C_INIT_FUNC(); /* 不管有没有成功恢复，都重新初始化I2C */
 
-    if (i != 0)
+    if (timeout != 0xFFFFFFFF)
     {
         return 1;
     }

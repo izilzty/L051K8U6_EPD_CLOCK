@@ -73,7 +73,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     {
         snprintf(str_buffer, sizeof(str_buffer), "RTC SEC: %x", RTC_ReadREG(RTC_REG_SEC));
         USART_SendStringRN(str_buffer);
-        //LL_mDelay(99);
+        LL_mDelay(99);
     }
 
     USART_DebugPrint("Wait in standby mode");
