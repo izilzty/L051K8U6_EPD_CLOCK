@@ -1,18 +1,17 @@
 #include "func.h"
 
+#include <stdio.h>
+
 uint8_t ResetInfo;
+char str_buffer[61];
 
 static void FirstInit(void) /* 系统首次上电、时钟数据丢失、按下了复位按键 初始化 */
 {
-    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);
-    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);
     LL_mDelay(0);
     I2C_Start(0xD0, 2, 0);
     I2C_WriteByte(0x0E);
     I2C_WriteByte(0x1C);
     I2C_Stop();
-    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);
-    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);
 }
 
 static void UpdateDisplay(void) /* 系统由实时时钟从Standby模式唤醒 */
@@ -51,6 +50,8 @@ void Init(void) /* 系统复位后执行一次 */
         USART_DebugPrint("Wakeup from standby");
         break;
     }
+    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
+    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -66,6 +67,13 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     case LP_RESET_WKUPSTANDBY:
         UpdateDisplay();
         break;
+    }
+
+    while (1)
+    {
+        snprintf(str_buffer, sizeof(str_buffer), "RTC SEC: %x", RTC_ReadREG(RTC_REG_SEC));
+        USART_SendStringRN(str_buffer);
+        //LL_mDelay(99);
     }
 
     USART_DebugPrint("Wait in standby mode");

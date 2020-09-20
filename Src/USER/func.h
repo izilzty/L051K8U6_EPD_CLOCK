@@ -11,8 +11,9 @@
 #include "serial.h"
 #include "bkpr.h"
 #include "eeprom.h"
-#include "epd.h"
 #include "iic.h"
+#include "rtc.h"
+#include "epd.h"
 
 void Init(void);
 void Loop(void);

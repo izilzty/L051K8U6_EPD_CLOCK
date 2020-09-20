@@ -543,6 +543,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\USER\lowpower.c</FilePath>
             </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\rtc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

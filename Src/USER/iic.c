@@ -48,7 +48,7 @@ static uint8_t i2c_reset(void)
 
     if (LL_GPIO_IsInputPinSet(I2C_SDA_PORT, I2C_SDA_PIN) == 0) /* 检测I2C是否已释放，如未释放则代表I2C未恢复，继续处理 */
     {
-        for (i = 0; i < 255; i++) /* 在时钟线上发送脉冲，用来跳过现有数据 */
+        for (;;) /* 在时钟线上发送脉冲，用来跳过现有数据 */
         {
             LL_GPIO_ResetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
             delay_100ns(200);
@@ -89,8 +89,8 @@ static uint8_t i2c_reset(void)
 uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
-    timeout = I2C_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
     if (LL_I2C_IsEnabled(I2C_PORT) == 0)
     {
         LL_I2C_Enable(I2C_PORT);
@@ -111,11 +111,17 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
     /* DocID025942 Rev 8 - Page 606 */
     LL_I2C_DisableAutoEndMode(I2C_PORT);
     LL_I2C_GenerateStartCondition(I2C_PORT);
+    timeout = I2C_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
     if (is_read == 0)
     {
-        while (LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0 && timeout != 0)
+        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
         {
-            timeout -= 1;
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+            {
+                timeout -= 1;
+            }
             if (LL_I2C_IsActiveFlag_NACK(I2C_PORT) != 0)
             {
                 LL_I2C_ClearFlag_NACK(I2C_PORT);
@@ -125,9 +131,12 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
     }
     else
     {
-        while (LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0 && timeout != 0)
+        while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0)
         {
-            timeout -= 1;
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+            {
+                timeout -= 1;
+            }
             if (LL_I2C_IsActiveFlag_NACK(I2C_PORT) != 0)
             {
                 LL_I2C_ClearFlag_NACK(I2C_PORT);
@@ -152,12 +161,18 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
 uint8_t I2C_Stop(void)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
-    timeout = I2C_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
     LL_I2C_GenerateStopCondition(I2C_PORT);
-    while (LL_I2C_IsActiveFlag_BUSY(I2C_PORT) != 0 && timeout != 0)
+    timeout = I2C_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_I2C_IsActiveFlag_BUSY(I2C_PORT) != 0)
     {
-        timeout -= 1;
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     if (timeout == 0)
     {
@@ -176,12 +191,18 @@ uint8_t I2C_Stop(void)
 uint8_t I2C_WriteByte(uint8_t byte)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
-    timeout = I2C_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
     LL_I2C_TransmitData8(I2C_PORT, byte);
-    while (LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0 && timeout != 0)
+    timeout = I2C_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
     {
-        timeout -= 1;
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     if (timeout == 0)
     {
@@ -200,11 +221,17 @@ uint8_t I2C_WriteByte(uint8_t byte)
 uint8_t I2C_ReadByte(void)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
-    timeout = I2C_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
-    while (LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0 && timeout != 0)
+    timeout = I2C_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0)
     {
-        timeout -= 1;
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     if (timeout == 0)
     {

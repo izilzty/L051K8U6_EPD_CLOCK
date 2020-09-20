@@ -52,14 +52,20 @@ static void delay_100ns(volatile uint16_t nsX100)
 static uint8_t spi_send_data(const uint8_t *tx_data, uint16_t data_size)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
     LL_SPI_ClearFlag_OVR(EPD_SPI);
     while (data_size--)
     {
-        timeout = SPI_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
-        while (LL_SPI_IsActiveFlag_TXE(EPD_SPI) == RESET && timeout != 0)
+        timeout = SPI_TIMEOUT_MS;
+        systick_tmp = SysTick->CTRL;
+        ((void)systick_tmp);
+        while (timeout != 0 && LL_SPI_IsActiveFlag_TXE(EPD_SPI) == RESET)
         {
-            timeout -= 1;
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+            {
+                timeout -= 1;
+            }
         }
         if (timeout == 0)
         {
@@ -68,10 +74,15 @@ static uint8_t spi_send_data(const uint8_t *tx_data, uint16_t data_size)
         LL_SPI_TransmitData8(EPD_SPI, *tx_data);
         tx_data += 1;
     }
-    timeout = SPI_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
-    while (LL_SPI_IsActiveFlag_BSY(EPD_SPI) == SET && timeout != 0)
+    timeout = SPI_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_SPI_IsActiveFlag_BSY(EPD_SPI) == SET)
     {
-        timeout -= 1;
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     if (timeout == 0 || LL_SPI_IsActiveFlag_OVR(EPD_SPI) != 0)
     {
@@ -130,14 +141,19 @@ static void epd_send_data_multi(const uint8_t *data, uint16_t data_size)
 static uint8_t epd_wait_busy(void)
 {
     uint16_t timeout;
+    volatile uint32_t systick_tmp;
 
     LL_GPIO_ResetOutputPin(EPD_LED_PORT, EPD_LED_PIN);
     delay_100ns(10); /* 1us 未要求时间，短暂延时 */
     timeout = EPD_TIMEOUT_MS;
-    while (LL_GPIO_IsInputPinSet(EPD_BUSY_PORT, EPD_BUSY_PIN) && timeout != 0)
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_GPIO_IsInputPinSet(EPD_BUSY_PORT, EPD_BUSY_PIN))
     {
-        timeout -= 1;
-        LL_mDelay(0); /* 1ms */
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     LL_GPIO_SetOutputPin(EPD_LED_PORT, EPD_LED_PIN);
     if (timeout == 0)

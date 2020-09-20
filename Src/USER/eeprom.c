@@ -1,15 +1,15 @@
 #include "eeprom.h"
 
-#define EEPROM_UNLOCK() \
-    if (eeprom_unlock() != 0)  \
-    {                   \
-        return 1;       \
+#define EEPROM_UNLOCK()       \
+    if (eeprom_unlock() != 0) \
+    {                         \
+        return 1;             \
     }
 
-#define EEPROM_LOCK() \
-    if (eeprom_lock() != 0)  \
-    {                 \
-        return 1;     \
+#define EEPROM_LOCK()       \
+    if (eeprom_lock() != 0) \
+    {                       \
+        return 1;           \
     }
 
 /**
@@ -19,11 +19,17 @@
 static uint8_t eeprom_wait_busy(void)
 {
     uint32_t timeout;
+    volatile uint32_t systick_tmp;
 
-    timeout = EEPROM_TIMEOUT_MS / (1 / (0.00095 * HSE_VALUE));
-    while ((FLASH->SR & FLASH_SR_BSY) != 0 && timeout != 0)
+    timeout = EEPROM_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && (FLASH->SR & FLASH_SR_BSY) != 0)
     {
-        timeout -= 1;
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
     }
     if (timeout == 0)
     {
