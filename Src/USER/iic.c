@@ -1,8 +1,5 @@
 #include "iic.h"
 
-#include "i2c.h"
-#include "serial.h"
-
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
  * @param  nsX100 延时时间。
@@ -175,7 +172,14 @@ uint8_t I2C_Stop(void)
     }
     if (timeout == 0)
     {
-        return i2c_reset() + 1;
+        if (i2c_reset() == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
     }
     return 0;
 }
@@ -192,7 +196,14 @@ uint8_t I2C_WriteByte(uint8_t byte)
     }
     if (timeout == 0)
     {
-        return i2c_reset() + 1;
+        if (i2c_reset() == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
     }
     return 0;
 }

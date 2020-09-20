@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#include "i2c.h"
+
 #define I2C_TIMEOUT_MS 3000
 
 #define I2C_PORT I2C1
