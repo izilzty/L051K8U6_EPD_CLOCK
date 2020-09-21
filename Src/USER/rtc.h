@@ -43,6 +43,18 @@ struct RTC_Time
     uint8_t PM;
 };
 
+struct RTC_Alarm
+{
+    uint8_t Seconds;
+    uint8_t Minutes;
+    uint8_t Hours;
+    uint8_t Day;
+    uint8_t Date;
+    uint8_t DY;
+    uint8_t Is_12hr;
+    uint8_t PM;
+};
+
 uint8_t RTC_ReadREG(uint8_t reg);
 uint8_t RTC_WriteREG(uint8_t reg, uint8_t data);
 uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_data);
@@ -50,8 +62,18 @@ uint8_t RTC_WriteREG_Multi(uint8_t start_reg, uint8_t write_size, const uint8_t 
 uint8_t RTC_ModifyREG(uint8_t reg, uint8_t mask, uint8_t new_val);
 uint8_t RTC_TestREG(uint8_t reg, uint8_t mask);
 
-uint8_t RTC_ReadTime(struct RTC_Time *time);
+uint8_t RTC_GetTime(struct RTC_Time *time);
 uint8_t RTC_SetTime(const struct RTC_Time *time);
+
+uint8_t RTC_GetAlarm1(struct RTC_Alarm *alarm);
+uint8_t RTC_SetAlarm1(const struct RTC_Alarm *alarm);
+uint8_t RTC_GetAlarm2(struct RTC_Alarm *alarm);
+uint8_t RTC_SetAlarm2(const struct RTC_Alarm *alarm);
+
+uint8_t RTC_GetAM1Mask(void);
+uint8_t RTC_ModifyAM1Mask(uint8_t alarm_mask);
+uint8_t RTC_GetAM2Mask(void);
+uint8_t RTC_ModifyAM2Mask(uint8_t alarm_mask);
 uint8_t RTC_GetEOSC(void);
 uint8_t RTC_ModifyEOSC(uint8_t eosc);
 uint8_t RTC_GetBBSQW(void);

@@ -9,13 +9,10 @@
  */
 static uint8_t bin_to_bcd(uint8_t bin)
 {
-    uint8_t high = 0;
-    while (bin >= 10)
-    {
-        high++;
-        bin -= 10;
-    }
-    return (high << 4) | bin;
+    uint8_t tmp;
+    tmp = bin % 10;
+    tmp += bin / 10 * 16;
+    return tmp;
 }
 
 /**
@@ -25,9 +22,9 @@ static uint8_t bin_to_bcd(uint8_t bin)
  */
 static uint8_t bcd_to_bin(uint8_t bcd)
 {
-    uint8_t tmp = 0;
+    uint8_t tmp;
     tmp = bcd % 16;
-    tmp = tmp + (bcd / 16) * 10;
+    tmp += bcd / 16 * 10;
     return tmp;
 }
 
@@ -167,27 +164,27 @@ uint8_t RTC_TestREG(uint8_t reg, uint8_t mask)
  * @param  time 时间存储结构体。
  * @return 1：读取失败，0：读取成功。
  */
-uint8_t RTC_ReadTime(struct RTC_Time *time)
+uint8_t RTC_GetTime(struct RTC_Time *time)
 {
-    uint8_t i, *tmp;
+    uint8_t i, *time_tmp;
 
-    tmp = (uint8_t *)time;
-    if (RTC_ReadREG_Multi(RTC_REG_SEC, sizeof(struct RTC_Time) - 2, tmp) != 0)
+    time_tmp = (uint8_t *)time;
+    if (RTC_ReadREG_Multi(RTC_REG_SEC, sizeof(struct RTC_Time) - 2, time_tmp) != 0)
     {
         for (i = 0; i < sizeof(struct RTC_Time); i++)
         {
-            tmp[i] = 0x00;
+            time_tmp[i] = 0x00;
         }
         return 1;
     }
-    for (i = 0; i < sizeof(struct RTC_Time) - 2; i++)
+    for (i = 0; i < sizeof(struct RTC_Time) - 2; i++) /* BCD转BIN */
     {
-        if (i == 2)
+        if (i == 2) /* 12小时制标志处理 */
         {
-            if ((tmp[i] & 0x40) != 0) /* RTC当前使用的是12小时制 */
+            if ((time_tmp[i] & 0x40) != 0) /* RTC当前使用的是12小时制 */
             {
                 time->Is_12hr = 1;
-                if ((tmp[i] & 0x20) != 0)
+                if ((time_tmp[i] & 0x20) != 0)
                 {
                     time->PM = 1;
                 }
@@ -195,51 +192,56 @@ uint8_t RTC_ReadTime(struct RTC_Time *time)
                 {
                     time->PM = 0;
                 }
-                tmp[i] &= 0x1F;
+                time_tmp[i] &= 0x1F;
             }
             else /* RTC当前使用的是24小时制 */
             {
                 time->Is_12hr = 0;
-                tmp[i] &= 0x3F;
+                time->PM = 0;
+                time_tmp[i] &= 0x3F;
             }
         }
-        else if (i == 5 && (tmp[i] & 0x80) != 0) /* 世纪处理 */
+        else if (i == 5 && (time_tmp[i] & 0x80) != 0) /* 世纪处理 */
         {
-            tmp[i] = bcd_to_bin(tmp[i] & 0x1E) % 100;          /* 限制最大99，防止读取出错导致溢出 */
-            tmp[i + 1] = (bcd_to_bin(tmp[i + 1]) + 100) % 200; /* 限制最大199，防止读取出错导致溢出 */
-            break;
+            time_tmp[i] = bcd_to_bin(time_tmp[i] & 0x1F); /* 转换月 */
+            i += 1;
+            time_tmp[i] = bcd_to_bin(time_tmp[i]) + 100; /* 转换年 */
+            continue;
         }
-        tmp[i] = (bcd_to_bin(tmp[i])) % 100; /* 限制最大99，防止读取出错导致溢出 */
+        time_tmp[i] = bcd_to_bin(time_tmp[i]);
     }
-    tmp[3] = ((tmp[3] + 12) % 7) + 1; /* 转换星期，以1为星期日 */
+    time->Day = ((time->Day + 12) % 7) + 1; /* 转换星期，以1为星期日 */
     return 0;
 }
 
 /**
- * @brief  写入实时时钟时间。
+ * @brief  设置实时时钟时间。
  * @param  time 时间存储结构体。
- * @return 1：写入失败，0：写入成功。
+ * @return 1：设置失败，0：设置成功。
  */
 uint8_t RTC_SetTime(const struct RTC_Time *time)
 {
     uint8_t i, time_tmp[7];
 
-    if (time->Is_12hr != 0) /* 当前目标数据是12小时制 */
-    {
-        time_tmp[0] = time->Seconds % 13; /* 限制最大12 */
-    }
-    else /* 当前目标数据是24小时制 */
-    {
-        time_tmp[0] = time->Seconds % 60; /* 限制最大59 */
-    }
-    time_tmp[1] = time->Minutes % 60;        /* 限制最大59 */
-    time_tmp[2] = (time->Hours & 0x3F) % 24; /* 限制最大23 */
+    time_tmp[0] = time->Seconds;
+    time_tmp[1] = time->Minutes;
+    time_tmp[2] = time->Hours;
     time_tmp[3] = ((time->Day + 7) % 7) + 1; /* 转换星期，以1为星期日 */
-    time_tmp[4] = time->Date % 32;           /* 限制最大31 */
-    time_tmp[5] = (time->Month & 0x1E) % 13; /* 限制最大12 */
-    time_tmp[6] = time->Year % 200;          /* 限制最大199 */
+    time_tmp[4] = time->Date;
+    time_tmp[5] = time->Month;
+    time_tmp[6] = time->Year;
 
-    if (time->Is_12hr != 0) /* 当前目标数据是12小时制 */
+    for (i = 0; i < sizeof(time_tmp); i++) /* BIN转BCD */
+    {
+        if (i == 6 && time_tmp[i] > 99) /* 世纪处理 */
+        {
+            time_tmp[i] -= 100;
+            time_tmp[i - 1] |= 0x80;
+        }
+        time_tmp[i] = bin_to_bcd(time_tmp[i]);
+    }
+
+    if (time->Is_12hr != 0) /* 12小时制标志处理 */
     {
         time_tmp[2] &= 0x1F; /* 清除将要使用的标志 */
         time_tmp[2] |= 0x40; /* 设置12小时标志 */
@@ -249,16 +251,307 @@ uint8_t RTC_SetTime(const struct RTC_Time *time)
         }
     }
 
-    for (i = 0; i < sizeof(time_tmp); i++)
-    {
-        if (i == 6 && time_tmp[i] > 99) /* 世纪处理 */
-        {
-            time_tmp[i] -= 100;
-            time_tmp[i - 1] |= 0x80;
-        }
-        time_tmp[i] = bin_to_bcd(time_tmp[i]);
-    }
     return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(time_tmp), time_tmp);
+}
+
+/**
+ * @brief  读取闹钟1时间。
+ * @param  alarm 闹钟存储结构体。
+ * @return 1：读取失败，0：读取成功。
+ */
+uint8_t RTC_GetAlarm1(struct RTC_Alarm *alarm)
+{
+    uint8_t i, *alarm_tmp;
+
+    alarm_tmp = (uint8_t *)alarm;
+    if (RTC_ReadREG_Multi(RTC_REG_AL1_SEC, sizeof(struct RTC_Alarm) - 4, alarm_tmp) != 0)
+    {
+        for (i = 0; i < sizeof(struct RTC_Alarm); i++)
+        {
+            alarm_tmp[i] = 0x00;
+        }
+        return 1;
+    }
+
+    if ((alarm->Hours & 0x40) != 0) /* 12小时制 */
+    {
+        alarm->Is_12hr = 1;
+        if ((alarm->Hours & 0x60) != 0) /* PM标志 */
+        {
+            alarm->PM = 1;
+        }
+        else
+        {
+            alarm->PM = 0;
+        }
+        alarm->Hours &= 0x1F;
+    }
+    else /* 24小时制 */
+    {
+        alarm->Is_12hr = 0;
+        alarm->PM = 0;
+        alarm->Hours &= 0x3F;
+    }
+
+    if ((alarm->Day & 0x40) != 0) /* 存储的是Day */
+    {
+        alarm->Day &= 0x0F;
+        alarm->DY = 1;
+    }
+    else /* 存储的是Date */
+    {
+        alarm->Date = alarm->Day & 0x3F;
+        alarm->Day = 0;
+        alarm->DY = 0;
+    }
+
+    for (i = 0; i < sizeof(struct RTC_Alarm) - 3; i++) /* BCD转BIN */
+    {
+        alarm_tmp[i] = bcd_to_bin(alarm_tmp[i] & 0x7F);
+    }
+
+    if (alarm->DY != 0)
+    {
+        alarm->Day = ((alarm->Day + 12) % 7) + 1; /* 转换星期，以1为星期日 */
+    }
+
+    return 0;
+}
+
+/**
+ * @brief  设置闹钟1时间。
+ * @param  alarm 闹钟存储结构体。
+ * @return 1：写入失败，0：写入成功。
+ */
+uint8_t RTC_SetAlarm1(const struct RTC_Alarm *alarm)
+{
+    uint8_t ret;
+
+    ret = RTC_ModifyREG(RTC_REG_AL1_SEC, 0x7F, bin_to_bcd(alarm->Seconds));
+    ret = RTC_ModifyREG(RTC_REG_AL1_MIN, 0x7F, bin_to_bcd(alarm->Minutes));
+    if (alarm->Is_12hr != 0)
+    {
+        if (alarm->PM != 0)
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL1_HOR, 0x7F, bin_to_bcd(alarm->Hours) | 0x60);
+        }
+        else
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL1_HOR, 0x7F, bin_to_bcd(alarm->Hours) | 0x40);
+        }
+    }
+    else
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL1_HOR, 0x7F, bin_to_bcd(alarm->Hours));
+    }
+    if (alarm->DY != 0)
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL1_DDT, 0x7F, bin_to_bcd(((alarm->Day + 7) % 7) + 1) | 0x40);
+    }
+    else
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL1_DDT, 0x7F, bin_to_bcd(alarm->Date));
+    }
+    if (ret != 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief  读取闹钟2时间。
+ * @param  alarm 闹钟存储结构体。
+ * @return 1：读取失败，0：读取成功。
+ */
+uint8_t RTC_GetAlarm2(struct RTC_Alarm *alarm)
+{
+    uint8_t i, *alarm_tmp;
+
+    alarm_tmp = (uint8_t *)alarm;
+    if (RTC_ReadREG_Multi(RTC_REG_AL2_MIN, sizeof(struct RTC_Alarm) - 4, alarm_tmp + 1) != 0)
+    {
+        for (i = 0; i < sizeof(struct RTC_Alarm); i++)
+        {
+            alarm_tmp[i] = 0x00;
+        }
+        return 1;
+    }
+
+    if ((alarm->Hours & 0x40) != 0) /* 12小时制 */
+    {
+        alarm->Is_12hr = 1;
+        if ((alarm->Hours & 0x60) != 0) /* PM标志 */
+        {
+            alarm->PM = 1;
+        }
+        else
+        {
+            alarm->PM = 0;
+        }
+        alarm->Hours &= 0x1F;
+    }
+    else /* 24小时制 */
+    {
+        alarm->Is_12hr = 0;
+        alarm->PM = 0;
+        alarm->Hours &= 0x3F;
+    }
+
+    if ((alarm->Day & 0x40) != 0) /* 存储的是Day */
+    {
+        alarm->Day &= 0x0F;
+        alarm->DY = 1;
+    }
+    else /* 存储的是Date */
+    {
+        alarm->Date = alarm->Day & 0x3F;
+        alarm->Day = 0;
+        alarm->DY = 0;
+    }
+
+    for (i = 1; i < sizeof(struct RTC_Alarm) - 3; i++) /* BCD转BIN */
+    {
+        alarm_tmp[i] = bcd_to_bin(alarm_tmp[i] & 0x7F);
+    }
+
+    if (alarm->DY != 0)
+    {
+        alarm->Day = ((alarm->Day + 12) % 7) + 1; /* 转换星期，以1为星期日 */
+    }
+
+    return 0;
+}
+
+/**
+ * @brief  设置闹钟2时间。
+ * @param  alarm 闹钟存储结构体。
+ * @return 1：写入失败，0：写入成功。
+ */
+uint8_t RTC_SetAlarm2(const struct RTC_Alarm *alarm)
+{
+    uint8_t ret;
+
+    ret = RTC_ModifyREG(RTC_REG_AL2_MIN, 0x7F, bin_to_bcd(alarm->Minutes));
+    if (alarm->Is_12hr != 0)
+    {
+        if (alarm->PM != 0)
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL2_HOR, 0x7F, bin_to_bcd(alarm->Hours) | 0x60);
+        }
+        else
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL2_HOR, 0x7F, bin_to_bcd(alarm->Hours) | 0x40);
+        }
+    }
+    else
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL2_HOR, 0x7F, bin_to_bcd(alarm->Hours));
+    }
+    if (alarm->DY != 0)
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL2_DDT, 0x7F, bin_to_bcd(alarm->Day) | 0x40);
+    }
+    else
+    {
+        ret = RTC_ModifyREG(RTC_REG_AL2_DDT, 0x7F, bin_to_bcd(alarm->Date));
+    }
+    if (ret != 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief  获取闹钟1运行模式。
+ * @return 运行模式，从左往右分别为：0 0 0 DY A1M4 A1M3 A1M2 A1M1 。
+ */
+uint8_t RTC_GetAM1Mask(void)
+{
+    uint8_t i, alarm_mask;
+    alarm_mask = 0x00;
+    if (RTC_TestREG(RTC_REG_AL1_DDT, 0x40) != 0)
+    {
+        alarm_mask |= 0x10;
+    }
+    for (i = 0; i < 4; i++)
+    {
+        alarm_mask |= RTC_TestREG(RTC_REG_AL1_SEC + i, 0x80) << i;
+    }
+    return alarm_mask;
+}
+
+/**
+ * @brief  修改闹钟1运行模式。
+ * @param  alarm_mask 运行模式，从左往右分别为：0 0 0 0 A1M4 A1M3 A1M2 A1M1 。
+ * @return 1：修改失败，0：修改成功。
+ */
+uint8_t RTC_ModifyAM1Mask(uint8_t alarm_mask)
+{
+    uint8_t i, ret;
+    for (i = 0; i < 4; i++)
+    {
+        if ((alarm_mask & (0x01 << i)) != 0)
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL1_SEC + i, 0x80, 0x80);
+        }
+        else
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL1_SEC + i, 0x80, 0x00);
+        }
+    }
+    if (ret != 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief  获取闹钟2运行模式。
+ * @return 运行模式，从左往右分别为：0 0 0 0 DY A2M4 A2M3 A2M2 。
+ */
+uint8_t RTC_GetAM2Mask(void)
+{
+    uint8_t i, alarm_mask;
+
+    alarm_mask = 0x00;
+    if (RTC_TestREG(RTC_REG_AL2_DDT, 0x40) != 0)
+    {
+        alarm_mask |= 0x08;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        alarm_mask |= RTC_TestREG(RTC_REG_AL2_MIN + i, 0x80) << i;
+    }
+    return alarm_mask;
+}
+
+/**
+ * @brief  修改闹钟2运行模式。
+ * @param  alarm_mask 运行模式，从左往右分别为：0 0 0 0 0 A2M4 A2M3 A2M2 。
+ * @return 1：修改失败，0：修改成功。
+ */
+uint8_t RTC_ModifyAM2Mask(uint8_t alarm_mask)
+{
+    uint8_t i, ret;
+    for (i = 0; i < 3; i++)
+    {
+        if ((alarm_mask & (0x01 << i)) != 0)
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL2_MIN + i, 0x80, 0x80);
+        }
+        else
+        {
+            ret = RTC_ModifyREG(RTC_REG_AL2_MIN + i, 0x80, 0x00);
+        }
+    }
+    if (ret != 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -279,11 +572,11 @@ uint8_t RTC_ModifyEOSC(uint8_t eosc)
 {
     if (eosc != 0)
     {
-        eosc = 0x00;
+        eosc = 0x80;
     }
     else
     {
-        eosc = 0x80;
+        eosc = 0x00;
     }
     return RTC_ModifyREG(RTC_REG_CTL, 0x80, eosc);
 }
@@ -564,13 +857,15 @@ float RTC_GetTemp(void)
 }
 
 /**
- * @brief  将所有寄存器修改到默认状态（时间寄存器不修改）。
+ * @brief  将所有寄存器修改到默认状态。
  * @return 1：修改失败，0：修改成功。
  */
 uint8_t RTC_ResetAllRegToDefault(void)
 {
-    const uint8_t default_reg[10] = {
+    const uint8_t default_reg[17] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x1C, 0x88, 0x00};
-    return RTC_WriteREG_Multi(RTC_REG_AL1_SEC, sizeof(default_reg), default_reg);
+        0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00,
+        0x1C, 0x8B, 0x00};
+    return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(default_reg), default_reg);
 }
