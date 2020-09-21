@@ -30,9 +30,6 @@
 #define RTC_REG_TPM 0x11
 #define RTC_REG_TPL 0x12
 
-#define RTC_FORMAT_HEX 0
-#define RTC_FORMAT_BCD 1
-
 struct RTC_Time
 {
     uint8_t Seconds;
@@ -42,11 +39,47 @@ struct RTC_Time
     uint8_t Date;
     uint8_t Month;
     uint8_t Year;
+    uint8_t Is_12hr;
+    uint8_t PM;
 };
 
 uint8_t RTC_ReadREG(uint8_t reg);
-uint8_t RTC_SetTime24(const struct RTC_Time *time);
-uint8_t RTC_ReadTime24(struct RTC_Time *time);
+uint8_t RTC_WriteREG(uint8_t reg, uint8_t data);
+uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_data);
+uint8_t RTC_WriteREG_Multi(uint8_t start_reg, uint8_t write_size, const uint8_t *write_data);
+uint8_t RTC_ModifyREG(uint8_t reg, uint8_t mask, uint8_t new_val);
+uint8_t RTC_TestREG(uint8_t reg, uint8_t mask);
+
+uint8_t RTC_ReadTime(struct RTC_Time *time);
+uint8_t RTC_SetTime(const struct RTC_Time *time);
+uint8_t RTC_ReadTime12(struct RTC_Time *time);
+uint8_t RTC_SetTime12(const struct RTC_Time *time);
+uint8_t RTC_GetEOSC(void);
+uint8_t RTC_ModifyEOSC(uint8_t eosc);
+uint8_t RTC_GetBBSQW(void);
+uint8_t RTC_ModifyBBSQW(uint8_t bbsqw);
+uint8_t RTC_GetCONV(void);
+uint8_t RTC_ModifyCONV(uint8_t conv);
+uint8_t RTC_GetRS(void);
+uint8_t RTC_ModifyRS(uint8_t rs);
+uint8_t RTC_GetINTCN(void);
+uint8_t RTC_ModifyINTCN(uint8_t intcn);
+uint8_t RTC_GetA2IE(void);
+uint8_t RTC_ModifyA2IE(uint8_t a2ie);
+uint8_t RTC_GetA1IE(void);
+uint8_t RTC_ModifyA1IE(uint8_t a1ie);
+uint8_t RTC_GetOSF(void);
+uint8_t RTC_ClerOSF(void);
+uint8_t RTC_GetEN32KHZ(void);
+uint8_t RTC_ModifyEN32KHZ(uint8_t en32khz);
+uint8_t RTC_GetBUSY(void);
+uint8_t RTC_GetA2F(void);
+uint8_t RTC_ClearA2F(void);
+uint8_t RTC_GetA1F(void);
+uint8_t RTC_ClearA1F(void);
+int8_t RTC_GetAging(void);
+uint8_t RTC_ModifyAging(int8_t aging);
 float RTC_GetTemp(void);
+uint8_t RTC_ResetAllRegToDefault(void);
 
 #endif

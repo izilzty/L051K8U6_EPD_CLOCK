@@ -75,7 +75,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
     while (1)
     {
-        RTC_ReadTime24(&clock);
+        RTC_ReadTime(&clock);
         snprintf(str_buffer, sizeof(str_buffer), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", clock.Year, clock.Month, clock.Date, clock.Day, clock.Hours, clock.Minutes, clock.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
         USART_SendStringRN(str_buffer);
         LL_mDelay(99);

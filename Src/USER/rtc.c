@@ -115,50 +115,93 @@ uint8_t RTC_TestREG(uint8_t reg, uint8_t mask)
     }
 }
 
-uint8_t RTC_SetTime24(const struct RTC_Time *time)
-{
-    uint8_t i, time_tmp[7];
-
-    time_tmp[0] = time->Seconds % 60;
-    time_tmp[1] = time->Minutes % 60;
-    time_tmp[2] = time->Hours & 0x3F;
-    time_tmp[3] = ((time->Day + 7) % 7) + 1; /* 以1为星期日 */
-    time_tmp[4] = time->Date % 32;
-    time_tmp[5] = time->Month & 0x1E;
-    time_tmp[6] = time->Year;
-    for (i = 0; i < sizeof(time_tmp); i++)
-    {
-        if (i == 6 && time_tmp[6] > 99)
-        {
-            time_tmp[6] -= 100;
-            time_tmp[5] |= 0x80;
-        }
-        time_tmp[i] = bin_to_bcd(time_tmp[i]);
-    }
-    return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(time_tmp), time_tmp);
-}
-
-uint8_t RTC_ReadTime24(struct RTC_Time *time)
+uint8_t RTC_ReadTime(struct RTC_Time *time)
 {
     uint8_t i, *tmp;
 
     tmp = (uint8_t *)time;
-    if (RTC_ReadREG_Multi(RTC_REG_SEC, sizeof(struct RTC_Time), tmp) != 0)
+    if (RTC_ReadREG_Multi(RTC_REG_SEC, sizeof(struct RTC_Time) - 2, tmp) != 0)
     {
+        for (i = 0; i < sizeof(struct RTC_Time); i++)
+        {
+            tmp[i] = 0x00;
+        }
         return 1;
     }
-    for (i = 0; i < sizeof(struct RTC_Time); i++)
+    for (i = 0; i < sizeof(struct RTC_Time) - 2; i++)
     {
-        if (i == 5 && (tmp[5] & 0x80) != 0)
+        if (i == 2)
         {
-            tmp[5] = bcd_to_bin(tmp[5] & 0x1E);
-            tmp[6] = bcd_to_bin(tmp[6]) + 100;
+            if (tmp[i] & 0x40 != 0) /* RTC当前使用的是12小时制 */
+            {
+                time->Is_12hr = 1;
+                if (tmp[i] & 0x20 != 0)
+                {
+                    time->PM = 1;
+                }
+                else
+                {
+                    time->PM = 0;
+                }
+                tmp[i] &= 0x1F;
+            }
+            else /* RTC当前使用的是24小时制 */
+            {
+                time->Is_12hr = 0;
+                tmp[i] &= 0x3F;
+            }
+        }
+        else if (i == 5 && (tmp[i] & 0x80) != 0) /* 世纪处理 */
+        {
+            tmp[i] = bcd_to_bin(tmp[i] & 0x1E) % 100;          /* 限制最大99，防止读取出错导致溢出 */
+            tmp[i + 1] = (bcd_to_bin(tmp[i + 1]) + 100) % 200; /* 限制最大199，防止读取出错导致溢出 */
             break;
         }
-        tmp[i] = bcd_to_bin(tmp[i] % 100);
+        tmp[i] = (bcd_to_bin(tmp[i])) % 100; /* 限制最大99，防止读取出错导致溢出 */
     }
-    tmp[3] = ((tmp[3] + 12) % 7) + 1;
+    tmp[3] = ((tmp[3] + 12) % 7) + 1; /* 转换星期，以1为星期日 */
     return 0;
+}
+
+uint8_t RTC_SetTime(const struct RTC_Time *time)
+{
+    uint8_t i, time_tmp[7];
+
+    if (time->Is_12hr != 0) /* 当前目标数据是12小时制 */
+    {
+        time_tmp[0] = time->Seconds % 13; /* 限制最大12 */
+    }
+    else /* 当前目标数据是24小时制 */
+    {
+        time_tmp[0] = time->Seconds % 60; /* 限制最大59 */
+    }
+    time_tmp[1] = time->Minutes % 60;        /* 限制最大59 */
+    time_tmp[2] = (time->Hours & 0x3F) % 24; /* 限制最大23 */
+    time_tmp[3] = ((time->Day + 7) % 7) + 1; /* 转换星期，以1为星期日 */
+    time_tmp[4] = time->Date % 32;           /* 限制最大31 */
+    time_tmp[5] = (time->Month & 0x1E) % 13; /* 限制最大12 */
+    time_tmp[6] = time->Year % 200;          /* 限制最大199 */
+
+    if (time->Is_12hr != 0) /* 当前目标数据是12小时制 */
+    {
+        time_tmp[2] &= 0x1F; /* 清除将要使用的标志 */
+        time_tmp[2] |= 0x40; /* 设置12小时标志 */
+        if (time->PM != 0)
+        {
+            time_tmp[2] |= 0x20; /* 设置PM标志 */
+        }
+    }
+
+    for (i = 0; i < sizeof(time_tmp); i++)
+    {
+        if (i == 6 && time_tmp[i] > 99) /* 世纪处理 */
+        {
+            time_tmp[i] -= 100;
+            time_tmp[i - 1] |= 0x80;
+        }
+        time_tmp[i] = bin_to_bcd(time_tmp[i]);
+    }
+    return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(time_tmp), time_tmp);
 }
 
 uint8_t RTC_GetEOSC(void)
@@ -166,17 +209,17 @@ uint8_t RTC_GetEOSC(void)
     return RTC_TestREG(RTC_REG_CTL, 0x80);
 }
 
-uint8_t RTC_ModifyEOSC(uint8_t enable)
+uint8_t RTC_ModifyEOSC(uint8_t eosc)
 {
-    if (enable != 0)
+    if (eosc != 0)
     {
-        enable = 0x00;
+        eosc = 0x00;
     }
     else
     {
-        enable = 0x80;
+        eosc = 0x80;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x80, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x80, eosc);
 }
 
 uint8_t RTC_GetBBSQW(void)
@@ -184,17 +227,17 @@ uint8_t RTC_GetBBSQW(void)
     return RTC_TestREG(RTC_REG_CTL, 0x40);
 }
 
-uint8_t RTC_ModifyBBSQW(uint8_t enable)
+uint8_t RTC_ModifyBBSQW(uint8_t bbsqw)
 {
-    if (enable != 0)
+    if (bbsqw != 0)
     {
-        enable = 0x40;
+        bbsqw = 0x40;
     }
     else
     {
-        enable = 0x00;
+        bbsqw = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x40, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x40, bbsqw);
 }
 
 uint8_t RTC_GetCONV(void)
@@ -202,17 +245,17 @@ uint8_t RTC_GetCONV(void)
     return RTC_TestREG(RTC_REG_CTL, 0x20);
 }
 
-uint8_t RTC_ModifyCONV(uint8_t enable)
+uint8_t RTC_ModifyCONV(uint8_t conv)
 {
-    if (enable != 0)
+    if (conv != 0)
     {
-        enable = 0x20;
+        conv = 0x20;
     }
     else
     {
-        enable = 0x00;
+        conv = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x20, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x20, conv);
 }
 
 uint8_t RTC_GetRS(void)
@@ -230,17 +273,17 @@ uint8_t RTC_GetINTCN(void)
     return RTC_TestREG(RTC_REG_CTL, 0x04);
 }
 
-uint8_t RTC_ModifyINTCN(uint8_t enable)
+uint8_t RTC_ModifyINTCN(uint8_t intcn)
 {
-    if (enable != 0)
+    if (intcn != 0)
     {
-        enable = 0x04;
+        intcn = 0x04;
     }
     else
     {
-        enable = 0x00;
+        intcn = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x04, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x04, intcn);
 }
 
 uint8_t RTC_GetA2IE(void)
@@ -248,17 +291,17 @@ uint8_t RTC_GetA2IE(void)
     return RTC_TestREG(RTC_REG_CTL, 0x02);
 }
 
-uint8_t RTC_ModifyA2IE(uint8_t enable)
+uint8_t RTC_ModifyA2IE(uint8_t a2ie)
 {
-    if (enable != 0)
+    if (a2ie != 0)
     {
-        enable = 0x02;
+        a2ie = 0x02;
     }
     else
     {
-        enable = 0x00;
+        a2ie = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x02, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x02, a2ie);
 }
 
 uint8_t RTC_GetA1IE(void)
@@ -266,17 +309,17 @@ uint8_t RTC_GetA1IE(void)
     return RTC_TestREG(RTC_REG_CTL, 0x02);
 }
 
-uint8_t RTC_ModifyA1IE(uint8_t enable)
+uint8_t RTC_ModifyA1IE(uint8_t a1ie)
 {
-    if (enable != 0)
+    if (a1ie != 0)
     {
-        enable = 0x01;
+        a1ie = 0x01;
     }
     else
     {
-        enable = 0x00;
+        a1ie = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_CTL, 0x01, enable);
+    return RTC_ModifyREG(RTC_REG_CTL, 0x01, a1ie);
 }
 
 uint8_t RTC_GetOSF(void)
@@ -284,7 +327,7 @@ uint8_t RTC_GetOSF(void)
     return RTC_TestREG(RTC_REG_STA, 0x80);
 }
 
-uint8_t RTC_ClearOSF(void)
+uint8_t RTC_ClerOSF(void)
 {
     return RTC_ModifyREG(RTC_REG_STA, 0x80, 0x00);
 }
@@ -294,17 +337,17 @@ uint8_t RTC_GetEN32KHZ(void)
     return RTC_TestREG(RTC_REG_STA, 0x08);
 }
 
-uint8_t RTC_ModifyEN32KHZ(uint8_t enable)
+uint8_t RTC_ModifyEN32KHZ(uint8_t en32khz)
 {
-    if (enable != 0)
+    if (en32khz != 0)
     {
-        enable = 0x08;
+        en32khz = 0x08;
     }
     else
     {
-        enable = 0x00;
+        en32khz = 0x00;
     }
-    return RTC_ModifyREG(RTC_REG_STA, 0x08, enable);
+    return RTC_ModifyREG(RTC_REG_STA, 0x08, en32khz);
 }
 
 uint8_t RTC_GetBUSY(void)
@@ -337,7 +380,7 @@ int8_t RTC_GetAging(void)
     return (int8_t)RTC_ReadREG(RTC_REG_AGI);
 }
 
-uint8_t RTC_SetAging(int8_t aging)
+uint8_t RTC_ModifyAging(int8_t aging)
 {
     return RTC_WriteREG(RTC_REG_AGI, (uint8_t)aging);
 }
@@ -352,8 +395,8 @@ float RTC_GetTemp(void)
 
 uint8_t RTC_ResetAllRegToDefault(void)
 {
-    const uint8_t default_tmp[10] = {
+    const uint8_t default_reg[10] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x1C, 0x88, 0x00};
-    return RTC_WriteREG_Multi(RTC_REG_AL1_SEC, sizeof(default_tmp), default_tmp);
+    return RTC_WriteREG_Multi(RTC_REG_AL1_SEC, sizeof(default_reg), default_reg);
 }
