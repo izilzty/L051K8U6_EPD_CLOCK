@@ -251,7 +251,12 @@ uint8_t RTC_SetTime(const struct RTC_Time *time)
         }
     }
 
-    return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(time_tmp), time_tmp);
+    /* 设置时间 -> 打开震荡器 -> 清除振荡器停止历史 */
+    if (RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(time_tmp), time_tmp) != 0 || RTC_ModifyEOSC(0) != 0 || RTC_ClearOSF() != 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 /**

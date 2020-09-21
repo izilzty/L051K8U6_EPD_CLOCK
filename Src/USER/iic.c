@@ -45,7 +45,7 @@ static uint8_t i2c_reset(void)
     /* 设置IO默认状态 */
     LL_GPIO_SetOutputPin(I2C_SDA_PORT, I2C_SDA_PIN);
     LL_GPIO_SetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
-    delay_100ns(200);
+    delay_100ns(100);
 
     if (LL_GPIO_IsInputPinSet(I2C_SDA_PORT, I2C_SDA_PIN) == 0) /* 检测I2C是否已释放，如未释放则代表I2C未恢复，继续处理 */
     {
@@ -59,9 +59,9 @@ static uint8_t i2c_reset(void)
                 timeout -= 1;
             }
             LL_GPIO_ResetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
-            delay_100ns(200);
+            delay_100ns(100);
             LL_GPIO_SetOutputPin(I2C_SCL_PORT, I2C_SCL_PIN);
-            delay_100ns(200);
+            delay_100ns(100);
             if (LL_GPIO_IsInputPinSet(I2C_SDA_PORT, I2C_SDA_PIN) != 0) /* 数据线为高 */
             {
                 timeout = 0xFFFFFFFF; /* I2C数据线已被释放 */

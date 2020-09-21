@@ -3,9 +3,23 @@
 #include <stdio.h>
 
 uint8_t ResetInfo;
-struct RTC_Time clock;
+const struct RTC_Time Default_time = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日 星期4 00:00:00 24小时制 PM = 0  */
+struct RTC_Time time;
 struct RTC_Alarm alarm;
 char str_buffer[61];
+
+/**
+ * @brief  延时100ns的倍数（不准确，只是大概）。
+ * @param  nsX100 延时时间。
+ */
+static void Delay_100ns(volatile uint16_t nsX100)
+{
+    while (nsX100)
+    {
+        nsX100--;
+    }
+    ((void)nsX100);
+}
 
 static void Menu_MainMenu(void) /* 主菜单 */
 {
@@ -15,25 +29,24 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 {
 }
 
-static void FirstInit(void) /* 重新初始化全部数据 */
+static void FullInit(void) /* 重新初始化全部数据 */
 {
     USART_DebugPrint("BEGIN RESET ALL DATA");
     RTC_ResetAllRegToDefault();
+    RTC_SetTime(&Default_time);
     USART_DebugPrint("RTC reset done");
     BKPR_ResetALL();
     USART_DebugPrint("BKPR reset done");
-    EEPROM_EraseRange(0, 510); /* VREFINT测量值不擦除 */
+    EEPROM_EraseRange(0, 511);
     USART_DebugPrint("EEPROM reset done");
     USART_DebugPrint("All done");
 }
 
-static void UpdateDisplay(void) /* 更新显示的时间和温度等数据 */
+static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
-    LL_mDelay(9); /* 唤醒按键消抖 */
-    while (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
-    {
-        LL_mDelay(0); /* 唤醒按键消抖 */
-    }
+    RTC_GetTime(&time);
+    snprintf(str_buffer, sizeof(str_buffer), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", time.Year, time.Month, time.Date, time.Day, time.Hours, time.Minutes, time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
+    USART_SendStringRN(str_buffer);
 }
 
 static void DumpRTCReg(void)
@@ -75,7 +88,7 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     switch (ResetInfo)
     {
     case LP_RESET_POWERON:
-        USART_DebugPrint("POR reset");
+        USART_DebugPrint("Power on reset");
         break;
     case LP_RESET_NORMALRESET:
         USART_DebugPrint("Normal reset");
@@ -86,6 +99,12 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     }
     LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
     LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
+    LL_GPIO_SetOutputPin(EPD_RST_GPIO_Port, EPD_RST_PIN);
+    Delay_100ns(10);
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin); /* SHT30硬复位 */
+    Delay_100ns(10);
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin); /* SHT30硬复位 */
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -95,19 +114,18 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     case LP_RESET_POWERON:
         if (RTC_GetOSF() != 0)
         {
+            RTC_SetTime(&Default_time);
             Menu_SetTime();
-            RTC_ClearOSF();
         }
         break;
     case LP_RESET_NORMALRESET:
-        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0 && LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
         {
             LL_mDelay(9);
-            if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0 && LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
             {
-                FirstInit();
+                FullInit();
                 Menu_SetTime();
-                RTC_ClearOSF();
             }
         }
         break;
@@ -130,13 +148,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
     UpdateDisplay();
 
-    while (1)
-    {
-        RTC_GetTime(&clock);
-        snprintf(str_buffer, sizeof(str_buffer), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", clock.Year, clock.Month, clock.Date, clock.Day, clock.Hours, clock.Minutes, clock.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
-        USART_SendStringRN(str_buffer);
-        LL_mDelay(99);
-    }
+    DumpRTCReg();
 
     USART_DebugPrint("Ready in standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
