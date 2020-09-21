@@ -6,7 +6,7 @@ uint8_t ResetInfo;
 struct RTC_Time clock;
 char str_buffer[61];
 
-static void FirstInit(void) /* 系统首次上电、时钟数据丢失、按下了复位按键 初始化 */
+static void FirstInit(void) /* 系统首次上电、时钟数据丢失、按下了复位按键，重新初始化 */
 {
     LL_mDelay(0);
     I2C_Start(0xD0, 2, 0);
@@ -15,25 +15,22 @@ static void FirstInit(void) /* 系统首次上电、时钟数据丢失、按下�
     I2C_Stop();
 }
 
-static void UpdateDisplay(void) /* 系统由实时时钟从Standby模式唤醒 */
+static void UpdateDisplay(void) /* 更新显示的时间和温度等数据 */
 {
-    LL_mDelay(0); /* 唤醒按键消抖 */
+}
+
+static void ShowMainMenu(void) /* 显示主菜单 */
+{
+    LL_mDelay(9); /* 唤醒按键消抖 */
     while (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
     {
-        LL_mDelay(9); /* 唤醒按键消抖 */
+        LL_mDelay(0); /* 唤醒按键消抖 */
     }
 }
 
-static void OpenMenu(void) /* 系统由“设置”按键从Standby模式唤醒 */
-{
-    LL_mDelay(0); /* 唤醒按键消抖 */
-    while (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
-    {
-        LL_mDelay(9); /* 唤醒按键消抖 */
-    }
-}
+/* ==================== 主循环 ==================== */
 
-void Init(void) /* 系统复位后执行一次 */
+void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
     USART_DebugPrint("SYSTEM RESET");
     LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用唤醒中断 */
@@ -60,14 +57,27 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     switch (ResetInfo)
     {
     case LP_RESET_POWERON:
-        FirstInit();
+        if (RTC_GetOSF() != 0)
+        {
+            FirstInit();
+        }
+        else
+        {
+            UpdateDisplay();
+        }
         break;
     case LP_RESET_NORMALRESET:
         FirstInit();
         break;
     case LP_RESET_WKUPSTANDBY:
-        UpdateDisplay();
-        OpenMenu();
+        if (RTC_GetA1F() != 0)
+        {
+            UpdateDisplay();
+        }
+        else
+        {
+            ShowMainMenu();
+        }
         break;
     }
 
@@ -85,5 +95,5 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     /* 正常情况下程序会停止在此处 */
 
     USART_DebugPrint("In standby mode fail");
-    NVIC_SystemReset(); /* 未成功进入Standby模式，手动软复位 */
+    NVIC_SystemReset(); /* 未成功进入Standby模式，执行软复位 */
 }

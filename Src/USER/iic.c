@@ -166,6 +166,10 @@ uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
     return 0;
 }
 
+/**
+ * @brief  产生停止标志。
+ * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
+ */
 uint8_t I2C_Stop(void)
 {
     uint32_t timeout;
@@ -184,18 +188,23 @@ uint8_t I2C_Stop(void)
     }
     if (timeout == 0)
     {
-        if (i2c_reset() == 0)
+        if (i2c_reset() != 0)
         {
-            return 1;
+            return 2;
         }
         else
         {
-            return 2;
+            return 1;
         }
     }
     return 0;
 }
 
+/**
+ * @brief  发送一字节。
+ * @param  byte 要传输的数据。
+ * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
+ */
 uint8_t I2C_WriteByte(uint8_t byte)
 {
     uint32_t timeout;
@@ -214,18 +223,22 @@ uint8_t I2C_WriteByte(uint8_t byte)
     }
     if (timeout == 0)
     {
-        if (i2c_reset() == 0)
+        if (i2c_reset() != 0)
         {
-            return 1;
+            return 2;
         }
         else
         {
-            return 2;
+            return 1;
         }
     }
     return 0;
 }
 
+/**
+ * @brief  接收一字节。
+ * @return 接收到的数据。
+ */
 uint8_t I2C_ReadByte(void)
 {
     uint32_t timeout;
