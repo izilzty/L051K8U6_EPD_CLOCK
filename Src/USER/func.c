@@ -71,8 +71,6 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     }
 
-    // RTC_SetTime24_BIN(20, 9, 20, 7, 23, 8, 30);
-
     while (1)
     {
         RTC_ReadTime(&clock);

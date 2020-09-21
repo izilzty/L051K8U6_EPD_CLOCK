@@ -52,8 +52,6 @@ uint8_t RTC_TestREG(uint8_t reg, uint8_t mask);
 
 uint8_t RTC_ReadTime(struct RTC_Time *time);
 uint8_t RTC_SetTime(const struct RTC_Time *time);
-uint8_t RTC_ReadTime12(struct RTC_Time *time);
-uint8_t RTC_SetTime12(const struct RTC_Time *time);
 uint8_t RTC_GetEOSC(void);
 uint8_t RTC_ModifyEOSC(uint8_t eosc);
 uint8_t RTC_GetBBSQW(void);
@@ -69,7 +67,7 @@ uint8_t RTC_ModifyA2IE(uint8_t a2ie);
 uint8_t RTC_GetA1IE(void);
 uint8_t RTC_ModifyA1IE(uint8_t a1ie);
 uint8_t RTC_GetOSF(void);
-uint8_t RTC_ClerOSF(void);
+uint8_t RTC_ClearOSF(void);
 uint8_t RTC_GetEN32KHZ(void);
 uint8_t RTC_ModifyEN32KHZ(uint8_t en32khz);
 uint8_t RTC_GetBUSY(void);

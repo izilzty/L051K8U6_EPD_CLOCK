@@ -53,7 +53,14 @@ void USART_SendStringRN(const char *tx_char)
     USART_SendData((uint8_t *)"\r\n", 2);
 }
 
-void _USART_DebugPrint(const char* file_name, const char *func_name, uint32_t func_line, const char *info_str)
+/**
+ * @brief  从串口发送调试打印信息
+ * @param  file_name  当前程序文件路径字符串指针
+ * @param  func_name  当前函数名称字符串指针
+ * @param  func_line  当前函数所在行
+ * @param  info_str  自定义信息字符串
+ */
+void _USART_DebugPrint(const char *file_name, const char *func_name, uint32_t func_line, const char *info_str)
 {
     char text[11];
     USART_SendString("\r\n**DEBUG PRINT");
@@ -66,5 +73,5 @@ void _USART_DebugPrint(const char* file_name, const char *func_name, uint32_t fu
     USART_SendString(text);
     USART_SendString("\r\nINFO  : ");
     USART_SendString(info_str);
-    USART_SendString("\r\n");
+    USART_SendString("\r\n\r\n");
 }

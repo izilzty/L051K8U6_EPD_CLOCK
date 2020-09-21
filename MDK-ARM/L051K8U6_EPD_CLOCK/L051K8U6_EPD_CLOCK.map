@@ -6,13 +6,13 @@ Section Cross References
 
     startup_stm32l051xx.o(RESET) refers to startup_stm32l051xx.o(STACK) for __initial_sp
     startup_stm32l051xx.o(RESET) refers to startup_stm32l051xx.o(.text) for Reset_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.NMI_Handler) for NMI_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.HardFault_Handler) for HardFault_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.SVC_Handler) for SVC_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.PendSV_Handler) for PendSV_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.SysTick_Handler) for SysTick_Handler
-    startup_stm32l051xx.o(RESET) refers to lto-llvm-63a3f3.o(.text.EXTI0_1_IRQHandler) for EXTI0_1_IRQHandler
-    startup_stm32l051xx.o(.text) refers to lto-llvm-63a3f3.o(.text.SystemInit) for SystemInit
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.NMI_Handler) for NMI_Handler
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.HardFault_Handler) for HardFault_Handler
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.SVC_Handler) for SVC_Handler
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.PendSV_Handler) for PendSV_Handler
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.SysTick_Handler) for SysTick_Handler
+    startup_stm32l051xx.o(RESET) refers to lto-llvm-da7b05.o(.text.EXTI0_1_IRQHandler) for EXTI0_1_IRQHandler
+    startup_stm32l051xx.o(.text) refers to lto-llvm-da7b05.o(.text.SystemInit) for SystemInit
     startup_stm32l051xx.o(.text) refers to entry.o(.ARM.Collect$$$$00000000) for __main
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry10a.o(.ARM.Collect$$$$0000000D) for __rt_final_cpp
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry11a.o(.ARM.Collect$$$$0000000F) for __rt_final_exit
@@ -262,8 +262,8 @@ Section Cross References
     entry2.o(__vectab_stack_and_reset_area) refers to startup_stm32l051xx.o(STACK) for __initial_sp
     entry2.o(__vectab_stack_and_reset_area) refers to entry.o(.ARM.Collect$$$$00000000) for __main
     entry5.o(.ARM.Collect$$$$00000004) refers to init.o(.text) for __scatterload
-    entry9a.o(.ARM.Collect$$$$0000000B) refers to lto-llvm-63a3f3.o(.text.main) for main
-    entry9b.o(.ARM.Collect$$$$0000000C) refers to lto-llvm-63a3f3.o(.text.main) for main
+    entry9a.o(.ARM.Collect$$$$0000000B) refers to lto-llvm-da7b05.o(.text.main) for main
+    entry9b.o(.ARM.Collect$$$$0000000C) refers to lto-llvm-da7b05.o(.text.main) for main
     fputc.o(i.fputc) refers (Special) to iusesemip.o(.text) for __I$use$semihosting$fputc
     fputc.o(i.fputc) refers (Special) to semi.o(.text) for __semihosting_library_function
     fputc_h.o(i._fputc$hlt) refers (Special) to iusesemip.o(.text) for __I$use$semihosting$fputc
@@ -287,76 +287,76 @@ Section Cross References
     depilogue.o(.text) refers to depilogue.o(i.__ARM_clz) for __ARM_clz
     depilogue.o(.text) refers to llshl.o(.text) for __aeabi_llsl
     depilogue.o(.text) refers to llushr.o(.text) for __aeabi_llsr
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.text.LL_GPIO_Init) for LL_GPIO_Init
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.text.MX_I2C1_Init) for MX_I2C1_Init
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq) for RCC_GetSystemClockFreq
-    lto-llvm-63a3f3.o(.text.main) refers to uidiv.o(.text) for __aeabi_uidiv
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.text._USART_DebugPrint) for _USART_DebugPrint
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.text.Loop) for Loop
-    lto-llvm-63a3f3.o(.text.main) refers to lto-llvm-63a3f3.o(.bss.ResetInfo) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.main) refers to lto-llvm-63a3f3.o(.text.main) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.MX_I2C1_Init) refers to lto-llvm-63a3f3.o(.text.LL_GPIO_Init) for LL_GPIO_Init
-    lto-llvm-63a3f3.o(.ARM.exidx.text.MX_I2C1_Init) refers to lto-llvm-63a3f3.o(.text.MX_I2C1_Init) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.NMI_Handler) refers to lto-llvm-63a3f3.o(.text.NMI_Handler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.HardFault_Handler) refers to lto-llvm-63a3f3.o(.text.USART_SendStringRN) for USART_SendStringRN
-    lto-llvm-63a3f3.o(.ARM.exidx.text.HardFault_Handler) refers to lto-llvm-63a3f3.o(.text.HardFault_Handler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.SVC_Handler) refers to lto-llvm-63a3f3.o(.text.SVC_Handler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.PendSV_Handler) refers to lto-llvm-63a3f3.o(.text.PendSV_Handler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.SysTick_Handler) refers to lto-llvm-63a3f3.o(.text.SysTick_Handler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.EXTI0_1_IRQHandler) refers to lto-llvm-63a3f3.o(.text.EXTI0_1_IRQHandler) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.LL_GPIO_Init) refers to lto-llvm-63a3f3.o(.text.LL_GPIO_Init) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq) refers to uidiv.o(.text) for __aeabi_uidiv
-    lto-llvm-63a3f3.o(.ARM.exidx.text.RCC_GetSystemClockFreq) refers to lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.SystemInit) refers to lto-llvm-63a3f3.o(.text.SystemInit) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.FirstInit) for FirstInit
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.I2C_Start) for I2C_Start
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.I2C_WriteByte) for I2C_WriteByte
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.I2C_ReadByte) for I2C_ReadByte
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.I2C_Stop) for I2C_Stop
-    lto-llvm-63a3f3.o(.text.Loop) refers to uidiv.o(.text) for __aeabi_uidivmod
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.RTC_GetTemp) for RTC_GetTemp
-    lto-llvm-63a3f3.o(.text.Loop) refers to ffixi.o(.text) for __aeabi_f2iz
-    lto-llvm-63a3f3.o(.text.Loop) refers to fflti.o(.text) for __aeabi_i2f
-    lto-llvm-63a3f3.o(.text.Loop) refers to fadd.o(.text) for __aeabi_fsub
-    lto-llvm-63a3f3.o(.text.Loop) refers to fmul.o(.text) for __aeabi_fmul
-    lto-llvm-63a3f3.o(.text.Loop) refers to printf6.o(i.__0snprintf$6) for __2snprintf
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.text.USART_SendStringRN) for USART_SendStringRN
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.bss.ResetInfo) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.bss.clock) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.Loop) refers to lto-llvm-63a3f3.o(.bss.str_buffer) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.Loop) refers to lto-llvm-63a3f3.o(.text.Loop) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.FirstInit) refers to lto-llvm-63a3f3.o(.text.I2C_Start) for I2C_Start
-    lto-llvm-63a3f3.o(.text.FirstInit) refers to lto-llvm-63a3f3.o(.text.I2C_WriteByte) for I2C_WriteByte
-    lto-llvm-63a3f3.o(.text.FirstInit) refers to lto-llvm-63a3f3.o(.text.I2C_Stop) for I2C_Stop
-    lto-llvm-63a3f3.o(.ARM.exidx.text.FirstInit) refers to lto-llvm-63a3f3.o(.text.FirstInit) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.ARM.exidx.text.USART_SendString) refers to lto-llvm-63a3f3.o(.text.USART_SendString) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.USART_SendStringRN) refers to lto-llvm-63a3f3.o(.text.USART_SendString) for USART_SendString
-    lto-llvm-63a3f3.o(.text.USART_SendStringRN) refers to lto-llvm-63a3f3.o(.rodata.str1.1) for .L.str.54
-    lto-llvm-63a3f3.o(.ARM.exidx.text.USART_SendStringRN) refers to lto-llvm-63a3f3.o(.text.USART_SendStringRN) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text._USART_DebugPrint) refers to lto-llvm-63a3f3.o(.text.USART_SendString) for USART_SendString
-    lto-llvm-63a3f3.o(.text._USART_DebugPrint) refers to printf6.o(i.__0snprintf$6) for __2snprintf
-    lto-llvm-63a3f3.o(.text._USART_DebugPrint) refers to lto-llvm-63a3f3.o(.rodata.str1.1) for .L.str.54
-    lto-llvm-63a3f3.o(.ARM.exidx.text._USART_DebugPrint) refers to lto-llvm-63a3f3.o(.text._USART_DebugPrint) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.I2C_Start) refers to lto-llvm-63a3f3.o(.text.i2c_reset) for i2c_reset
-    lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_Start) refers to lto-llvm-63a3f3.o(.text.I2C_Start) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.i2c_reset) refers to lto-llvm-63a3f3.o(.text.MX_I2C1_Init) for MX_I2C1_Init
-    lto-llvm-63a3f3.o(.ARM.exidx.text.i2c_reset) refers to lto-llvm-63a3f3.o(.text.i2c_reset) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.I2C_Stop) refers to lto-llvm-63a3f3.o(.text.i2c_reset) for i2c_reset
-    lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_Stop) refers to lto-llvm-63a3f3.o(.text.I2C_Stop) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.I2C_WriteByte) refers to lto-llvm-63a3f3.o(.text.i2c_reset) for i2c_reset
-    lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_WriteByte) refers to lto-llvm-63a3f3.o(.text.I2C_WriteByte) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.I2C_ReadByte) refers to lto-llvm-63a3f3.o(.text.i2c_reset) for i2c_reset
-    lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_ReadByte) refers to lto-llvm-63a3f3.o(.text.I2C_ReadByte) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.RTC_ReadREG) refers to lto-llvm-63a3f3.o(.text.I2C_Start) for I2C_Start
-    lto-llvm-63a3f3.o(.text.RTC_ReadREG) refers to lto-llvm-63a3f3.o(.text.I2C_WriteByte) for I2C_WriteByte
-    lto-llvm-63a3f3.o(.text.RTC_ReadREG) refers to lto-llvm-63a3f3.o(.text.I2C_ReadByte) for I2C_ReadByte
-    lto-llvm-63a3f3.o(.text.RTC_ReadREG) refers to lto-llvm-63a3f3.o(.text.I2C_Stop) for I2C_Stop
-    lto-llvm-63a3f3.o(.ARM.exidx.text.RTC_ReadREG) refers to lto-llvm-63a3f3.o(.text.RTC_ReadREG) for [Anonymous Symbol]
-    lto-llvm-63a3f3.o(.text.RTC_GetTemp) refers to lto-llvm-63a3f3.o(.text.RTC_ReadREG) for RTC_ReadREG
-    lto-llvm-63a3f3.o(.text.RTC_GetTemp) refers to dflti.o(.text) for __aeabi_i2d
-    lto-llvm-63a3f3.o(.text.RTC_GetTemp) refers to dmul.o(.text) for __aeabi_dmul
-    lto-llvm-63a3f3.o(.text.RTC_GetTemp) refers to d2f.o(.text) for __aeabi_d2f
-    lto-llvm-63a3f3.o(.ARM.exidx.text.RTC_GetTemp) refers to lto-llvm-63a3f3.o(.text.RTC_GetTemp) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.text.LL_GPIO_Init) for LL_GPIO_Init
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.text.MX_I2C1_Init) for MX_I2C1_Init
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq) for RCC_GetSystemClockFreq
+    lto-llvm-da7b05.o(.text.main) refers to uidiv.o(.text) for __aeabi_uidiv
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.text._USART_DebugPrint) for _USART_DebugPrint
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.text.Loop) for Loop
+    lto-llvm-da7b05.o(.text.main) refers to lto-llvm-da7b05.o(.bss.ResetInfo) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.main) refers to lto-llvm-da7b05.o(.text.main) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.MX_I2C1_Init) refers to lto-llvm-da7b05.o(.text.LL_GPIO_Init) for LL_GPIO_Init
+    lto-llvm-da7b05.o(.ARM.exidx.text.MX_I2C1_Init) refers to lto-llvm-da7b05.o(.text.MX_I2C1_Init) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.NMI_Handler) refers to lto-llvm-da7b05.o(.text.NMI_Handler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.HardFault_Handler) refers to lto-llvm-da7b05.o(.text.USART_SendStringRN) for USART_SendStringRN
+    lto-llvm-da7b05.o(.ARM.exidx.text.HardFault_Handler) refers to lto-llvm-da7b05.o(.text.HardFault_Handler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.SVC_Handler) refers to lto-llvm-da7b05.o(.text.SVC_Handler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.PendSV_Handler) refers to lto-llvm-da7b05.o(.text.PendSV_Handler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.SysTick_Handler) refers to lto-llvm-da7b05.o(.text.SysTick_Handler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.EXTI0_1_IRQHandler) refers to lto-llvm-da7b05.o(.text.EXTI0_1_IRQHandler) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.LL_GPIO_Init) refers to lto-llvm-da7b05.o(.text.LL_GPIO_Init) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq) refers to uidiv.o(.text) for __aeabi_uidiv
+    lto-llvm-da7b05.o(.ARM.exidx.text.RCC_GetSystemClockFreq) refers to lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.SystemInit) refers to lto-llvm-da7b05.o(.text.SystemInit) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.FirstInit) for FirstInit
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.I2C_Start) for I2C_Start
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.I2C_WriteByte) for I2C_WriteByte
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.RTC_GetTemp) for RTC_GetTemp
+    lto-llvm-da7b05.o(.text.Loop) refers to ffixi.o(.text) for __aeabi_f2iz
+    lto-llvm-da7b05.o(.text.Loop) refers to fflti.o(.text) for __aeabi_i2f
+    lto-llvm-da7b05.o(.text.Loop) refers to fadd.o(.text) for __aeabi_fsub
+    lto-llvm-da7b05.o(.text.Loop) refers to fmul.o(.text) for __aeabi_fmul
+    lto-llvm-da7b05.o(.text.Loop) refers to printf6.o(i.__0snprintf$6) for __2snprintf
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.USART_SendStringRN) for USART_SendStringRN
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.I2C_ReadByte) for I2C_ReadByte
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.text.I2C_Stop) for I2C_Stop
+    lto-llvm-da7b05.o(.text.Loop) refers to uidiv.o(.text) for __aeabi_uidivmod
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.bss.ResetInfo) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.bss.clock) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.Loop) refers to lto-llvm-da7b05.o(.bss.str_buffer) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.Loop) refers to lto-llvm-da7b05.o(.text.Loop) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.FirstInit) refers to lto-llvm-da7b05.o(.text.I2C_Start) for I2C_Start
+    lto-llvm-da7b05.o(.text.FirstInit) refers to lto-llvm-da7b05.o(.text.I2C_WriteByte) for I2C_WriteByte
+    lto-llvm-da7b05.o(.text.FirstInit) refers to lto-llvm-da7b05.o(.text.I2C_Stop) for I2C_Stop
+    lto-llvm-da7b05.o(.ARM.exidx.text.FirstInit) refers to lto-llvm-da7b05.o(.text.FirstInit) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.ARM.exidx.text.USART_SendString) refers to lto-llvm-da7b05.o(.text.USART_SendString) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.USART_SendStringRN) refers to lto-llvm-da7b05.o(.text.USART_SendString) for USART_SendString
+    lto-llvm-da7b05.o(.text.USART_SendStringRN) refers to lto-llvm-da7b05.o(.rodata.str1.1) for .L.str.54
+    lto-llvm-da7b05.o(.ARM.exidx.text.USART_SendStringRN) refers to lto-llvm-da7b05.o(.text.USART_SendStringRN) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text._USART_DebugPrint) refers to lto-llvm-da7b05.o(.text.USART_SendString) for USART_SendString
+    lto-llvm-da7b05.o(.text._USART_DebugPrint) refers to printf6.o(i.__0snprintf$6) for __2snprintf
+    lto-llvm-da7b05.o(.text._USART_DebugPrint) refers to lto-llvm-da7b05.o(.rodata.str1.1) for .L.str.54
+    lto-llvm-da7b05.o(.ARM.exidx.text._USART_DebugPrint) refers to lto-llvm-da7b05.o(.text._USART_DebugPrint) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.I2C_Start) refers to lto-llvm-da7b05.o(.text.i2c_reset) for i2c_reset
+    lto-llvm-da7b05.o(.ARM.exidx.text.I2C_Start) refers to lto-llvm-da7b05.o(.text.I2C_Start) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.i2c_reset) refers to lto-llvm-da7b05.o(.text.MX_I2C1_Init) for MX_I2C1_Init
+    lto-llvm-da7b05.o(.ARM.exidx.text.i2c_reset) refers to lto-llvm-da7b05.o(.text.i2c_reset) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.I2C_Stop) refers to lto-llvm-da7b05.o(.text.i2c_reset) for i2c_reset
+    lto-llvm-da7b05.o(.ARM.exidx.text.I2C_Stop) refers to lto-llvm-da7b05.o(.text.I2C_Stop) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.I2C_WriteByte) refers to lto-llvm-da7b05.o(.text.i2c_reset) for i2c_reset
+    lto-llvm-da7b05.o(.ARM.exidx.text.I2C_WriteByte) refers to lto-llvm-da7b05.o(.text.I2C_WriteByte) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.I2C_ReadByte) refers to lto-llvm-da7b05.o(.text.i2c_reset) for i2c_reset
+    lto-llvm-da7b05.o(.ARM.exidx.text.I2C_ReadByte) refers to lto-llvm-da7b05.o(.text.I2C_ReadByte) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.RTC_ReadREG) refers to lto-llvm-da7b05.o(.text.I2C_Start) for I2C_Start
+    lto-llvm-da7b05.o(.text.RTC_ReadREG) refers to lto-llvm-da7b05.o(.text.I2C_WriteByte) for I2C_WriteByte
+    lto-llvm-da7b05.o(.text.RTC_ReadREG) refers to lto-llvm-da7b05.o(.text.I2C_ReadByte) for I2C_ReadByte
+    lto-llvm-da7b05.o(.text.RTC_ReadREG) refers to lto-llvm-da7b05.o(.text.I2C_Stop) for I2C_Stop
+    lto-llvm-da7b05.o(.ARM.exidx.text.RTC_ReadREG) refers to lto-llvm-da7b05.o(.text.RTC_ReadREG) for [Anonymous Symbol]
+    lto-llvm-da7b05.o(.text.RTC_GetTemp) refers to lto-llvm-da7b05.o(.text.RTC_ReadREG) for RTC_ReadREG
+    lto-llvm-da7b05.o(.text.RTC_GetTemp) refers to dflti.o(.text) for __aeabi_i2d
+    lto-llvm-da7b05.o(.text.RTC_GetTemp) refers to dmul.o(.text) for __aeabi_dmul
+    lto-llvm-da7b05.o(.text.RTC_GetTemp) refers to d2f.o(.text) for __aeabi_d2f
+    lto-llvm-da7b05.o(.ARM.exidx.text.RTC_GetTemp) refers to lto-llvm-da7b05.o(.text.RTC_GetTemp) for [Anonymous Symbol]
     fadd.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     fadd.o(.text) refers to fepilogue.o(.text) for _float_epilogue
     fmul.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
@@ -380,31 +380,31 @@ Removing Unused input sections from the image.
     Removing ddiv.o(.text), (240 bytes).
     Removing dfixul.o(.text), (64 bytes).
     Removing cdrcmple.o(.text), (40 bytes).
-    Removing lto-llvm-63a3f3.o(.text), (0 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.main), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.MX_I2C1_Init), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.NMI_Handler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.HardFault_Handler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.SVC_Handler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.PendSV_Handler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.SysTick_Handler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.EXTI0_1_IRQHandler), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.LL_GPIO_Init), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.RCC_GetSystemClockFreq), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.SystemInit), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.Loop), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.FirstInit), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.USART_SendString), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.USART_SendStringRN), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text._USART_DebugPrint), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_Start), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.i2c_reset), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_Stop), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_WriteByte), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.I2C_ReadByte), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.RTC_ReadREG), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.exidx.text.RTC_GetTemp), (8 bytes).
-    Removing lto-llvm-63a3f3.o(.ARM.use_no_argv), (4 bytes).
+    Removing lto-llvm-da7b05.o(.text), (0 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.main), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.MX_I2C1_Init), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.NMI_Handler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.HardFault_Handler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.SVC_Handler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.PendSV_Handler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.SysTick_Handler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.EXTI0_1_IRQHandler), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.LL_GPIO_Init), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.RCC_GetSystemClockFreq), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.SystemInit), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.Loop), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.FirstInit), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.USART_SendString), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.USART_SendStringRN), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text._USART_DebugPrint), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.I2C_Start), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.i2c_reset), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.I2C_Stop), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.I2C_WriteByte), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.I2C_ReadByte), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.RTC_ReadREG), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.exidx.text.RTC_GetTemp), (8 bytes).
+    Removing lto-llvm-da7b05.o(.ARM.use_no_argv), (4 bytes).
 
 30 unused section(s) (total 888 bytes) removed from the image.
 
@@ -468,7 +468,7 @@ Image Symbol Table
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
     handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
     init.s                                   0x00000000   Number         0  init.o ABSOLUTE
-    ld-temp.o                                0x00000000   Number         0  lto-llvm-63a3f3.o ABSOLUTE
+    ld-temp.o                                0x00000000   Number         0  lto-llvm-da7b05.o ABSOLUTE
     startup_stm32l051xx.s                    0x00000000   Number         0  startup_stm32l051xx.o ABSOLUTE
     RESET                                    0x08000000   Section      192  startup_stm32l051xx.o(RESET)
     .ARM.Collect$$$$00000000                 0x080000c0   Section        0  entry.o(.ARM.Collect$$$$00000000)
@@ -496,137 +496,137 @@ Image Symbol Table
     .text                                    0x0800047c   Section        0  ffixi.o(.text)
     .text                                    0x080004ae   Section        0  d2f.o(.text)
     .text                                    0x080004e6   Section        0  fepilogue.o(.text)
-    [Anonymous Symbol]                       0x08000568   Section        0  lto-llvm-63a3f3.o(.text.EXTI0_1_IRQHandler)
-    __arm_cp.7_0                             0x08000578   Number         4  lto-llvm-63a3f3.o(.text.EXTI0_1_IRQHandler)
-    FirstInit                                0x0800057d   Thumb Code    52  lto-llvm-63a3f3.o(.text.FirstInit)
-    [Anonymous Symbol]                       0x0800057c   Section        0  lto-llvm-63a3f3.o(.text.FirstInit)
-    [Anonymous Symbol]                       0x080005b0   Section        0  lto-llvm-63a3f3.o(.text.HardFault_Handler)
-    __arm_cp.3_0                             0x080005d4   Number         4  lto-llvm-63a3f3.o(.text.HardFault_Handler)
-    I2C_ReadByte                             0x080005e9   Thumb Code    48  lto-llvm-63a3f3.o(.text.I2C_ReadByte)
-    [Anonymous Symbol]                       0x080005e8   Section        0  lto-llvm-63a3f3.o(.text.I2C_ReadByte)
-    I2C_Start                                0x08000619   Thumb Code   200  lto-llvm-63a3f3.o(.text.I2C_Start)
-    [Anonymous Symbol]                       0x08000618   Section        0  lto-llvm-63a3f3.o(.text.I2C_Start)
-    __arm_cp.16_1                            0x080006dc   Number         4  lto-llvm-63a3f3.o(.text.I2C_Start)
-    I2C_Stop                                 0x080006e1   Thumb Code    56  lto-llvm-63a3f3.o(.text.I2C_Stop)
-    [Anonymous Symbol]                       0x080006e0   Section        0  lto-llvm-63a3f3.o(.text.I2C_Stop)
-    __arm_cp.18_0                            0x08000714   Number         4  lto-llvm-63a3f3.o(.text.I2C_Stop)
-    I2C_WriteByte                            0x08000719   Thumb Code    68  lto-llvm-63a3f3.o(.text.I2C_WriteByte)
-    [Anonymous Symbol]                       0x08000718   Section        0  lto-llvm-63a3f3.o(.text.I2C_WriteByte)
-    __arm_cp.19_0                            0x08000750   Number         4  lto-llvm-63a3f3.o(.text.I2C_WriteByte)
-    __arm_cp.19_1                            0x08000754   Number         4  lto-llvm-63a3f3.o(.text.I2C_WriteByte)
-    __arm_cp.19_2                            0x08000758   Number         4  lto-llvm-63a3f3.o(.text.I2C_WriteByte)
-    LL_GPIO_Init                             0x0800075d   Thumb Code   186  lto-llvm-63a3f3.o(.text.LL_GPIO_Init)
-    [Anonymous Symbol]                       0x0800075c   Section        0  lto-llvm-63a3f3.o(.text.LL_GPIO_Init)
-    Loop                                     0x08000819   Thumb Code   480  lto-llvm-63a3f3.o(.text.Loop)
-    [Anonymous Symbol]                       0x08000818   Section        0  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_0                            0x080009b0   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_1                            0x080009b4   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_2                            0x080009b8   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_3                            0x080009bc   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_4                            0x080009c0   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    __arm_cp.11_5                            0x080009c4   Number         4  lto-llvm-63a3f3.o(.text.Loop)
-    MX_I2C1_Init                             0x080009f9   Thumb Code   212  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    [Anonymous Symbol]                       0x080009f8   Section        0  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_0                             0x08000ab4   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_1                             0x08000ab8   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_2                             0x08000abc   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_3                             0x08000ac0   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_4                             0x08000ac4   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    __arm_cp.1_5                             0x08000ac8   Number         4  lto-llvm-63a3f3.o(.text.MX_I2C1_Init)
-    [Anonymous Symbol]                       0x08000acc   Section        0  lto-llvm-63a3f3.o(.text.NMI_Handler)
-    [Anonymous Symbol]                       0x08000ace   Section        0  lto-llvm-63a3f3.o(.text.PendSV_Handler)
-    RCC_GetSystemClockFreq                   0x08000ad1   Thumb Code   128  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    [Anonymous Symbol]                       0x08000ad0   Section        0  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    __arm_cp.9_0                             0x08000b34   Number         4  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    __arm_cp.9_1                             0x08000b38   Number         4  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    __arm_cp.9_2                             0x08000b3c   Number         4  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    __arm_cp.9_3                             0x08000b40   Number         4  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    PLLMulTable                              0x08000b44   Number         0  lto-llvm-63a3f3.o(.text.RCC_GetSystemClockFreq)
-    RTC_GetTemp                              0x08000b51   Thumb Code    44  lto-llvm-63a3f3.o(.text.RTC_GetTemp)
-    [Anonymous Symbol]                       0x08000b50   Section        0  lto-llvm-63a3f3.o(.text.RTC_GetTemp)
-    __arm_cp.22_0                            0x08000b78   Number         4  lto-llvm-63a3f3.o(.text.RTC_GetTemp)
-    RTC_ReadREG                              0x08000b7d   Thumb Code    54  lto-llvm-63a3f3.o(.text.RTC_ReadREG)
-    [Anonymous Symbol]                       0x08000b7c   Section        0  lto-llvm-63a3f3.o(.text.RTC_ReadREG)
-    [Anonymous Symbol]                       0x08000bb2   Section        0  lto-llvm-63a3f3.o(.text.SVC_Handler)
-    [Anonymous Symbol]                       0x08000bb4   Section        0  lto-llvm-63a3f3.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x08000bb8   Section        0  lto-llvm-63a3f3.o(.text.SystemInit)
-    __arm_cp.10_0                            0x08000bf8   Number         4  lto-llvm-63a3f3.o(.text.SystemInit)
-    __arm_cp.10_1                            0x08000bfc   Number         4  lto-llvm-63a3f3.o(.text.SystemInit)
-    __arm_cp.10_2                            0x08000c00   Number         4  lto-llvm-63a3f3.o(.text.SystemInit)
-    __arm_cp.10_3                            0x08000c04   Number         4  lto-llvm-63a3f3.o(.text.SystemInit)
-    USART_SendString                         0x08000c09   Thumb Code    64  lto-llvm-63a3f3.o(.text.USART_SendString)
-    [Anonymous Symbol]                       0x08000c08   Section        0  lto-llvm-63a3f3.o(.text.USART_SendString)
-    USART_SendStringRN                       0x08000c49   Thumb Code    48  lto-llvm-63a3f3.o(.text.USART_SendStringRN)
-    [Anonymous Symbol]                       0x08000c48   Section        0  lto-llvm-63a3f3.o(.text.USART_SendStringRN)
-    __arm_cp.14_1                            0x08000c74   Number         4  lto-llvm-63a3f3.o(.text.USART_SendStringRN)
-    _USART_DebugPrint                        0x08000c79   Thumb Code   188  lto-llvm-63a3f3.o(.text._USART_DebugPrint)
-    [Anonymous Symbol]                       0x08000c78   Section        0  lto-llvm-63a3f3.o(.text._USART_DebugPrint)
-    __arm_cp.15_8                            0x08000d30   Number         4  lto-llvm-63a3f3.o(.text._USART_DebugPrint)
-    i2c_reset                                0x08000d35   Thumb Code   332  lto-llvm-63a3f3.o(.text.i2c_reset)
-    [Anonymous Symbol]                       0x08000d34   Section        0  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_0                            0x08000e64   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_1                            0x08000e68   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_2                            0x08000e6c   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_3                            0x08000e70   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_4                            0x08000e74   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_5                            0x08000e78   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    __arm_cp.17_6                            0x08000e7c   Number         4  lto-llvm-63a3f3.o(.text.i2c_reset)
-    [Anonymous Symbol]                       0x08000e80   Section        0  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_39                            0x08000ecc   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_41                            0x080011dc   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_42                            0x080011e0   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_45                            0x080011ec   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_49                            0x080011fc   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_50                            0x08001200   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_0                             0x0800156c   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_1                             0x08001570   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_3                             0x08001574   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_6                             0x08001578   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_7                             0x0800157c   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_9                             0x08001580   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_10                            0x08001584   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_13                            0x08001588   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_14                            0x0800158c   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_15                            0x08001590   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_16                            0x08001594   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_17                            0x08001598   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_18                            0x0800159c   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_19                            0x080015a0   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_20                            0x080015a4   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_21                            0x080015a8   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_22                            0x080015ac   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_23                            0x080015b0   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_24                            0x080015b4   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_25                            0x080015b8   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_26                            0x080015bc   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_27                            0x080015c0   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_28                            0x080015c4   Number         4  lto-llvm-63a3f3.o(.text.main)
-    APBPrescTable                            0x080015c8   Number         0  lto-llvm-63a3f3.o(.text.main)
-    AHBPrescTable                            0x080015d0   Number         0  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_31                            0x080015e0   Number         4  lto-llvm-63a3f3.o(.text.main)
-    __arm_cp.0_33                            0x080015f4   Number         4  lto-llvm-63a3f3.o(.text.main)
-    i.__0snprintf$6                          0x08001628   Section        0  printf6.o(i.__0snprintf$6)
-    i.__ARM_clz                              0x08001660   Section        0  depilogue.o(i.__ARM_clz)
-    i.__scatterload_copy                     0x0800168e   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x0800169c   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x0800169e   Section       14  handlers.o(i.__scatterload_zeroinit)
-    _printf_core                             0x080016ad   Thumb Code   768  printf6.o(i._printf_core)
-    i._printf_core                           0x080016ac   Section        0  printf6.o(i._printf_core)
-    _printf_post_padding                     0x080019b1   Thumb Code    32  printf6.o(i._printf_post_padding)
-    i._printf_post_padding                   0x080019b0   Section        0  printf6.o(i._printf_post_padding)
-    _printf_pre_padding                      0x080019d1   Thumb Code    44  printf6.o(i._printf_pre_padding)
-    i._printf_pre_padding                    0x080019d0   Section        0  printf6.o(i._printf_pre_padding)
-    _snputc                                  0x080019fd   Thumb Code    22  printf6.o(i._snputc)
-    i._snputc                                0x080019fc   Section        0  printf6.o(i._snputc)
-    .L.str.54                                0x08001a12   Data           3  lto-llvm-63a3f3.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x08001a12   Section        0  lto-llvm-63a3f3.o(.rodata.str1.1)
-    ResetInfo                                0x20000000   Data           1  lto-llvm-63a3f3.o(.bss.ResetInfo)
-    [Anonymous Symbol]                       0x20000000   Section        0  lto-llvm-63a3f3.o(.bss.ResetInfo)
-    clock                                    0x20000001   Data           7  lto-llvm-63a3f3.o(.bss.clock)
-    [Anonymous Symbol]                       0x20000001   Section        0  lto-llvm-63a3f3.o(.bss.clock)
-    str_buffer                               0x20000008   Data          61  lto-llvm-63a3f3.o(.bss.str_buffer)
-    [Anonymous Symbol]                       0x20000008   Section        0  lto-llvm-63a3f3.o(.bss.str_buffer)
-    STACK                                    0x20000048   Section     1024  startup_stm32l051xx.o(STACK)
+    [Anonymous Symbol]                       0x08000568   Section        0  lto-llvm-da7b05.o(.text.EXTI0_1_IRQHandler)
+    __arm_cp.7_0                             0x08000578   Number         4  lto-llvm-da7b05.o(.text.EXTI0_1_IRQHandler)
+    FirstInit                                0x0800057d   Thumb Code    52  lto-llvm-da7b05.o(.text.FirstInit)
+    [Anonymous Symbol]                       0x0800057c   Section        0  lto-llvm-da7b05.o(.text.FirstInit)
+    [Anonymous Symbol]                       0x080005b0   Section        0  lto-llvm-da7b05.o(.text.HardFault_Handler)
+    __arm_cp.3_0                             0x080005d4   Number         4  lto-llvm-da7b05.o(.text.HardFault_Handler)
+    I2C_ReadByte                             0x080005e9   Thumb Code    48  lto-llvm-da7b05.o(.text.I2C_ReadByte)
+    [Anonymous Symbol]                       0x080005e8   Section        0  lto-llvm-da7b05.o(.text.I2C_ReadByte)
+    I2C_Start                                0x08000619   Thumb Code   200  lto-llvm-da7b05.o(.text.I2C_Start)
+    [Anonymous Symbol]                       0x08000618   Section        0  lto-llvm-da7b05.o(.text.I2C_Start)
+    __arm_cp.16_1                            0x080006dc   Number         4  lto-llvm-da7b05.o(.text.I2C_Start)
+    I2C_Stop                                 0x080006e1   Thumb Code    56  lto-llvm-da7b05.o(.text.I2C_Stop)
+    [Anonymous Symbol]                       0x080006e0   Section        0  lto-llvm-da7b05.o(.text.I2C_Stop)
+    __arm_cp.18_0                            0x08000714   Number         4  lto-llvm-da7b05.o(.text.I2C_Stop)
+    I2C_WriteByte                            0x08000719   Thumb Code    68  lto-llvm-da7b05.o(.text.I2C_WriteByte)
+    [Anonymous Symbol]                       0x08000718   Section        0  lto-llvm-da7b05.o(.text.I2C_WriteByte)
+    __arm_cp.19_0                            0x08000750   Number         4  lto-llvm-da7b05.o(.text.I2C_WriteByte)
+    __arm_cp.19_1                            0x08000754   Number         4  lto-llvm-da7b05.o(.text.I2C_WriteByte)
+    __arm_cp.19_2                            0x08000758   Number         4  lto-llvm-da7b05.o(.text.I2C_WriteByte)
+    LL_GPIO_Init                             0x0800075d   Thumb Code   186  lto-llvm-da7b05.o(.text.LL_GPIO_Init)
+    [Anonymous Symbol]                       0x0800075c   Section        0  lto-llvm-da7b05.o(.text.LL_GPIO_Init)
+    Loop                                     0x08000819   Thumb Code   584  lto-llvm-da7b05.o(.text.Loop)
+    [Anonymous Symbol]                       0x08000818   Section        0  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_0                            0x08000a18   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_1                            0x08000a1c   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_2                            0x08000a20   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_3                            0x08000a24   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_4                            0x08000a28   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    __arm_cp.11_5                            0x08000a2c   Number         4  lto-llvm-da7b05.o(.text.Loop)
+    MX_I2C1_Init                             0x08000a61   Thumb Code   212  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    [Anonymous Symbol]                       0x08000a60   Section        0  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_0                             0x08000b1c   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_1                             0x08000b20   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_2                             0x08000b24   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_3                             0x08000b28   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_4                             0x08000b2c   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    __arm_cp.1_5                             0x08000b30   Number         4  lto-llvm-da7b05.o(.text.MX_I2C1_Init)
+    [Anonymous Symbol]                       0x08000b34   Section        0  lto-llvm-da7b05.o(.text.NMI_Handler)
+    [Anonymous Symbol]                       0x08000b36   Section        0  lto-llvm-da7b05.o(.text.PendSV_Handler)
+    RCC_GetSystemClockFreq                   0x08000b39   Thumb Code   128  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    [Anonymous Symbol]                       0x08000b38   Section        0  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    __arm_cp.9_0                             0x08000b9c   Number         4  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    __arm_cp.9_1                             0x08000ba0   Number         4  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    __arm_cp.9_2                             0x08000ba4   Number         4  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    __arm_cp.9_3                             0x08000ba8   Number         4  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    PLLMulTable                              0x08000bac   Number         0  lto-llvm-da7b05.o(.text.RCC_GetSystemClockFreq)
+    RTC_GetTemp                              0x08000bb9   Thumb Code    44  lto-llvm-da7b05.o(.text.RTC_GetTemp)
+    [Anonymous Symbol]                       0x08000bb8   Section        0  lto-llvm-da7b05.o(.text.RTC_GetTemp)
+    __arm_cp.22_0                            0x08000be0   Number         4  lto-llvm-da7b05.o(.text.RTC_GetTemp)
+    RTC_ReadREG                              0x08000be5   Thumb Code    54  lto-llvm-da7b05.o(.text.RTC_ReadREG)
+    [Anonymous Symbol]                       0x08000be4   Section        0  lto-llvm-da7b05.o(.text.RTC_ReadREG)
+    [Anonymous Symbol]                       0x08000c1a   Section        0  lto-llvm-da7b05.o(.text.SVC_Handler)
+    [Anonymous Symbol]                       0x08000c1c   Section        0  lto-llvm-da7b05.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x08000c20   Section        0  lto-llvm-da7b05.o(.text.SystemInit)
+    __arm_cp.10_0                            0x08000c60   Number         4  lto-llvm-da7b05.o(.text.SystemInit)
+    __arm_cp.10_1                            0x08000c64   Number         4  lto-llvm-da7b05.o(.text.SystemInit)
+    __arm_cp.10_2                            0x08000c68   Number         4  lto-llvm-da7b05.o(.text.SystemInit)
+    __arm_cp.10_3                            0x08000c6c   Number         4  lto-llvm-da7b05.o(.text.SystemInit)
+    USART_SendString                         0x08000c71   Thumb Code    64  lto-llvm-da7b05.o(.text.USART_SendString)
+    [Anonymous Symbol]                       0x08000c70   Section        0  lto-llvm-da7b05.o(.text.USART_SendString)
+    USART_SendStringRN                       0x08000cb1   Thumb Code    48  lto-llvm-da7b05.o(.text.USART_SendStringRN)
+    [Anonymous Symbol]                       0x08000cb0   Section        0  lto-llvm-da7b05.o(.text.USART_SendStringRN)
+    __arm_cp.14_1                            0x08000cdc   Number         4  lto-llvm-da7b05.o(.text.USART_SendStringRN)
+    _USART_DebugPrint                        0x08000ce1   Thumb Code   188  lto-llvm-da7b05.o(.text._USART_DebugPrint)
+    [Anonymous Symbol]                       0x08000ce0   Section        0  lto-llvm-da7b05.o(.text._USART_DebugPrint)
+    __arm_cp.15_8                            0x08000d98   Number         4  lto-llvm-da7b05.o(.text._USART_DebugPrint)
+    i2c_reset                                0x08000d9d   Thumb Code   332  lto-llvm-da7b05.o(.text.i2c_reset)
+    [Anonymous Symbol]                       0x08000d9c   Section        0  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_0                            0x08000ecc   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_1                            0x08000ed0   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_2                            0x08000ed4   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_3                            0x08000ed8   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_4                            0x08000edc   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_5                            0x08000ee0   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    __arm_cp.17_6                            0x08000ee4   Number         4  lto-llvm-da7b05.o(.text.i2c_reset)
+    [Anonymous Symbol]                       0x08000ee8   Section        0  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_39                            0x08000f34   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_41                            0x08001244   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_42                            0x08001248   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_45                            0x08001254   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_49                            0x08001264   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_50                            0x08001268   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_0                             0x080015d4   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_1                             0x080015d8   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_3                             0x080015dc   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_6                             0x080015e0   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_7                             0x080015e4   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_9                             0x080015e8   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_10                            0x080015ec   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_13                            0x080015f0   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_14                            0x080015f4   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_15                            0x080015f8   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_16                            0x080015fc   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_17                            0x08001600   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_18                            0x08001604   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_19                            0x08001608   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_20                            0x0800160c   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_21                            0x08001610   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_22                            0x08001614   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_23                            0x08001618   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_24                            0x0800161c   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_25                            0x08001620   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_26                            0x08001624   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_27                            0x08001628   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_28                            0x0800162c   Number         4  lto-llvm-da7b05.o(.text.main)
+    APBPrescTable                            0x08001630   Number         0  lto-llvm-da7b05.o(.text.main)
+    AHBPrescTable                            0x08001638   Number         0  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_31                            0x08001648   Number         4  lto-llvm-da7b05.o(.text.main)
+    __arm_cp.0_33                            0x0800165c   Number         4  lto-llvm-da7b05.o(.text.main)
+    i.__0snprintf$6                          0x08001690   Section        0  printf6.o(i.__0snprintf$6)
+    i.__ARM_clz                              0x080016c8   Section        0  depilogue.o(i.__ARM_clz)
+    i.__scatterload_copy                     0x080016f6   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x08001704   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x08001706   Section       14  handlers.o(i.__scatterload_zeroinit)
+    _printf_core                             0x08001715   Thumb Code   768  printf6.o(i._printf_core)
+    i._printf_core                           0x08001714   Section        0  printf6.o(i._printf_core)
+    _printf_post_padding                     0x08001a19   Thumb Code    32  printf6.o(i._printf_post_padding)
+    i._printf_post_padding                   0x08001a18   Section        0  printf6.o(i._printf_post_padding)
+    _printf_pre_padding                      0x08001a39   Thumb Code    44  printf6.o(i._printf_pre_padding)
+    i._printf_pre_padding                    0x08001a38   Section        0  printf6.o(i._printf_pre_padding)
+    _snputc                                  0x08001a65   Thumb Code    22  printf6.o(i._snputc)
+    i._snputc                                0x08001a64   Section        0  printf6.o(i._snputc)
+    .L.str.54                                0x08001a7a   Data           3  lto-llvm-da7b05.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08001a7a   Section        0  lto-llvm-da7b05.o(.rodata.str1.1)
+    ResetInfo                                0x20000000   Data           1  lto-llvm-da7b05.o(.bss.ResetInfo)
+    [Anonymous Symbol]                       0x20000000   Section        0  lto-llvm-da7b05.o(.bss.ResetInfo)
+    clock                                    0x20000004   Data           9  lto-llvm-da7b05.o(.bss.clock)
+    [Anonymous Symbol]                       0x20000004   Section        0  lto-llvm-da7b05.o(.bss.clock)
+    str_buffer                               0x2000000d   Data          61  lto-llvm-da7b05.o(.bss.str_buffer)
+    [Anonymous Symbol]                       0x2000000d   Section        0  lto-llvm-da7b05.o(.bss.str_buffer)
+    STACK                                    0x20000050   Section     1024  startup_stm32l051xx.o(STACK)
 
     Global Symbols
 
@@ -737,24 +737,24 @@ Image Symbol Table
     __aeabi_d2f                              0x080004af   Thumb Code    56  d2f.o(.text)
     _float_round                             0x080004e7   Thumb Code    16  fepilogue.o(.text)
     _float_epilogue                          0x080004f7   Thumb Code   114  fepilogue.o(.text)
-    EXTI0_1_IRQHandler                       0x08000569   Thumb Code    20  lto-llvm-63a3f3.o(.text.EXTI0_1_IRQHandler)
-    HardFault_Handler                        0x080005b1   Thumb Code    56  lto-llvm-63a3f3.o(.text.HardFault_Handler)
-    NMI_Handler                              0x08000acd   Thumb Code     2  lto-llvm-63a3f3.o(.text.NMI_Handler)
-    PendSV_Handler                           0x08000acf   Thumb Code     2  lto-llvm-63a3f3.o(.text.PendSV_Handler)
-    SVC_Handler                              0x08000bb3   Thumb Code     2  lto-llvm-63a3f3.o(.text.SVC_Handler)
-    SysTick_Handler                          0x08000bb5   Thumb Code     2  lto-llvm-63a3f3.o(.text.SysTick_Handler)
-    SystemInit                               0x08000bb9   Thumb Code    80  lto-llvm-63a3f3.o(.text.SystemInit)
-    main                                     0x08000e81   Thumb Code  1960  lto-llvm-63a3f3.o(.text.main)
-    __0snprintf$6                            0x08001629   Thumb Code    50  printf6.o(i.__0snprintf$6)
-    __1snprintf$6                            0x08001629   Thumb Code     0  printf6.o(i.__0snprintf$6)
-    __2snprintf                              0x08001629   Thumb Code     0  printf6.o(i.__0snprintf$6)
-    __ARM_clz                                0x08001661   Thumb Code    46  depilogue.o(i.__ARM_clz)
-    __scatterload_copy                       0x0800168f   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x0800169d   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x0800169f   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    Region$$Table$$Base                      0x08001a18   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08001a28   Number         0  anon$$obj.o(Region$$Table)
-    __initial_sp                             0x20000448   Data           0  startup_stm32l051xx.o(STACK)
+    EXTI0_1_IRQHandler                       0x08000569   Thumb Code    20  lto-llvm-da7b05.o(.text.EXTI0_1_IRQHandler)
+    HardFault_Handler                        0x080005b1   Thumb Code    56  lto-llvm-da7b05.o(.text.HardFault_Handler)
+    NMI_Handler                              0x08000b35   Thumb Code     2  lto-llvm-da7b05.o(.text.NMI_Handler)
+    PendSV_Handler                           0x08000b37   Thumb Code     2  lto-llvm-da7b05.o(.text.PendSV_Handler)
+    SVC_Handler                              0x08000c1b   Thumb Code     2  lto-llvm-da7b05.o(.text.SVC_Handler)
+    SysTick_Handler                          0x08000c1d   Thumb Code     2  lto-llvm-da7b05.o(.text.SysTick_Handler)
+    SystemInit                               0x08000c21   Thumb Code    80  lto-llvm-da7b05.o(.text.SystemInit)
+    main                                     0x08000ee9   Thumb Code  1960  lto-llvm-da7b05.o(.text.main)
+    __0snprintf$6                            0x08001691   Thumb Code    50  printf6.o(i.__0snprintf$6)
+    __1snprintf$6                            0x08001691   Thumb Code     0  printf6.o(i.__0snprintf$6)
+    __2snprintf                              0x08001691   Thumb Code     0  printf6.o(i.__0snprintf$6)
+    __ARM_clz                                0x080016c9   Thumb Code    46  depilogue.o(i.__ARM_clz)
+    __scatterload_copy                       0x080016f7   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x08001705   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x08001707   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    Region$$Table$$Base                      0x08001a80   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08001a90   Number         0  anon$$obj.o(Region$$Table)
+    __initial_sp                             0x20000450   Data           0  startup_stm32l051xx.o(STACK)
 
 
 
@@ -764,9 +764,9 @@ Memory Map of the image
 
   Image Entry point : 0x080000c1
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00001a28, Max: 0x00010000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00001a90, Max: 0x00010000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00001a28, Max: 0x00010000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00001a90, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -796,54 +796,55 @@ Memory Map of the image
     0x0800047c   0x0800047c   0x00000032   Code   RO          417    .text               mf_p.l(ffixi.o)
     0x080004ae   0x080004ae   0x00000038   Code   RO          419    .text               mf_p.l(d2f.o)
     0x080004e6   0x080004e6   0x00000082   Code   RO          421    .text               mf_p.l(fepilogue.o)
-    0x08000568   0x08000568   0x00000014   Code   RO          365    .text.EXTI0_1_IRQHandler  lto-llvm-63a3f3.o
-    0x0800057c   0x0800057c   0x00000034   Code   RO          375    .text.FirstInit     lto-llvm-63a3f3.o
-    0x080005b0   0x080005b0   0x00000038   Code   RO          357    .text.HardFault_Handler  lto-llvm-63a3f3.o
-    0x080005e8   0x080005e8   0x00000030   Code   RO          391    .text.I2C_ReadByte  lto-llvm-63a3f3.o
-    0x08000618   0x08000618   0x000000c8   Code   RO          383    .text.I2C_Start     lto-llvm-63a3f3.o
-    0x080006e0   0x080006e0   0x00000038   Code   RO          387    .text.I2C_Stop      lto-llvm-63a3f3.o
-    0x08000718   0x08000718   0x00000044   Code   RO          389    .text.I2C_WriteByte  lto-llvm-63a3f3.o
-    0x0800075c   0x0800075c   0x000000ba   Code   RO          367    .text.LL_GPIO_Init  lto-llvm-63a3f3.o
+    0x08000568   0x08000568   0x00000014   Code   RO          365    .text.EXTI0_1_IRQHandler  lto-llvm-da7b05.o
+    0x0800057c   0x0800057c   0x00000034   Code   RO          375    .text.FirstInit     lto-llvm-da7b05.o
+    0x080005b0   0x080005b0   0x00000038   Code   RO          357    .text.HardFault_Handler  lto-llvm-da7b05.o
+    0x080005e8   0x080005e8   0x00000030   Code   RO          391    .text.I2C_ReadByte  lto-llvm-da7b05.o
+    0x08000618   0x08000618   0x000000c8   Code   RO          383    .text.I2C_Start     lto-llvm-da7b05.o
+    0x080006e0   0x080006e0   0x00000038   Code   RO          387    .text.I2C_Stop      lto-llvm-da7b05.o
+    0x08000718   0x08000718   0x00000044   Code   RO          389    .text.I2C_WriteByte  lto-llvm-da7b05.o
+    0x0800075c   0x0800075c   0x000000ba   Code   RO          367    .text.LL_GPIO_Init  lto-llvm-da7b05.o
     0x08000816   0x08000816   0x00000002   PAD
-    0x08000818   0x08000818   0x000001e0   Code   RO          373    .text.Loop          lto-llvm-63a3f3.o
-    0x080009f8   0x080009f8   0x000000d4   Code   RO          353    .text.MX_I2C1_Init  lto-llvm-63a3f3.o
-    0x08000acc   0x08000acc   0x00000002   Code   RO          355    .text.NMI_Handler   lto-llvm-63a3f3.o
-    0x08000ace   0x08000ace   0x00000002   Code   RO          361    .text.PendSV_Handler  lto-llvm-63a3f3.o
-    0x08000ad0   0x08000ad0   0x00000080   Code   RO          369    .text.RCC_GetSystemClockFreq  lto-llvm-63a3f3.o
-    0x08000b50   0x08000b50   0x0000002c   Code   RO          395    .text.RTC_GetTemp   lto-llvm-63a3f3.o
-    0x08000b7c   0x08000b7c   0x00000036   Code   RO          393    .text.RTC_ReadREG   lto-llvm-63a3f3.o
-    0x08000bb2   0x08000bb2   0x00000002   Code   RO          359    .text.SVC_Handler   lto-llvm-63a3f3.o
-    0x08000bb4   0x08000bb4   0x00000002   Code   RO          363    .text.SysTick_Handler  lto-llvm-63a3f3.o
-    0x08000bb6   0x08000bb6   0x00000002   PAD
-    0x08000bb8   0x08000bb8   0x00000050   Code   RO          371    .text.SystemInit    lto-llvm-63a3f3.o
-    0x08000c08   0x08000c08   0x00000040   Code   RO          377    .text.USART_SendString  lto-llvm-63a3f3.o
-    0x08000c48   0x08000c48   0x00000030   Code   RO          379    .text.USART_SendStringRN  lto-llvm-63a3f3.o
-    0x08000c78   0x08000c78   0x000000bc   Code   RO          381    .text._USART_DebugPrint  lto-llvm-63a3f3.o
-    0x08000d34   0x08000d34   0x0000014c   Code   RO          385    .text.i2c_reset     lto-llvm-63a3f3.o
-    0x08000e80   0x08000e80   0x000007a8   Code   RO          351    .text.main          lto-llvm-63a3f3.o
-    0x08001628   0x08001628   0x00000038   Code   RO          197    i.__0snprintf$6     mc_p.l(printf6.o)
-    0x08001660   0x08001660   0x0000002e   Code   RO          348    i.__ARM_clz         mf_p.l(depilogue.o)
-    0x0800168e   0x0800168e   0x0000000e   Code   RO          425    i.__scatterload_copy  mc_p.l(handlers.o)
-    0x0800169c   0x0800169c   0x00000002   Code   RO          426    i.__scatterload_null  mc_p.l(handlers.o)
-    0x0800169e   0x0800169e   0x0000000e   Code   RO          427    i.__scatterload_zeroinit  mc_p.l(handlers.o)
-    0x080016ac   0x080016ac   0x00000304   Code   RO          203    i._printf_core      mc_p.l(printf6.o)
-    0x080019b0   0x080019b0   0x00000020   Code   RO          204    i._printf_post_padding  mc_p.l(printf6.o)
-    0x080019d0   0x080019d0   0x0000002c   Code   RO          205    i._printf_pre_padding  mc_p.l(printf6.o)
-    0x080019fc   0x080019fc   0x00000016   Code   RO          206    i._snputc           mc_p.l(printf6.o)
-    0x08001a12   0x08001a12   0x00000003   Data   RO          401    .rodata.str1.1      lto-llvm-63a3f3.o
-    0x08001a15   0x08001a15   0x00000003   PAD
-    0x08001a18   0x08001a18   0x00000010   Data   RO          424    Region$$Table       anon$$obj.o
+    0x08000818   0x08000818   0x00000248   Code   RO          373    .text.Loop          lto-llvm-da7b05.o
+    0x08000a60   0x08000a60   0x000000d4   Code   RO          353    .text.MX_I2C1_Init  lto-llvm-da7b05.o
+    0x08000b34   0x08000b34   0x00000002   Code   RO          355    .text.NMI_Handler   lto-llvm-da7b05.o
+    0x08000b36   0x08000b36   0x00000002   Code   RO          361    .text.PendSV_Handler  lto-llvm-da7b05.o
+    0x08000b38   0x08000b38   0x00000080   Code   RO          369    .text.RCC_GetSystemClockFreq  lto-llvm-da7b05.o
+    0x08000bb8   0x08000bb8   0x0000002c   Code   RO          395    .text.RTC_GetTemp   lto-llvm-da7b05.o
+    0x08000be4   0x08000be4   0x00000036   Code   RO          393    .text.RTC_ReadREG   lto-llvm-da7b05.o
+    0x08000c1a   0x08000c1a   0x00000002   Code   RO          359    .text.SVC_Handler   lto-llvm-da7b05.o
+    0x08000c1c   0x08000c1c   0x00000002   Code   RO          363    .text.SysTick_Handler  lto-llvm-da7b05.o
+    0x08000c1e   0x08000c1e   0x00000002   PAD
+    0x08000c20   0x08000c20   0x00000050   Code   RO          371    .text.SystemInit    lto-llvm-da7b05.o
+    0x08000c70   0x08000c70   0x00000040   Code   RO          377    .text.USART_SendString  lto-llvm-da7b05.o
+    0x08000cb0   0x08000cb0   0x00000030   Code   RO          379    .text.USART_SendStringRN  lto-llvm-da7b05.o
+    0x08000ce0   0x08000ce0   0x000000bc   Code   RO          381    .text._USART_DebugPrint  lto-llvm-da7b05.o
+    0x08000d9c   0x08000d9c   0x0000014c   Code   RO          385    .text.i2c_reset     lto-llvm-da7b05.o
+    0x08000ee8   0x08000ee8   0x000007a8   Code   RO          351    .text.main          lto-llvm-da7b05.o
+    0x08001690   0x08001690   0x00000038   Code   RO          197    i.__0snprintf$6     mc_p.l(printf6.o)
+    0x080016c8   0x080016c8   0x0000002e   Code   RO          348    i.__ARM_clz         mf_p.l(depilogue.o)
+    0x080016f6   0x080016f6   0x0000000e   Code   RO          425    i.__scatterload_copy  mc_p.l(handlers.o)
+    0x08001704   0x08001704   0x00000002   Code   RO          426    i.__scatterload_null  mc_p.l(handlers.o)
+    0x08001706   0x08001706   0x0000000e   Code   RO          427    i.__scatterload_zeroinit  mc_p.l(handlers.o)
+    0x08001714   0x08001714   0x00000304   Code   RO          203    i._printf_core      mc_p.l(printf6.o)
+    0x08001a18   0x08001a18   0x00000020   Code   RO          204    i._printf_post_padding  mc_p.l(printf6.o)
+    0x08001a38   0x08001a38   0x0000002c   Code   RO          205    i._printf_pre_padding  mc_p.l(printf6.o)
+    0x08001a64   0x08001a64   0x00000016   Code   RO          206    i._snputc           mc_p.l(printf6.o)
+    0x08001a7a   0x08001a7a   0x00000003   Data   RO          401    .rodata.str1.1      lto-llvm-da7b05.o
+    0x08001a7d   0x08001a7d   0x00000003   PAD
+    0x08001a80   0x08001a80   0x00000010   Data   RO          424    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08001a28, Size: 0x00000448, Max: 0x00002000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08001a90, Size: 0x00000450, Max: 0x00002000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000        -       0x00000001   Zero   RW          398    .bss.ResetInfo      lto-llvm-63a3f3.o
-    0x20000001        -       0x00000007   Zero   RW          399    .bss.clock          lto-llvm-63a3f3.o
-    0x20000008        -       0x0000003d   Zero   RW          400    .bss.str_buffer     lto-llvm-63a3f3.o
-    0x20000045   0x08001a28   0x00000003   PAD
-    0x20000048        -       0x00000400   Zero   RW            1    STACK               startup_stm32l051xx.o
+    0x20000000        -       0x00000001   Zero   RW          398    .bss.ResetInfo      lto-llvm-da7b05.o
+    0x20000001   0x08001a90   0x00000003   PAD
+    0x20000004        -       0x00000009   Zero   RW          399    .bss.clock          lto-llvm-da7b05.o
+    0x2000000d        -       0x0000003d   Zero   RW          400    .bss.str_buffer     lto-llvm-da7b05.o
+    0x2000004a   0x08001a90   0x00000006   PAD
+    0x20000050        -       0x00000400   Zero   RW            1    STACK               startup_stm32l051xx.o
 
 
 ==============================================================================
@@ -853,13 +854,13 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      4284        572          3          0         69      54050   lto-llvm-63a3f3.o
+      4388        572          3          0         71      54323   lto-llvm-da7b05.o
         28          8        192          0       1024        600   startup_stm32l051xx.o
 
     ----------------------------------------------------------------------
-      4316        580        214          0       1096      54650   Object Totals
+      4420        580        214          0       1104      54923   Object Totals
          0          0         16          0          0          0   (incl. Generated)
-         4          0          3          0          3          0   (incl. Padding)
+         4          0          3          0          9          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -911,15 +912,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      6482        618        214          0       1096      55614   Grand Totals
-      6482        618        214          0       1096      55614   ELF Image Totals
-      6482        618        214          0          0          0   ROM Totals
+      6586        618        214          0       1104      55887   Grand Totals
+      6586        618        214          0       1104      55887   ELF Image Totals
+      6586        618        214          0          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 6696 (   6.54kB)
-    Total RW  Size (RW Data + ZI Data)              1096 (   1.07kB)
-    Total ROM Size (Code + RO Data + RW Data)       6696 (   6.54kB)
+    Total RO  Size (Code + RO Data)                 6800 (   6.64kB)
+    Total RW  Size (RW Data + ZI Data)              1104 (   1.08kB)
+    Total ROM Size (Code + RO Data + RW Data)       6800 (   6.64kB)
 
 ==============================================================================
 

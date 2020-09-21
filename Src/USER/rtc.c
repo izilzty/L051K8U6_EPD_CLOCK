@@ -132,10 +132,10 @@ uint8_t RTC_ReadTime(struct RTC_Time *time)
     {
         if (i == 2)
         {
-            if (tmp[i] & 0x40 != 0) /* RTC当前使用的是12小时制 */
+            if ((tmp[i] & 0x40) != 0) /* RTC当前使用的是12小时制 */
             {
                 time->Is_12hr = 1;
-                if (tmp[i] & 0x20 != 0)
+                if ((tmp[i] & 0x20) != 0)
                 {
                     time->PM = 1;
                 }
@@ -327,7 +327,7 @@ uint8_t RTC_GetOSF(void)
     return RTC_TestREG(RTC_REG_STA, 0x80);
 }
 
-uint8_t RTC_ClerOSF(void)
+uint8_t RTC_ClearOSF(void)
 {
     return RTC_ModifyREG(RTC_REG_STA, 0x80, 0x00);
 }
