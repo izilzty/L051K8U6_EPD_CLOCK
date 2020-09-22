@@ -1,7 +1,7 @@
 #include "sht30.h"
 
-static float TempOffset;
-static float RHOffset;
+static float TemperatureOffset;
+static float HumidityOffset;
 
 static uint8_t crc8(const uint8_t *data, uint8_t data_size)
 {
@@ -31,7 +31,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
 {
     float conv_tmp;
 
-    conv_tmp = (-45 + 175 * (((raw_data[0] << 8) | raw_data[1]) / 65535.0)) + TempOffset;
+    conv_tmp = (-45 + 175 * (((raw_data[0] << 8) | raw_data[1]) / 65535.0)) + TemperatureOffset;
     value->CEL = conv_tmp;
     if (conv_tmp > 0)
     {
@@ -44,7 +44,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     value->CEL_Int = (int8_t)conv_tmp;
     value->CEL_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
 
-    conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + RHOffset;
+    conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + HumidityOffset;
     value->RH = conv_tmp;
     if (conv_tmp > 0)
     {
@@ -112,56 +112,6 @@ uint8_t TH_ReadCmd(uint16_t command, uint8_t *data, uint8_t data_size)
         return 1;
     }
     return 0;
-}
-
-uint8_t TH_GetStatus(void)
-{
-    uint8_t i, status_tmp[3], ret;
-
-    if (TH_ReadCmd(0xF32D, status_tmp, sizeof(status_tmp)) != 0)
-    {
-        return 0xFE;
-    }
-    if (crc8(status_tmp, 2) != status_tmp[2])
-    {
-        return 0xFF;
-    }
-    ret = 0;
-    if ((status_tmp[0] & 0x80) != 0)
-    {
-        ret |= 0x40;
-    }
-    if ((status_tmp[0] & 0x20) != 0)
-    {
-        ret |= 0x40 >> 1;
-    }
-    if ((status_tmp[0] & 0x08) != 0)
-    {
-        ret |= 0x40 >> 2;
-    }
-    if ((status_tmp[0] & 0x04) != 0)
-    {
-        ret |= 0x40 >> 3;
-    }
-    if ((status_tmp[1] & 0x10) != 0)
-    {
-        ret |= 0x40 >> 4;
-    }
-    if ((status_tmp[1] & 0x02) != 0)
-    {
-        ret |= 0x40 >> 5;
-    }
-    if ((status_tmp[1] & 0x01) != 0)
-    {
-        ret |= 0x40 >> 6;
-    }
-
-    return ret;
-}
-
-uint8_t TH_ClearStatus(void)
-{
-    return TH_WriteCmd(0x3041);
 }
 
 uint8_t TH_GetTH_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
@@ -238,7 +188,7 @@ uint8_t TH_GetTH_SingleShotWithoutCS(struct TH_Value *value)
     return 0;
 }
 
-uint8_t TH_StartConvTH_Periodic(uint8_t acc,uint8_t mps)
+uint8_t TH_StartConvTH_Periodic(uint8_t acc, uint8_t mps)
 {
     uint8_t ht_tmp[6];
     uint16_t cmd;
@@ -280,24 +230,74 @@ uint8_t TH_GetTH_Periodic(struct TH_Value *value)
     return 0;
 }
 
-void TH_SetTempOffset(float offset)
+uint8_t TH_GetStatus(void)
 {
-    TempOffset = offset;
+    uint8_t i, status_tmp[3], ret;
+
+    if (TH_ReadCmd(0xF32D, status_tmp, sizeof(status_tmp)) != 0)
+    {
+        return 0xFE;
+    }
+    if (crc8(status_tmp, 2) != status_tmp[2])
+    {
+        return 0xFF;
+    }
+    ret = 0;
+    if ((status_tmp[0] & 0x80) != 0)
+    {
+        ret |= 0x40;
+    }
+    if ((status_tmp[0] & 0x20) != 0)
+    {
+        ret |= 0x40 >> 1;
+    }
+    if ((status_tmp[0] & 0x08) != 0)
+    {
+        ret |= 0x40 >> 2;
+    }
+    if ((status_tmp[0] & 0x04) != 0)
+    {
+        ret |= 0x40 >> 3;
+    }
+    if ((status_tmp[1] & 0x10) != 0)
+    {
+        ret |= 0x40 >> 4;
+    }
+    if ((status_tmp[1] & 0x02) != 0)
+    {
+        ret |= 0x40 >> 5;
+    }
+    if ((status_tmp[1] & 0x01) != 0)
+    {
+        ret |= 0x40 >> 6;
+    }
+
+    return ret;
 }
 
-void TH_SetRHOffset(float offset)
+uint8_t TH_ClearStatus(void)
 {
-    RHOffset = offset;
+    return TH_WriteCmd(0x3041);
 }
 
-float TH_GetTempOffset(void)
+void TH_SetTemperatureOffset(float offset)
 {
-    return TempOffset;
+    TemperatureOffset = offset;
 }
 
-void TH_GetRHOffset(void)
+void TH_SetHumidityOffset(float offset)
 {
-    return RHOffset;
+    HumidityOffset = offset;
+}
+
+float TH_GetTemperatureOffset(void)
+{
+    return TemperatureOffset;
+}
+
+float TH_GetHumidityOffset(void)
+{
+    return HumidityOffset;
 }
 
 /*
