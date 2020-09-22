@@ -42,7 +42,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
         conv_tmp -= 0.005;
     }
     value->Temp_Int = (int8_t)conv_tmp;
-    value->Temp_Frac = (conv_tmp - (int8_t)conv_tmp) * 100;
+    value->Temp_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
 
     conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + RHOffset;
     value->Humidity = conv_tmp;
@@ -54,8 +54,8 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     {
         conv_tmp -= 0.005;
     }
-    value->HR_Int = (int8_t)conv_tmp;
-    value->HR_Frac = (conv_tmp - (int8_t)conv_tmp) * 100;
+    value->RH_Int = (int8_t)conv_tmp;
+    value->RH_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
 }
 
 uint8_t TH_WriteCmd(uint16_t command)

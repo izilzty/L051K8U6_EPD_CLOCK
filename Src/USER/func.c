@@ -53,7 +53,7 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d TRAW:%02d STATUS:0x%02X", TH_GetTH_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.Temp_Int, Sensor.Temp_Frac, Sensor.HR_Int, Sensor.HR_Frac,(int8_t)Sensor.Temperature, TH_GetStatus());
+    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d TRAW:%02d STATUS:0x%02X", TH_GetTH_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.Temp_Int, Sensor.Temp_Poi, Sensor.RH_Int, Sensor.RH_Poi,(int8_t)Sensor.Temperature, TH_GetStatus());
     USART_SendStringRN(str_buf);
 }
 

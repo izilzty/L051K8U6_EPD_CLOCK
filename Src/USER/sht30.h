@@ -15,10 +15,10 @@ struct TH_Value
 {
     float Humidity;
     float Temperature;
-    int8_t HR_Int;
-    uint8_t HR_Frac;
+    int8_t RH_Int;
+    uint8_t RH_Poi;
     int8_t Temp_Int;
-    uint8_t Temp_Frac;
+    uint8_t Temp_Poi;
 };
 
 uint8_t TH_WriteCmd(uint16_t command);
