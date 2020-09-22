@@ -1,4 +1,4 @@
-#include "epd.h"
+#include "gdeh029a1.h"
 
 /* 全屏刷新LUT */
 static const uint8_t LUT_Full[30] = {

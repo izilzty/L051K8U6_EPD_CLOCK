@@ -1,5 +1,5 @@
-#ifndef _EPD_H_
-#define _EPD_H_
+#ifndef _GDEH029A1_H_
+#define _GDEH029A1_H_
 
 #include "main.h"
 

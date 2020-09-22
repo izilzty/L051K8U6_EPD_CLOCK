@@ -1,5 +1,5 @@
-#ifndef _RTC_H_
-#define _RTC_H_
+#ifndef _DS3231_H_
+#define _DS3231_H_
 
 #include "main.h"
 

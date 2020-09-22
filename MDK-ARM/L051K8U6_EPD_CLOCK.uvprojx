@@ -514,11 +514,6 @@
               <FilePath>..\Src\USER\eeprom.c</FilePath>
             </File>
             <File>
-              <FileName>epd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\USER\epd.c</FilePath>
-            </File>
-            <File>
               <FileName>func.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\USER\func.c</FilePath>
@@ -544,9 +539,14 @@
               <FilePath>..\Src\USER\lowpower.c</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
+              <FileName>ds3231.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\USER\rtc.c</FilePath>
+              <FilePath>..\Src\USER\ds3231.c</FilePath>
+            </File>
+            <File>
+              <FileName>gdeh029a1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\gdeh029a1.c</FilePath>
             </File>
           </Files>
         </Group>

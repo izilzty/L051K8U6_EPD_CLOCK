@@ -2,11 +2,12 @@
 
 #include <stdio.h>
 
+const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
+
 uint8_t ResetInfo;
-const struct RTC_Time Default_time = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日 星期4 00:00:00 24小时制 PM = 0  */
-struct RTC_Time time;
-struct RTC_Alarm alarm;
-char str_buffer[61];
+struct RTC_Time Time;
+struct RTC_Alarm Alarm;
+char str_buf[61];
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -33,7 +34,7 @@ static void FullInit(void) /* 重新初始化全部数据 */
 {
     USART_DebugPrint("BEGIN RESET ALL DATA");
     RTC_ResetAllRegToDefault();
-    RTC_SetTime(&Default_time);
+    RTC_SetTime(&DefaultTime);
     USART_DebugPrint("RTC reset done");
     BKPR_ResetALL();
     USART_DebugPrint("BKPR reset done");
@@ -44,9 +45,9 @@ static void FullInit(void) /* 重新初始化全部数据 */
 
 static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
-    RTC_GetTime(&time);
-    snprintf(str_buffer, sizeof(str_buffer), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", time.Year, time.Month, time.Date, time.Day, time.Hours, time.Minutes, time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
-    USART_SendStringRN(str_buffer);
+    RTC_GetTime(&Time);
+    snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
+    USART_SendStringRN(str_buf);
 }
 
 static void DumpRTCReg(void)
@@ -114,7 +115,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     case LP_RESET_POWERON:
         if (RTC_GetOSF() != 0)
         {
-            RTC_SetTime(&Default_time);
+            RTC_SetTime(&DefaultTime);
             Menu_SetTime();
         }
         break;
@@ -177,7 +178,7 @@ alarm.Seconds = 00;
     RTC_ModifyAM2Mask(0xFF);
     RTC_SetAlarm2(&alarm);
     RTC_GetAlarm2(&alarm);
-    snprintf(str_buffer, sizeof(str_buffer), "ALARM1:%02d:%02d:%02d PM:%d 12HR:%d DY:%d DAY:%d DATE:%02d", alarm.Hours, alarm.Minutes, alarm.Seconds, alarm.PM, alarm.Is_12hr, alarm.DY, alarm.Day, alarm.Date);
-    USART_SendStringRN(str_buffer);
+    snprintf(str_buf, sizeof(str_buf), "ALARM1:%02d:%02d:%02d PM:%d 12HR:%d DY:%d DAY:%d DATE:%02d", alarm.Hours, alarm.Minutes, alarm.Seconds, alarm.PM, alarm.Is_12hr, alarm.DY, alarm.Day, alarm.Date);
+    USART_SendStringRN(str_buf);
 
 */

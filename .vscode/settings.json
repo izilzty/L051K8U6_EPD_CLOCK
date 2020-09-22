@@ -5,6 +5,7 @@
         "*.h": "c",
         "*.C": "c",
         "*.H": "c",
-        "cstddef": "c"
+        "cstddef": "c",
+        "__config": "c"
     }
 }

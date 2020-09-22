@@ -21,13 +21,13 @@
 "l051k8u6_epd_clock\stm32l0xx_ll_usart.o"
 "l051k8u6_epd_clock\system_stm32l0xx.o"
 "l051k8u6_epd_clock\eeprom.o"
-"l051k8u6_epd_clock\epd.o"
 "l051k8u6_epd_clock\func.o"
 "l051k8u6_epd_clock\serial.o"
 "l051k8u6_epd_clock\bkpr.o"
 "l051k8u6_epd_clock\iic.o"
 "l051k8u6_epd_clock\lowpower.o"
-"l051k8u6_epd_clock\rtc.o"
+"l051k8u6_epd_clock\ds3231.o"
+"l051k8u6_epd_clock\gdeh029a1.o"
 --library_type=microlib --strict --scatter "L051K8U6_EPD_CLOCK\L051K8U6_EPD_CLOCK.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
