@@ -11,14 +11,20 @@
 #define TH_ACC_MID 1
 #define TH_ACC_LOW 2
 
+#define TH_MPS_0_5 0
+#define TH_MPS_1 1
+#define TH_MPS_2 2
+#define TH_MPS_4 3
+#define TH_MPS_10 4
+
 struct TH_Value
 {
-    float Humidity;
-    float Temperature;
+    float RH;
+    float CEL;
     int8_t RH_Int;
     uint8_t RH_Poi;
-    int8_t Temp_Int;
-    uint8_t Temp_Poi;
+    int8_t CEL_Int;
+    uint8_t CEL_Poi;
 };
 
 uint8_t TH_WriteCmd(uint16_t command);
