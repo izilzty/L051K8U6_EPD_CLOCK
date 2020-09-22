@@ -32,7 +32,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     float conv_tmp;
 
     conv_tmp = (-45 + 175 * (((raw_data[0] << 8) | raw_data[1]) / 65535.0)) + TempOffset;
-    value->Temperature = conv_tmp;
+    value->CEL = conv_tmp;
     if (conv_tmp > 0)
     {
         conv_tmp += 0.005;
@@ -41,11 +41,11 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     {
         conv_tmp -= 0.005;
     }
-    value->Temp_Int = (int8_t)conv_tmp;
-    value->Temp_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
+    value->CEL_Int = (int8_t)conv_tmp;
+    value->CEL_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
 
     conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + RHOffset;
-    value->Humidity = conv_tmp;
+    value->RH = conv_tmp;
     if (conv_tmp > 0)
     {
         conv_tmp += 0.005;
