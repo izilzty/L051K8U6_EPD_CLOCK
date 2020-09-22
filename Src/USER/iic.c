@@ -90,11 +90,11 @@ static uint8_t i2c_reset(void)
 /**
  * @brief  产生启动或重新启动标志，开始数据传输。
  * @param  addr I2C设备地址。
- * @param  data_size 要传输的数据大小。
  * @param  is_read 本次传输是读取数据，不是写入数据。
+ * @param  data_size 要传输的数据大小。
  * @return 3：发送开始传输信号后收到了NACK，2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
  */
-uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read)
+uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size)
 {
     uint32_t timeout;
     volatile uint32_t systick_tmp;

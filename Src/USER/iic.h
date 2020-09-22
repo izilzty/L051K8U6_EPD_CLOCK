@@ -20,7 +20,7 @@
 
 #define I2C_INIT_FUNC MX_I2C1_Init
 
-uint8_t I2C_Start(uint8_t addr, uint8_t data_size, uint8_t is_read);
+uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size);
 uint8_t I2C_Stop(void);
 uint8_t I2C_WriteByte(uint8_t byte);
 uint8_t I2C_ReadByte(void);

@@ -37,7 +37,7 @@ uint8_t RTC_ReadREG(uint8_t reg)
 {
     uint8_t read_temp;
 
-    if (I2C_Start(RTC_I2C_ADDR, 1, 0) != 0 ||
+    if (I2C_Start(RTC_I2C_ADDR, 0, 1) != 0 ||
         I2C_WriteByte(reg) != 0 ||
         I2C_Start(RTC_I2C_ADDR, 1, 1) != 0)
     {
@@ -56,7 +56,7 @@ uint8_t RTC_ReadREG(uint8_t reg)
  */
 uint8_t RTC_WriteREG(uint8_t reg, uint8_t data)
 {
-    if (I2C_Start(RTC_I2C_ADDR, 2, 0) != 0 ||
+    if (I2C_Start(RTC_I2C_ADDR, 0, 2) != 0 ||
         I2C_WriteByte(reg) != 0 ||
         I2C_WriteByte(data) != 0)
     {
@@ -76,9 +76,9 @@ uint8_t RTC_WriteREG(uint8_t reg, uint8_t data)
 uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_data)
 {
     uint8_t i;
-    if (I2C_Start(RTC_I2C_ADDR, 1, 0) != 0 ||
+    if (I2C_Start(RTC_I2C_ADDR, 0, 1) != 0 ||
         I2C_WriteByte(start_reg) != 0 ||
-        I2C_Start(RTC_I2C_ADDR, read_size, 1) != 0)
+        I2C_Start(RTC_I2C_ADDR, 1, read_size) != 0)
     {
         return 1;
     }
@@ -100,7 +100,7 @@ uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_da
 uint8_t RTC_WriteREG_Multi(uint8_t start_reg, uint8_t write_size, const uint8_t *write_data)
 {
     uint8_t i, err;
-    if (I2C_Start(RTC_I2C_ADDR, write_size + 1, 0) != 0 ||
+    if (I2C_Start(RTC_I2C_ADDR, 0, write_size + 1) != 0 ||
         I2C_WriteByte(start_reg) != 0)
     {
         return 1;

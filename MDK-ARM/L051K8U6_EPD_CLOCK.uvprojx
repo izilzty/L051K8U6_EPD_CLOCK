@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>6</Optim>
+            <Optim>5</Optim>
             <oTime>1</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -547,6 +547,11 @@
               <FileName>gdeh029a1.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\USER\gdeh029a1.c</FilePath>
+            </File>
+            <File>
+              <FileName>sht30.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\sht30.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -3,10 +3,12 @@
 #include <stdio.h>
 
 const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
+const static uint16_t *VREFCAL = (const uint16_t *)0x1FF80078;
 
 uint8_t ResetInfo;
 struct RTC_Time Time;
 struct RTC_Alarm Alarm;
+struct TH_Value Sensor;
 char str_buf[61];
 
 /**
@@ -33,11 +35,14 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 static void FullInit(void) /* 重新初始化全部数据 */
 {
     USART_DebugPrint("BEGIN RESET ALL DATA");
+    USART_DebugPrint("RTC reset...");
     RTC_ResetAllRegToDefault();
     RTC_SetTime(&DefaultTime);
     USART_DebugPrint("RTC reset done");
+    USART_DebugPrint("BKPR reset...");
     BKPR_ResetALL();
     USART_DebugPrint("BKPR reset done");
+    USART_DebugPrint("EEPROM reset...");
     EEPROM_EraseRange(0, 511);
     USART_DebugPrint("EEPROM reset done");
     USART_DebugPrint("All done");
@@ -47,6 +52,8 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
+    USART_SendStringRN(str_buf);
+    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d TRAW:%02d STATUS:0x%02X", TH_GetTH_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.Temp_Int, Sensor.Temp_Frac, Sensor.HR_Int, Sensor.HR_Frac,(int8_t)Sensor.Temperature, TH_GetStatus());
     USART_SendStringRN(str_buf);
 }
 
@@ -101,11 +108,11 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
     LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
     LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
-    LL_GPIO_SetOutputPin(EPD_RST_GPIO_Port, EPD_RST_PIN);
-    Delay_100ns(10);
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin); /* SHT30硬复位 */
-    Delay_100ns(10);
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin); /* SHT30硬复位 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
+    LL_mDelay(2);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */

@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-#include <stdio.h>
-
 #define ENABLE_DEBUG_PRINT
 
 #include "lowpower.h"
@@ -13,6 +11,7 @@
 #include "serial.h"
 #include "iic.h"
 #include "ds3231.h"
+#include "sht30.h"
 #include "gdeh029A1.h"
 
 void Init(void);

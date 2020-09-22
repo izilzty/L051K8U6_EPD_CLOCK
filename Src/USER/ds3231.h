@@ -5,7 +5,7 @@
 
 #include "iic.h"
 
-#define RTC_I2C_ADDR 0xD0
+#define RTC_I2C_ADDR ((0x68 & 0xFE) << 1)
 
 #define RTC_REG_SEC 0x00
 #define RTC_REG_MIN 0x01
