@@ -119,7 +119,7 @@ uint8_t BKPR_WriteDWORD(uint8_t addr, uint32_t data)
  * @brief  重置备份寄存器，清除所有数据。
  * @return 1：复位失败，0：复位完成。
  */
-uint8_t BKPR_ResetALL(void)
+uint8_t BKPR_ResetAll(void)
 {
     uint8_t i;
 

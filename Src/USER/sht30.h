@@ -41,9 +41,17 @@ uint8_t TH_GetValue_Periodic_ART(struct TH_Value *value);
 
 uint8_t TH_BreakCommand(void);
 uint8_t TH_SoftReset(void);
-uint8_t TH_ModifyHeater(uint8_t is_enable);
+uint8_t TH_ModifyHeater(uint8_t enable);
 
 uint8_t TH_GetStatus(void);
+uint8_t TH_GetAlertPending(void);
+uint8_t TH_GetHeaterState(void);
+uint8_t TH_GetAlertRHState(void);
+uint8_t TH_GetAlertTempState(void);
+uint8_t TH_GetResetState(void);
+uint8_t TH_GetCmdExecuteState(void);
+uint8_t TH_GetDataChecksumState(void);
+
 uint8_t TH_ClearStatus(void);
 
 void TH_SetTemperatureOffset(float offset);

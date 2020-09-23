@@ -86,13 +86,12 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
 static void FullInit(void) /* 重新初始化全部数据 */
 {
-    USART_DebugPrint("BEGIN RESET ALL DATA");
+    USART_DebugPrint("BEGIN ERASE ALL DATA");
     USART_DebugPrint("RTC reset...");
     RTC_ResetAllRegToDefault();
-    RTC_SetTime(&DefaultTime);
     USART_DebugPrint("RTC reset done");
     USART_DebugPrint("BKPR reset...");
-    BKPR_ResetALL();
+    BKPR_ResetAll();
     USART_DebugPrint("BKPR reset done");
     USART_DebugPrint("EEPROM reset...");
     EEPROM_EraseRange(0, 511);
@@ -107,6 +106,10 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     USART_SendStringRN(str_buf);
     snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
     USART_SendStringRN(str_buf);
+
+    RTC_ModifyAM2Mask(0x07);
+    RTC_ModifyA2IE(1);
+    RTC_ModifyINTCN(1);
 }
 
 static void DumpRTCReg(void)

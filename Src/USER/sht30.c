@@ -58,11 +58,16 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     value->RH_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
 }
 
-uint8_t TH_WriteCmd(uint16_t command)
+/**
+ * @brief  向传感器发送命令。
+ * @param  cmd 要发送的命令。
+ * @return 1：发送失败，0：发送成功。
+ */
+uint8_t TH_WriteCmd(uint16_t cmd)
 {
     if (I2C_Start(TH_I2C_ADDR, 0, 2) != 0 ||
-        I2C_WriteByte(command >> 8) != 0 ||
-        I2C_WriteByte(command & 0x00FF) != 0)
+        I2C_WriteByte(cmd >> 8) != 0 ||
+        I2C_WriteByte(cmd & 0x00FF) != 0)
     {
         return 1;
     }
@@ -73,18 +78,19 @@ uint8_t TH_WriteCmd(uint16_t command)
     return 0;
 }
 
+/**
+ * @brief  从传感器读取数据。
+ * @param  data 数据指针。
+ * @param  data_size 数据大小。
+ * @return 1：读取失败，0：读取成功。
+ */
 uint8_t TH_ReadData(uint8_t *data, uint8_t data_size)
 {
-    uint8_t i, i2c_ret;
+    uint8_t i;
 
-    i2c_ret = I2C_Start(TH_I2C_ADDR, 1, data_size);
-    if (i2c_ret != 0 && i2c_ret != 3)
+    if (I2C_Start(TH_I2C_ADDR, 1, data_size) != 0)
     {
         return 1;
-    }
-    else if (i2c_ret == 3)
-    {
-        return 2;
     }
     for (i = 0; i < data_size; i++)
     {
@@ -97,13 +103,20 @@ uint8_t TH_ReadData(uint8_t *data, uint8_t data_size)
     return 0;
 }
 
-uint8_t TH_ReadCmd(uint16_t command, uint8_t *data, uint8_t data_size)
+/**
+ * @brief  向传感器发送命令后读取数据。
+ * @param  cmd 要发送的命令。
+ * @param  data 数据指针。
+ * @param  data_size 数据大小。
+ * @return 1：读取或命令执行失败，0：读取或命令执行成功。
+ */
+uint8_t TH_ReadCmd(uint16_t cmd, uint8_t *data, uint8_t data_size)
 {
     uint8_t i;
 
     if (I2C_Start(TH_I2C_ADDR, 0, 2) != 0 ||
-        I2C_WriteByte(command >> 8) != 0 ||
-        I2C_WriteByte(command & 0x00FF) != 0 ||
+        I2C_WriteByte(cmd >> 8) != 0 ||
+        I2C_WriteByte(cmd & 0x00FF) != 0 ||
         I2C_Start(TH_I2C_ADDR, 1, data_size) != 0)
     {
         return 1;
@@ -119,6 +132,12 @@ uint8_t TH_ReadCmd(uint16_t command, uint8_t *data, uint8_t data_size)
     return 0;
 }
 
+/**
+ * @brief  以单次模式开始转换数据并在完成后读取（在转换完成前等待）。
+ * @param  acc 数据精确等级。
+ * @param  value 数据存储结构体。
+ * @return 1：读取失败，0：读取成功。
+ */
 uint8_t TH_GetValue_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
 {
     uint8_t ht_tmp[6];
@@ -151,6 +170,11 @@ uint8_t TH_GetValue_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
     return 0;
 }
 
+/**
+ * @brief  以单次模式开始转换数据（发送开始转换命令后返回，后续使用其他命令读取返回值）。
+ * @param  acc 数据精确等级。
+ * @return 1：启动失败，0：启动成功。
+ */
 uint8_t TH_StartConv_SingleShotWithoutCS(uint8_t acc)
 {
     uint16_t cmd;
@@ -177,27 +201,33 @@ uint8_t TH_StartConv_SingleShotWithoutCS(uint8_t acc)
     return 0;
 }
 
+/**
+ * @brief  读取单次模式转换完成的数据。
+ * @param  value 数据存储结构体。
+ * @return 1：读取失败，0：读取成功。
+ */
 uint8_t TH_GetValue_SingleShotWithoutCS(struct TH_Value *value)
 {
-    uint8_t ht_tmp[6], i2c_ret;
+    uint8_t ht_tmp[6];
 
-    i2c_ret = TH_ReadData(ht_tmp, sizeof(ht_tmp));
-    if (i2c_ret != 0 && i2c_ret != 2)
+    if (TH_ReadData(ht_tmp, sizeof(ht_tmp)) != 0)
     {
         return 1;
     }
-    else if (i2c_ret == 2)
-    {
-        return 2;
-    }
     if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
     {
-        return 3;
+        return 1;
     }
     readout_data_conv(ht_tmp, value);
     return 0;
 }
 
+/**
+ * @brief  开始连续转换。
+ * @param  acc 数据精确等级。
+ * @param  mps 转换速度。
+ * @return 1：启动失败，0：启动成功。
+ */
 uint8_t TH_StartConv_Periodic(uint8_t acc, uint8_t mps)
 {
     uint8_t ht_tmp[6];
@@ -239,6 +269,10 @@ uint8_t TH_StartConv_Periodic(uint8_t acc, uint8_t mps)
     return 0;
 }
 
+/**
+ * @brief  开始加速响应速度的连续转换。
+ * @return 1：启动失败，0：启动成功。
+ */
 uint8_t TH_StartConv_ART(void)
 {
     if (TH_WriteCmd(0x2B32) != 0)
@@ -248,27 +282,31 @@ uint8_t TH_StartConv_ART(void)
     return 0;
 }
 
+/**
+ * @brief  读取连续转换的数据。
+ * @param  value 数据存储结构体。
+ * @return 1：读取失败（出错或转换未完成），0：读取成功。
+ */
 uint8_t TH_GetValue_Periodic_ART(struct TH_Value *value)
 {
-    uint8_t ht_tmp[6], i2c_ret;
+    uint8_t ht_tmp[6];
 
-    i2c_ret = TH_ReadCmd(0xE000, ht_tmp, sizeof(ht_tmp));
-    if (i2c_ret != 0 && i2c_ret != 2)
+    if (TH_ReadCmd(0xE000, ht_tmp, sizeof(ht_tmp)) != 0)
     {
         return 1;
     }
-    else if (i2c_ret == 2)
-    {
-        return 2;
-    }
     if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
     {
-        return 3;
+        return 1;
     }
     readout_data_conv(ht_tmp, value);
     return 0;
 }
 
+/**
+ * @brief  中断当前命令或停止连续转换。
+ * @return 1：执行失败，0：执行成功。
+ */
 uint8_t TH_BreakCommand(void)
 {
     uint8_t th_ret;
@@ -280,6 +318,10 @@ uint8_t TH_BreakCommand(void)
     return th_ret;
 }
 
+/**
+ * @brief  软复位。
+ * @return 1：执行失败，0：执行成功。
+ */
 uint8_t TH_SoftReset(void)
 {
     uint8_t th_ret;
@@ -291,11 +333,16 @@ uint8_t TH_SoftReset(void)
     return th_ret;
 }
 
-uint8_t TH_ModifyHeater(uint8_t is_enable)
+/**
+ * @brief  打开或关闭加热器。
+ * @param  enable 开启或关闭加热器。
+ * @return 1：执行失败，0：执行成功。
+ */
+uint8_t TH_ModifyHeater(uint8_t enable)
 {
     uint8_t th_ret;
 
-    if (is_enable != 0)
+    if (enable != 0)
     {
         th_ret = TH_WriteCmd(0x306D);
     }
@@ -310,6 +357,10 @@ uint8_t TH_ModifyHeater(uint8_t is_enable)
     return th_ret;
 }
 
+/**
+ * @brief  获取传感器状态。
+ * @return 传感器状态（从左往右分别是：0 警报待处理 加热器状态 湿度警报状态 温度警报状态 系统复位状态 命令执行状态 数据校验状态）。
+ */
 uint8_t TH_GetStatus(void)
 {
     uint8_t i, status_tmp[3], ret;
@@ -346,6 +397,122 @@ uint8_t TH_GetStatus(void)
     return ret;
 }
 
+/**
+ * @brief  获取待处理警报状态。
+ * @return 1：有待处理警报，0：无待处理警报。
+ */
+uint8_t TH_GetAlertPending(void)
+{
+    if (TH_GetStatus() & 0x40 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取加热器状态。
+ * @return 1：加热器已开启，0：加热器已关闭。
+ */
+uint8_t TH_GetHeater(void)
+{
+    if (TH_GetStatus() & 0x20 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取湿度理警报状态。
+ * @return 1：有警报，0：无警报。
+ */
+uint8_t TH_GetAlertRH(void)
+{
+    if (TH_GetStatus() & 0x10 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取温度理警报状态。
+ * @return 1：有警报，0：无警报。
+ */
+uint8_t TH_GetAlertTemp(void)
+{
+    if (TH_GetStatus() & 0x08 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取传感器复位状态。
+ * @return 1：有复位发生，0：无未发生。
+ */
+uint8_t TH_GetResetState(void)
+{
+    if (TH_GetStatus() & 0x04 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取最后一条命令状态。
+ * @return 1：最后一条命令执行失败，0：最后一条命令执行成功。
+ */
+uint8_t TH_GetCmdExecute(void)
+{
+    if (TH_GetStatus() & 0x02 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  获取写入数据校验状态。
+ * @return 1：校验错误，0：校验正确。
+ */
+uint8_t TH_GetDataChecksum(void)
+{
+    if (TH_GetStatus() & 0x01 != 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief  清除传感器状态。
+ * @return 1：清除失败，0：清除成功。
+ */
 uint8_t TH_ClearStatus(void)
 {
     uint8_t th_ret;
@@ -357,21 +524,37 @@ uint8_t TH_ClearStatus(void)
     return th_ret;
 }
 
+/**
+ * @brief  设置温度偏移。
+ * @param  offset 温度偏移量。
+ */
 void TH_SetTemperatureOffset(float offset)
 {
     TemperatureOffset = offset;
 }
 
+/**
+ * @brief  设置湿度偏移。
+ * @param  offset 湿度偏移量。
+ */
 void TH_SetHumidityOffset(float offset)
 {
     HumidityOffset = offset;
 }
 
+/**
+ * @brief  读取温度偏移。
+ * @return 温度偏移。
+ */
 float TH_GetTemperatureOffset(void)
 {
     return TemperatureOffset;
 }
 
+/**
+ * @brief  读取湿度偏移。
+ * @return 湿度偏移。
+ */
 float TH_GetHumidityOffset(void)
 {
     return HumidityOffset;
