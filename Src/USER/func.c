@@ -30,7 +30,7 @@ static void Power_EnableGDEH029A1(void)
     LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
     LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
     LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    delay_100ns(100); /* 10us，未要求，短暂延时 */
+    Delay_100ns(100); /* 10us，未要求，短暂延时 */
     if (LL_SPI_IsEnabled(SPI1) == 0)
     {
         LL_SPI_Enable(SPI1);
