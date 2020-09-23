@@ -553,6 +553,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\USER\sht30.c</FilePath>
             </File>
+            <File>
+              <FileName>analog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\analog.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -29,6 +29,7 @@
 "l051k8u6_epd_clock\ds3231.o"
 "l051k8u6_epd_clock\gdeh029a1.o"
 "l051k8u6_epd_clock\sht30.o"
+"l051k8u6_epd_clock\analog.o"
 --library_type=microlib --strict --scatter "L051K8U6_EPD_CLOCK\L051K8U6_EPD_CLOCK.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
