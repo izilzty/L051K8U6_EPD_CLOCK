@@ -51,7 +51,6 @@ uint8_t TH_GetAlertTempState(void);
 uint8_t TH_GetResetState(void);
 uint8_t TH_GetCmdExecuteState(void);
 uint8_t TH_GetDataChecksumState(void);
-
 uint8_t TH_ClearStatus(void);
 
 void TH_SetTemperatureOffset(float offset);

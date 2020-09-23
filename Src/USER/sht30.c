@@ -1,8 +1,14 @@
 #include "sht30.h"
 
-static float TemperatureOffset;
-static float HumidityOffset;
+static float TemperatureOffset = 0;
+static float HumidityOffset = 0;
 
+/**
+ * @brief  计算CRC-8校验值。
+ * @param  data 要计算的数据。
+ * @param  data_size 数据大小。
+ * @return 计算结果。
+ */
 static uint8_t crc8(const uint8_t *data, uint8_t data_size)
 {
     uint8_t i, j, crc, polynomial;
@@ -27,6 +33,11 @@ static uint8_t crc8(const uint8_t *data, uint8_t data_size)
     return crc;
 }
 
+/**
+ * @brief  传感器原始数据转为实际数据。
+ * @param  raw_data 原始数据。
+ * @param  value 实际数据存储结构体。
+ */
 static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
 {
     float conv_tmp;
@@ -403,7 +414,7 @@ uint8_t TH_GetStatus(void)
  */
 uint8_t TH_GetAlertPending(void)
 {
-    if (TH_GetStatus() & 0x40 != 0)
+    if ((TH_GetStatus() & 0x40) != 0)
     {
         return 1;
     }
@@ -419,7 +430,7 @@ uint8_t TH_GetAlertPending(void)
  */
 uint8_t TH_GetHeater(void)
 {
-    if (TH_GetStatus() & 0x20 != 0)
+    if ((TH_GetStatus() & 0x20) != 0)
     {
         return 1;
     }
@@ -435,7 +446,7 @@ uint8_t TH_GetHeater(void)
  */
 uint8_t TH_GetAlertRH(void)
 {
-    if (TH_GetStatus() & 0x10 != 0)
+    if ((TH_GetStatus() & 0x10) != 0)
     {
         return 1;
     }
@@ -451,7 +462,7 @@ uint8_t TH_GetAlertRH(void)
  */
 uint8_t TH_GetAlertTemp(void)
 {
-    if (TH_GetStatus() & 0x08 != 0)
+    if ((TH_GetStatus() & 0x08) != 0)
     {
         return 1;
     }
@@ -467,7 +478,7 @@ uint8_t TH_GetAlertTemp(void)
  */
 uint8_t TH_GetResetState(void)
 {
-    if (TH_GetStatus() & 0x04 != 0)
+    if ((TH_GetStatus() & 0x04) != 0)
     {
         return 1;
     }
@@ -483,7 +494,7 @@ uint8_t TH_GetResetState(void)
  */
 uint8_t TH_GetCmdExecute(void)
 {
-    if (TH_GetStatus() & 0x02 != 0)
+    if ((TH_GetStatus() & 0x02) != 0)
     {
         return 1;
     }
@@ -499,7 +510,7 @@ uint8_t TH_GetCmdExecute(void)
  */
 uint8_t TH_GetDataChecksum(void)
 {
-    if (TH_GetStatus() & 0x01 != 0)
+    if ((TH_GetStatus() & 0x01) != 0)
     {
         return 1;
     }
@@ -526,7 +537,7 @@ uint8_t TH_ClearStatus(void)
 
 /**
  * @brief  设置温度偏移。
- * @param  offset 温度偏移量。
+ * @param  offset 温度偏移。
  */
 void TH_SetTemperatureOffset(float offset)
 {
@@ -535,7 +546,7 @@ void TH_SetTemperatureOffset(float offset)
 
 /**
  * @brief  设置湿度偏移。
- * @param  offset 湿度偏移量。
+ * @param  offset 湿度偏移。
  */
 void TH_SetHumidityOffset(float offset)
 {
@@ -592,7 +603,4 @@ static void acc_div(uint32_t num1, uint32_t num2, uint16_t *result)
     }
     printf("\r\n%d.%04d\r\n",num_tmp[0],num_tmp[1]);
 }
-
-
-
 */

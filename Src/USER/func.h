@@ -6,6 +6,7 @@
 #define ENABLE_DEBUG_PRINT
 
 #include "lowpower.h"
+#include "analog.h"
 #include "bkpr.h"
 #include "eeprom.h"
 #include "serial.h"

@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
-const static uint16_t *VREFCAL = (const uint16_t *)0x1FF80078;
 
 uint8_t ResetInfo;
 struct RTC_Time Time;
@@ -203,21 +202,20 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     }
 
-    TH_ClearStatus();
-    TH_ModifyHeater(1);
-    TH_ModifyHeater(0);
-
     UpdateDisplay();
 
-    DumpRTCReg();
-
-    USART_DebugPrint("Ready in standby mode");
+    USART_DebugPrint("Ready to enter standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
 
-    /* 正常情况下程序会停止在此处 */
+    /* 正常情况下进入Standby模式后，程序会停止在此处，直到下次复位或唤醒再重头开始执行 */
 
-    USART_DebugPrint("In standby mode fail");
-    NVIC_SystemReset(); /* 未成功进入Standby模式，执行软复位 */
+    USART_DebugPrint("Enter standby mode fail");
+    LL_mDelay(999); /* 等待1000ms */
+    USART_DebugPrint("Try to enter standby mode again");
+    LP_EnterStandby(); /* 再次尝试进去Standby模式 */
+    USART_DebugPrint("Enter standby mode fail");
+    USART_DebugPrint("Try to reset the system");
+    NVIC_SystemReset(); /* 两次未成功进入Standby模式，执行软复位 */
 }
 
 /*
