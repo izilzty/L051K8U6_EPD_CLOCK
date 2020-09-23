@@ -21,9 +21,11 @@ static uint8_t i2c_reset(void)
 {
     uint32_t timeout;
     volatile uint32_t systick_tmp;
+    uint32_t i2c_old_state;
 
-    LL_I2C_Disable(I2C_PORT); /* 软复位 */
-    for (timeout = 0; timeout < 10; timeout++) /* 等待软复位 */
+    i2c_old_state = LL_I2C_IsEnabled(I2C_PORT); /* 保存I2C复位前的启用状态 */
+    LL_I2C_Disable(I2C_PORT);                   /* 软复位 */
+    for (timeout = 0; timeout < 10; timeout++)  /* 等待软复位 */
     {
         if (LL_I2C_IsEnabled(I2C_PORT) == 0)
         {
@@ -78,8 +80,11 @@ static uint8_t i2c_reset(void)
         timeout = 0xFFFFFFFF; /* I2C数据线已被释放 */
     }
 
-    I2C_INIT_FUNC(); /* 不管有没有成功恢复，都重新初始化I2C */
-
+    I2C_INIT_FUNC();        /* 不管有没有成功恢复，都重新初始化I2C */
+    if (i2c_old_state != 0) /* 恢复I2C启用状态 */
+    {
+        LL_I2C_Enable(I2C_PORT);
+    }
     if (timeout != 0xFFFFFFFF)
     {
         return 1;
@@ -92,16 +97,36 @@ static uint8_t i2c_reset(void)
  * @param  addr I2C设备地址。
  * @param  is_read 本次传输是读取数据，不是写入数据。
  * @param  data_size 要传输的数据大小。
- * @return 3：发送开始传输信号后收到了NACK，2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
+ * @return 3：发送开始传输信号后收到了NACK，2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，已恢复，可以重新执行，0：传输已启动。
  */
 uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size)
 {
     uint32_t timeout;
     volatile uint32_t systick_tmp;
 
-    if (LL_I2C_IsEnabled(I2C_PORT) == 0)
+    if (LL_I2C_IsActiveFlag_BUSY(I2C_PORT) != 0)
     {
-        LL_I2C_Enable(I2C_PORT);
+        timeout = I2C_TIMEOUT_MS;
+        systick_tmp = SysTick->CTRL;
+        ((void)systick_tmp);
+        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+        {
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+            {
+                timeout -= 1;
+            }
+        }
+        if (timeout == 0)
+        {
+            if (i2c_reset() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
     }
     /* DocID025942 Rev 8 - Page 604 */
     LL_I2C_SetMasterAddressingMode(I2C_PORT, LL_I2C_ADDRESSING_MODE_7BIT);
@@ -168,13 +193,34 @@ uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size)
 
 /**
  * @brief  产生停止标志。
- * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
+ * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，已恢复，可以重新执行，0：传输已停止。
  */
 uint8_t I2C_Stop(void)
 {
     uint32_t timeout;
     volatile uint32_t systick_tmp;
 
+    timeout = I2C_TIMEOUT_MS;
+    systick_tmp = SysTick->CTRL;
+    ((void)systick_tmp);
+    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+    {
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
+        {
+            timeout -= 1;
+        }
+    }
+    if (timeout == 0)
+    {
+        if (i2c_reset() == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
     LL_I2C_GenerateStopCondition(I2C_PORT);
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
@@ -203,14 +249,13 @@ uint8_t I2C_Stop(void)
 /**
  * @brief  发送一字节。
  * @param  byte 要传输的数据。
- * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：传输已启动。
+ * @return 2：I2C从机未响应或发生死锁，未恢复，1：I2C从机未响应或发生死锁，需要重新执行，0：数据已发送。
  */
 uint8_t I2C_WriteByte(uint8_t byte)
 {
     uint32_t timeout;
     volatile uint32_t systick_tmp;
 
-    LL_I2C_TransmitData8(I2C_PORT, byte);
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
@@ -232,6 +277,7 @@ uint8_t I2C_WriteByte(uint8_t byte)
             return 1;
         }
     }
+    LL_I2C_TransmitData8(I2C_PORT, byte);
     return 0;
 }
 

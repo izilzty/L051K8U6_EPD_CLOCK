@@ -75,11 +75,16 @@ uint8_t TH_WriteCmd(uint16_t command)
 
 uint8_t TH_ReadData(uint8_t *data, uint8_t data_size)
 {
-    uint8_t i;
+    uint8_t i, i2c_ret;
 
-    if (I2C_Start(TH_I2C_ADDR, 1, data_size) != 0)
+    i2c_ret = I2C_Start(TH_I2C_ADDR, 1, data_size);
+    if (i2c_ret != 0 && i2c_ret != 3)
     {
         return 1;
+    }
+    else if (i2c_ret == 3)
+    {
+        return 2;
     }
     for (i = 0; i < data_size; i++)
     {
@@ -114,7 +119,7 @@ uint8_t TH_ReadCmd(uint16_t command, uint8_t *data, uint8_t data_size)
     return 0;
 }
 
-uint8_t TH_GetTH_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
+uint8_t TH_GetValue_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
 {
     uint8_t ht_tmp[6];
     uint16_t cmd;
@@ -146,9 +151,8 @@ uint8_t TH_GetTH_SingleShotWithCS(uint8_t acc, struct TH_Value *value)
     return 0;
 }
 
-uint8_t TH_StartConvTH_SingleShotWithoutCS(uint8_t acc)
+uint8_t TH_StartConv_SingleShotWithoutCS(uint8_t acc)
 {
-    uint8_t ht_tmp[6];
     uint16_t cmd;
 
     switch (acc)
@@ -173,41 +177,61 @@ uint8_t TH_StartConvTH_SingleShotWithoutCS(uint8_t acc)
     return 0;
 }
 
-uint8_t TH_GetTH_SingleShotWithoutCS(struct TH_Value *value)
+uint8_t TH_GetValue_SingleShotWithoutCS(struct TH_Value *value)
 {
-    uint8_t ht_tmp[6];
-    if (TH_ReadData(ht_tmp, sizeof(ht_tmp)) != 0)
+    uint8_t ht_tmp[6], i2c_ret;
+
+    i2c_ret = TH_ReadData(ht_tmp, sizeof(ht_tmp));
+    if (i2c_ret != 0 && i2c_ret != 2)
     {
         return 1;
     }
-    if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
+    else if (i2c_ret == 2)
     {
         return 2;
+    }
+    if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
+    {
+        return 3;
     }
     readout_data_conv(ht_tmp, value);
     return 0;
 }
 
-uint8_t TH_StartConvTH_Periodic(uint8_t acc, uint8_t mps)
+uint8_t TH_StartConv_Periodic(uint8_t acc, uint8_t mps)
 {
     uint8_t ht_tmp[6];
     uint16_t cmd;
+    const uint8_t cmd_map[15] = {
+        0x32, 0x24, 0x2F, /* 0.5 mps */
+        0x30, 0x26, 0x2D, /* 1 mps */
+        0x36, 0x20, 0x2B, /* 2 mps */
+        0x34, 0x22, 0x29, /* 4 mps */
+        0x37, 0x21, 0x2A  /* 10 mps */
+    };
 
-    switch (acc)
+    switch (mps)
     {
-    case TH_ACC_HIGH:
-        cmd = 0x2400;
+    case TH_MPS_0_5:
+        cmd = 0x2000;
         break;
-    case TH_ACC_MID:
-        cmd = 0x240B;
+    case TH_MPS_1:
+        cmd = 0x2100;
         break;
-    case TH_ACC_LOW:
-        cmd = 0x2416;
+    case TH_MPS_2:
+        cmd = 0x2200;
+        break;
+    case TH_MPS_4:
+        cmd = 0x2300;
+        break;
+    case TH_MPS_10:
+        cmd = 0x2700;
         break;
     default:
-        cmd = 0x2400;
+        cmd = 0x2000;
         break;
     }
+    cmd |= cmd_map[mps * 3 + acc];
     if (TH_WriteCmd(cmd) != 0)
     {
         return 1;
@@ -215,24 +239,83 @@ uint8_t TH_StartConvTH_Periodic(uint8_t acc, uint8_t mps)
     return 0;
 }
 
-uint8_t TH_GetTH_Periodic(struct TH_Value *value)
+uint8_t TH_StartConv_ART(void)
 {
-    uint8_t ht_tmp[6];
-    if (TH_ReadCmd(0xE000, ht_tmp, sizeof(ht_tmp)) != 0)
+    if (TH_WriteCmd(0x2B32) != 0)
     {
         return 1;
     }
-    if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
+    return 0;
+}
+
+uint8_t TH_GetValue_Periodic_ART(struct TH_Value *value)
+{
+    uint8_t ht_tmp[6], i2c_ret;
+
+    i2c_ret = TH_ReadCmd(0xE000, ht_tmp, sizeof(ht_tmp));
+    if (i2c_ret != 0 && i2c_ret != 2)
+    {
+        return 1;
+    }
+    else if (i2c_ret == 2)
     {
         return 2;
     }
+    if (crc8(ht_tmp, 2) != ht_tmp[2] || crc8(ht_tmp + 3, 2) != ht_tmp[5])
+    {
+        return 3;
+    }
     readout_data_conv(ht_tmp, value);
     return 0;
+}
+
+uint8_t TH_BreakCommand(void)
+{
+    uint8_t th_ret;
+    th_ret = TH_WriteCmd(0x3093);
+    if (th_ret == 0)
+    {
+        LL_mDelay(1); /* 必要延时 */
+    }
+    return th_ret;
+}
+
+uint8_t TH_SoftReset(void)
+{
+    uint8_t th_ret;
+    th_ret = TH_WriteCmd(0x3041);
+    if (th_ret == 0)
+    {
+        LL_mDelay(1); /* 必要延时 */
+    }
+    return th_ret;
+}
+
+uint8_t TH_ModifyHeater(uint8_t is_enable)
+{
+    uint8_t th_ret;
+
+    if (is_enable != 0)
+    {
+        th_ret = TH_WriteCmd(0x306D);
+    }
+    else
+    {
+        th_ret = TH_WriteCmd(0x3066);
+    }
+    if (th_ret == 0)
+    {
+        LL_mDelay(1); /* 必要延时 */
+    }
+    return th_ret;
 }
 
 uint8_t TH_GetStatus(void)
 {
     uint8_t i, status_tmp[3], ret;
+    uint16_t status_val;
+    const uint8_t mask_map[7] = {
+        0x80, 0x20, 0x08, 0x04, 0x10, 0x02, 0x01};
 
     if (TH_ReadCmd(0xF32D, status_tmp, sizeof(status_tmp)) != 0)
     {
@@ -243,41 +326,35 @@ uint8_t TH_GetStatus(void)
         return 0xFF;
     }
     ret = 0;
-    if ((status_tmp[0] & 0x80) != 0)
+    for (i = 0; i < sizeof(mask_map); i++)
     {
-        ret |= 0x40;
+        if (i < 4)
+        {
+            if ((status_tmp[0] & mask_map[i]) != 0)
+            {
+                ret |= 0x40 >> i;
+            }
+        }
+        else
+        {
+            if ((status_tmp[1] & mask_map[i]) != 0)
+            {
+                ret |= 0x40 >> i;
+            }
+        }
     }
-    if ((status_tmp[0] & 0x20) != 0)
-    {
-        ret |= 0x40 >> 1;
-    }
-    if ((status_tmp[0] & 0x08) != 0)
-    {
-        ret |= 0x40 >> 2;
-    }
-    if ((status_tmp[0] & 0x04) != 0)
-    {
-        ret |= 0x40 >> 3;
-    }
-    if ((status_tmp[1] & 0x10) != 0)
-    {
-        ret |= 0x40 >> 4;
-    }
-    if ((status_tmp[1] & 0x02) != 0)
-    {
-        ret |= 0x40 >> 5;
-    }
-    if ((status_tmp[1] & 0x01) != 0)
-    {
-        ret |= 0x40 >> 6;
-    }
-
     return ret;
 }
 
 uint8_t TH_ClearStatus(void)
 {
-    return TH_WriteCmd(0x3041);
+    uint8_t th_ret;
+    th_ret = TH_WriteCmd(0x3041);
+    if (th_ret == 0)
+    {
+        LL_mDelay(1); /* 必要延时 */
+    }
+    return th_ret;
 }
 
 void TH_SetTemperatureOffset(float offset)

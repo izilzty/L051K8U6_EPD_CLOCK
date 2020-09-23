@@ -31,9 +31,23 @@ uint8_t TH_WriteCmd(uint16_t command);
 uint8_t TH_ReadData(uint8_t *data, uint8_t data_size);
 uint8_t TH_ReadCmd(uint16_t command, uint8_t *data, uint8_t data_size);
 
-uint8_t TH_GetTH_SingleShotWithCS(uint8_t acc, struct TH_Value *value);
-uint8_t TH_GetTH_Periodic(struct TH_Value *value);
+uint8_t TH_GetValue_SingleShotWithCS(uint8_t acc, struct TH_Value *value);
+uint8_t TH_StartConv_SingleShotWithoutCS(uint8_t acc);
+uint8_t TH_GetValue_SingleShotWithoutCS(struct TH_Value *value);
+
+uint8_t TH_StartConv_Periodic(uint8_t acc, uint8_t mps);
+uint8_t TH_StartConv_ART(void);
+uint8_t TH_GetValue_Periodic_ART(struct TH_Value *value);
+
+uint8_t TH_BreakCommand(void);
+uint8_t TH_SoftReset(void);
+uint8_t TH_ModifyHeater(uint8_t is_enable);
 
 uint8_t TH_GetStatus(void);
 uint8_t TH_ClearStatus(void);
+
+void TH_SetTemperatureOffset(float offset);
+void TH_SetHumidityOffset(float offset);
+float TH_GetTemperatureOffset(void);
+float TH_GetHumidityOffset(void);
 #endif

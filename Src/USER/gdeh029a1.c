@@ -280,22 +280,6 @@ void EPD_EnterDeepSleep(void)
  */
 void EPD_Init(uint8_t update_mode)
 {
-    if (LL_SPI_IsEnabled(EPD_SPI) == 0)
-    {
-        LL_SPI_Enable(EPD_SPI);
-    }
-
-    /* 为防止电流泄漏，系统复位后IO初始化时所有IO均为低电平，使用前需要先置高 */
-    if (LL_GPIO_IsOutputPinSet(EPD_CS_PORT, EPD_CS_PIN) == 0 ||
-        LL_GPIO_IsOutputPinSet(EPD_DC_PORT, EPD_DC_PIN) == 0 ||
-        LL_GPIO_IsOutputPinSet(EPD_RST_PORT, EPD_RST_PIN) == 0)
-    {
-        LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-        LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-        LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-        delay_100ns(100); /* 10us，未要求，短暂延时 */
-    }
-
     LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
     LL_mDelay(0); /* 1ms，未要求，短暂延时 */
     LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);

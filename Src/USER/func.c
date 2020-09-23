@@ -24,6 +24,58 @@ static void Delay_100ns(volatile uint16_t nsX100)
     ((void)nsX100);
 }
 
+static void Power_EnableGDEH029A1(void)
+{
+    LL_GPIO_ResetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+    LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    delay_100ns(100); /* 10us，未要求，短暂延时 */
+    if (LL_SPI_IsEnabled(SPI1) == 0)
+    {
+        LL_SPI_Enable(SPI1);
+    }
+}
+
+static void Power_DisableGDEH029A1(void)
+{
+    if (LL_SPI_IsEnabled(SPI1) != 0)
+    {
+        LL_SPI_Disable(SPI1);
+    }
+    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+}
+
+static void Power_EnableSHT30_I2C(void)
+{
+    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
+    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
+    LL_mDelay(1);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
+    if (LL_I2C_IsEnabled(I2C1) == 0)                                /* 打开I2C */
+    {
+        LL_I2C_Enable(I2C1);
+    }
+}
+
+static void Power_DisableSHT30_I2C(void)
+{
+    if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
+    {
+        LL_I2C_Disable(I2C1);
+    }
+    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin); /* 关闭I2C上拉电阻 */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* 拉低SHT30复位引脚 */
+    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
+}
+
 static void Menu_MainMenu(void) /* 主菜单 */
 {
 }
@@ -53,7 +105,7 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d TRAW:%02d STATUS:0x%02X", TH_GetTH_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi,(int8_t)Sensor.CEL, TH_GetStatus());
+    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
     USART_SendStringRN(str_buf);
 }
 
@@ -105,14 +157,8 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
         USART_DebugPrint("Wakeup from standby");
         break;
     }
-    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
-    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
-    LL_mDelay(2);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
+    Power_DisableGDEH029A1();
+    Power_EnableSHT30_I2C();
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -153,6 +199,10 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         }
         break;
     }
+
+    TH_ClearStatus();
+    TH_ModifyHeater(1);
+    TH_ModifyHeater(0);
 
     UpdateDisplay();
 
