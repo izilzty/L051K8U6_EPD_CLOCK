@@ -14,7 +14,7 @@ uint8_t ADC_GetCalFactor(void);
 
 uint8_t ADC_StartSingleConversion(uint16_t *data, uint8_t data_size);
 
-float conv_vref_to_vdda(uint16_t vrefval);
-float conv_tempv_to_temp(float vdda, uint16_t adcval);
+float conv_adc_to_vdda(uint16_t adc_val);
+float conv_adc_to_temp(uint16_t vdda_val, uint16_t adc_val);
 
 #endif

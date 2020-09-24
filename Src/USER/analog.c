@@ -16,10 +16,6 @@
         return 1;                                               \
     }
 
-#define TS_CAL1_ADDR TEMPSENSOR_CAL1_ADDR
-#define TS_CAL2_ADDR TEMPSENSOR_CAL2_ADDR
-#define TS_VREF_MV TEMPSENSOR_CAL_VREFANALOG
-
 #define VREFCAL_FACTORY_ADDR VREFINT_CAL_ADDR
 #define VREFINT_FACTORY_ADDR VREFINT_CAL_VREF
 
@@ -38,17 +34,17 @@ void delay_100ns(volatile uint16_t nsX100)
     ((void)nsX100);
 }
 
-float conv_vref_to_vdda(uint16_t vrefval)
+float conv_adc_to_vdda(uint16_t adc_val)
 {
-    return (VREFINT_CAL_VREF * (*VREFCAL_FACTORY_ADDR) / (float)vrefval) / 1000;
+    return (VREFINT_CAL_VREF * (*VREFCAL_FACTORY_ADDR) / (float)adc_val) / 1000;
 }
 
-float conv_tempv_to_temp(float vdda, uint16_t adcval)
+float conv_adc_to_temp(uint16_t vdda_val, uint16_t adc_val)
 {
-    int32_t temp_tmp;
-    temp_tmp = (adcval * vdda / (TS_VREF_MV / 1000)) - *TS_CAL1_ADDR;
-    temp_tmp = temp_tmp * 100;
-    temp_tmp = temp_tmp / (*TS_CAL2_ADDR - *TS_CAL1_ADDR);
+    float temp_tmp;
+    temp_tmp = (adc_val * (VREFINT_CAL_VREF * (*VREFCAL_FACTORY_ADDR) / (float)vdda_val) / (TEMPSENSOR_CAL_VREFANALOG)) - *TEMPSENSOR_CAL1_ADDR;
+    temp_tmp = temp_tmp * TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP;
+    temp_tmp = temp_tmp / (*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
     temp_tmp = temp_tmp + 30;
     return temp_tmp;
 }

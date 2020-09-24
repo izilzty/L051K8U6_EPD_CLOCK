@@ -136,8 +136,9 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     USART_SendStringRN(str_buf);
     snprintf(str_buf, sizeof(str_buf), "TH : CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "ADC: DISABLE:0x%02X CAL:0x%02X CALVAL:0x%02X ENABLE:0x%02X CONV:0x%02X CH1:0x%04X VREF:0x%04X TEMPRAW:0x%04X TEMP:%d DISABLE:0x%02X VDDA:%d 30CAL:0x%04X 130CAL:0x%04X",
-             ADC_Disable(), ADC_StartCal(), ADC_GetCalFactor(), ADC_Enable(), ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t)), adc_val[0], adc_val[1], adc_val[2], (int16_t)conv_tempv_to_temp(conv_vref_to_vdda(adc_val[1]), adc_val[2]), ADC_Disable(), (uint16_t)conv_vref_to_vdda(adc_val[1]), *TEMPSENSOR_CAL1_ADDR, *TEMPSENSOR_CAL2_ADDR);
+    snprintf(str_buf, sizeof(str_buf), "ADC: DISABLE:0x%02X CAL:0x%02X CALVAL:0x%02X ENABLE:0x%02X CONV:0x%02X CH1:0x%04X VREF:0x%04X TEMPRAW:0x%04X TEMP:%d.%02d DISABLE:0x%02X VDDA:%d 30CAL:0x%04X 130CAL:0x%04X",
+             ADC_Disable(), ADC_StartCal(), ADC_GetCalFactor(), ADC_Enable(), ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t)), adc_val[0], adc_val[1], adc_val[2],
+             (int16_t)conv_adc_to_temp(adc_val[1], adc_val[2]), (int16_t)((conv_adc_to_temp(adc_val[1], adc_val[2]) - (int16_t)conv_adc_to_temp(adc_val[1], adc_val[2]) + 0.005) * 100), ADC_Disable(), (uint16_t)conv_adc_to_vdda(adc_val[1]), *TEMPSENSOR_CAL1_ADDR, *TEMPSENSOR_CAL2_ADDR);
     USART_SendStringRN(str_buf);
 
     RTC_ModifyAM2Mask(0x07);
@@ -208,7 +209,10 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     }
 
-    UpdateDisplay();
+    while(1)
+    {
+        UpdateDisplay();
+    }
 
     USART_DebugPrint("Ready to enter standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
