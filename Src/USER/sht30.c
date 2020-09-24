@@ -241,7 +241,6 @@ uint8_t TH_GetValue_SingleShotWithoutCS(struct TH_Value *value)
  */
 uint8_t TH_StartConv_Periodic(uint8_t acc, uint8_t mps)
 {
-    uint8_t ht_tmp[6];
     uint16_t cmd;
     const uint8_t cmd_map[15] = {
         0x32, 0x24, 0x2F, /* 0.5 mps */
@@ -375,7 +374,6 @@ uint8_t TH_ModifyHeater(uint8_t enable)
 uint8_t TH_GetStatus(void)
 {
     uint8_t i, status_tmp[3], ret;
-    uint16_t status_val;
     const uint8_t mask_map[7] = {
         0x80, 0x20, 0x08, 0x04, 0x10, 0x02, 0x01};
 

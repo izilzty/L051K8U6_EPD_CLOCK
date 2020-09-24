@@ -75,6 +75,18 @@ static void Power_DisableSHT30_I2C(void)
     LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
 }
 
+static void Power_EnableADC(void)
+{
+    ADC_Disable();
+    ADC_StartCal();
+    ADC_Enable();
+}
+
+static void Power_DisableADC(void)
+{
+    ADC_Disable();
+}
+
 static void DumpRTCReg(void)
 {
     uint8_t i, j, reg_tmp;
@@ -134,11 +146,13 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "TH : CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
+
+    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
+    snprintf(str_buf, sizeof(str_buf), "TH : T:%02d.%02d H:%02d.%02d STATUS:0x%02X", Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "ADC: DISABLE:0x%02X CAL:0x%02X CALVAL:0x%02X ENABLE:0x%02X CONV:0x%02X CH1:0x%04X VREF:0x%04X TEMPRAW:0x%04X TEMP:%d.%02d DISABLE:0x%02X VDDA:%d 30CAL:0x%04X 130CAL:0x%04X",
-             ADC_Disable(), ADC_StartCal(), ADC_GetCalFactor(), ADC_Enable(), ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t)), adc_val[0], adc_val[1], adc_val[2],
-             (int16_t)conv_adc_to_temp(adc_val[1], adc_val[2]), (int16_t)((conv_adc_to_temp(adc_val[1], adc_val[2]) - (int16_t)conv_adc_to_temp(adc_val[1], adc_val[2]) + 0.005) * 100), ADC_Disable(), (uint16_t)conv_adc_to_vdda(adc_val[1]), *TEMPSENSOR_CAL1_ADDR, *TEMPSENSOR_CAL2_ADDR);
+
+    ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t));
+    snprintf(str_buf, sizeof(str_buf), "ADC: CH1RAW:%d VREFINTRAW:%d TEMPRAW:%d TEMP:%f VDDA:%f", adc_val[0], adc_val[1], adc_val[2], conv_adc_to_temp(adc_val[1], adc_val[2]), conv_adc_to_vdda(adc_val[1]));
     USART_SendStringRN(str_buf);
 
     RTC_ModifyAM2Mask(0x07);
@@ -150,6 +164,8 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
+    LL_mDelay(19); /* 防止预复位时打印出来东西，非调试时可以去掉 */
+
     USART_DebugPrint("SYSTEM RESET");
     LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用唤醒中断 */
     LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
@@ -168,6 +184,7 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     }
     Power_DisableGDEH029A1();
     Power_EnableSHT30_I2C();
+    Power_EnableADC();
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -209,10 +226,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     }
 
-    while(1)
-    {
-        UpdateDisplay();
-    }
+    UpdateDisplay();
 
     USART_DebugPrint("Ready to enter standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
