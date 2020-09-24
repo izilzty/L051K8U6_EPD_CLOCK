@@ -1,5 +1,28 @@
 #include "iic.h"
 
+#define WAIT_TIMEOUT(val)                                       \
+    timeout = I2C_TIMEOUT_MS;                                   \
+    systick_tmp = SysTick->CTRL;                                \
+    ((void)systick_tmp);                                        \
+    while (timeout != 0 && val)                                 \
+    {                                                           \
+        if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U) \
+        {                                                       \
+            timeout -= 1;                                       \
+        }                                                       \
+    }                                                           \
+    if (timeout == 0)                                           \
+    {                                                           \
+        if (i2c_reset() == 0)                                   \
+        {                                                       \
+            return 1;                                           \
+        }                                                       \
+        else                                                    \
+        {                                                       \
+            return 2;                                           \
+        }                                                       \
+    }
+
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
  * @param  nsX100 延时时间。

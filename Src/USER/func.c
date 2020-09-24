@@ -8,7 +8,7 @@ uint8_t ResetInfo;
 struct RTC_Time Time;
 struct RTC_Alarm Alarm;
 struct TH_Value Sensor;
-char str_buf[61];
+char str_buf[256];
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -75,6 +75,34 @@ static void Power_DisableSHT30_I2C(void)
     LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
 }
 
+static void DumpRTCReg(void)
+{
+    uint8_t i, j, reg_tmp;
+    char byte_str[9];
+    USART_SendStringRN("= DS3231 REG =");
+    for (i = 0; i < 19; i++)
+    {
+        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
+        for (j = 0; j < 8; j++)
+        {
+            if ((reg_tmp & (0x80 >> j)) != 0)
+            {
+                byte_str[j] = '1';
+            }
+            else
+            {
+                byte_str[j] = '0';
+            }
+        }
+        byte_str[8] = '\0';
+        USART_SendString(byte_str);
+        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
+        USART_SendStringRN(byte_str);
+    }
+    USART_SendStringRN("==============");
+    USART_SendStringRN("");
+}
+
 static void Menu_MainMenu(void) /* 主菜单 */
 {
 }
@@ -96,47 +124,25 @@ static void FullInit(void) /* 重新初始化全部数据 */
     EEPROM_EraseRange(0, 511);
     USART_DebugPrint("EEPROM reset done");
     USART_DebugPrint("All done");
+    DumpRTCReg();
 }
 
 static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
+    uint16_t adc_val[3];
+
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
     USART_SendStringRN(str_buf);
-    snprintf(str_buf, sizeof(str_buf), "TH :CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
+    snprintf(str_buf, sizeof(str_buf), "TH : CONV:0x%02X T:%02d.%02d H:%02d.%02d STATUS:0x%02X", TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor), Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
+    USART_SendStringRN(str_buf);
+    snprintf(str_buf, sizeof(str_buf), "ADC: DISABLE:0x%02X CAL:0x%02X CALVAL:0x%02X ENABLE:0x%02X CONV:0x%02X CH1:0x%04X VREF:0x%04X TEMPRAW:0x%04X TEMP:%d DISABLE:0x%02X VDDA:%d 30CAL:0x%04X 130CAL:0x%04X",
+             ADC_Disable(), ADC_StartCal(), ADC_GetCalFactor(), ADC_Enable(), ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t)), adc_val[0], adc_val[1], adc_val[2], (int16_t)conv_tempv_to_temp(conv_vref_to_vdda(adc_val[1]), adc_val[2]), ADC_Disable(), (uint16_t)conv_vref_to_vdda(adc_val[1]), *TEMPSENSOR_CAL1_ADDR, *TEMPSENSOR_CAL2_ADDR);
     USART_SendStringRN(str_buf);
 
     RTC_ModifyAM2Mask(0x07);
     RTC_ModifyA2IE(1);
     RTC_ModifyINTCN(1);
-}
-
-static void DumpRTCReg(void)
-{
-    uint8_t i, j, reg_tmp;
-    char byte_str[9];
-    USART_SendStringRN("== DS3231 REG ==");
-    for (i = 0; i < 19; i++)
-    {
-        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
-        for (j = 0; j < 8; j++)
-        {
-            if ((reg_tmp & (0x80 >> j)) != 0)
-            {
-                byte_str[j] = '1';
-            }
-            else
-            {
-                byte_str[j] = '0';
-            }
-        }
-        byte_str[8] = '\0';
-        USART_SendString(" ");
-        USART_SendString(byte_str);
-        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
-        USART_SendStringRN(byte_str);
-    }
-    USART_SendStringRN("================");
 }
 
 /* ==================== 主循环 ==================== */
