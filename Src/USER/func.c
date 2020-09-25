@@ -144,15 +144,14 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     uint16_t adc_val[3];
 
     RTC_GetTime(&Time);
-    snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d T:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
+    snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d TEMP:%02d.%02d", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, (int8_t)RTC_GetTemp(), (uint8_t)((RTC_GetTemp() - (int8_t)RTC_GetTemp()) * 100));
     USART_SendStringRN(str_buf);
 
     TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
-    snprintf(str_buf, sizeof(str_buf), "TH : T:%02d.%02d H:%02d.%02d STATUS:0x%02X", Sensor.CEL_Int, Sensor.CEL_Poi, Sensor.RH_Int, Sensor.RH_Poi, TH_GetStatus());
+    snprintf(str_buf, sizeof(str_buf), "TH : TEMP:%02d.%02d RH:%02d.%02d STATUS:0x%02X", Sensor.CEL_Int, Sensor.CEL_Point, Sensor.RH_Int, Sensor.RH_Point, TH_GetStatus());
     USART_SendStringRN(str_buf);
 
-    ADC_StartSingleConversion(adc_val, sizeof(adc_val) / sizeof(uint16_t));
-    snprintf(str_buf, sizeof(str_buf), "ADC: CH1RAW:%d VREFINTRAW:%d TEMPRAW:%d TEMP:%f VDDA:%f", adc_val[0], adc_val[1], adc_val[2], conv_adc_to_temp(adc_val[1], adc_val[2]), conv_adc_to_vdda(adc_val[1]));
+    snprintf(str_buf, sizeof(str_buf), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetBattery());
     USART_SendStringRN(str_buf);
 
     RTC_ModifyAM2Mask(0x07);

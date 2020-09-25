@@ -22,9 +22,9 @@ struct TH_Value
     float RH;
     float CEL;
     int8_t RH_Int;
-    uint8_t RH_Poi;
+    uint8_t RH_Point;
     int8_t CEL_Int;
-    uint8_t CEL_Poi;
+    uint8_t CEL_Point;
 };
 
 uint8_t TH_WriteCmd(uint16_t command);

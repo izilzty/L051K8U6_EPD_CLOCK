@@ -34,13 +34,13 @@ I (..\Inc\usart.h)(0x5F6CB74B)
 I (..\Inc\gpio.h)(0x5F6CB748)
 I (..\Src\USER\func.h)(0x5F6B4763)
 I (..\Src\USER\lowpower.h)(0x5F6613FC)
-I (..\Src\USER\analog.h)(0x5F6CBEC8)
+I (..\Src\USER\analog.h)(0x5F6DE93C)
 I (..\Src\USER\bkpr.h)(0x5F6AF166)
 I (..\Src\USER\eeprom.h)(0x5F66D301)
 I (..\Src\USER\serial.h)(0x5F67234A)
 I (..\Src\USER\iic.h)(0x5F696FC3)
 I (..\Src\USER\ds3231.h)(0x5F6B438B)
-I (..\Src\USER\sht30.h)(0x5F6B42C6)
+I (..\Src\USER\sht30.h)(0x5F6DEE68)
 I (..\Src\USER\gdeh029A1.h)(0x5F695D3E)
 F (../Src/gpio.c)(0x5F6CB748)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/gpio.o -MD)
 I (..\Inc\gpio.h)(0x5F6CB748)
@@ -383,7 +383,7 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\func.c)(0x5F6CC834)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/func.o -MD)
+F (..\Src\USER\func.c)(0x5F6DF617)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/func.o -MD)
 I (..\Src\USER\func.h)(0x5F6B4763)
 I (..\Inc\main.h)(0x5F6CB74B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
@@ -410,14 +410,14 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Src\USER\lowpower.h)(0x5F6613FC)
-I (..\Src\USER\analog.h)(0x5F6CBEC8)
+I (..\Src\USER\analog.h)(0x5F6DE93C)
 I (..\Src\USER\bkpr.h)(0x5F6AF166)
 I (..\Src\USER\eeprom.h)(0x5F66D301)
 I (..\Src\USER\serial.h)(0x5F67234A)
 I (..\Src\USER\iic.h)(0x5F696FC3)
 I (..\Inc\i2c.h)(0x5F6CB74A)
 I (..\Src\USER\ds3231.h)(0x5F6B438B)
-I (..\Src\USER\sht30.h)(0x5F6B42C6)
+I (..\Src\USER\sht30.h)(0x5F6DEE68)
 I (..\Src\USER\gdeh029A1.h)(0x5F695D3E)
 I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5ED60BE4)
 F (..\Src\USER\serial.c)(0x5F683B5E)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/serial.o -MD)
@@ -582,8 +582,8 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\sht30.c)(0x5F6CC046)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/sht30.o -MD)
-I (..\Src\USER\sht30.h)(0x5F6B42C6)
+F (..\Src\USER\sht30.c)(0x5F6DEEDB)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/sht30.o -MD)
+I (..\Src\USER\sht30.h)(0x5F6DEE68)
 I (..\Inc\main.h)(0x5F6CB74B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
 I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
@@ -610,8 +610,8 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Src\USER\iic.h)(0x5F696FC3)
 I (..\Inc\i2c.h)(0x5F6CB74A)
-F (..\Src\USER\analog.c)(0x5F6CC292)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/analog.o -MD)
-I (..\Src\USER\analog.h)(0x5F6CBEC8)
+F (..\Src\USER\analog.c)(0x5F6DED93)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/analog.o -MD)
+I (..\Src\USER\analog.h)(0x5F6DE93C)
 I (..\Inc\main.h)(0x5F6CB74B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
 I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)

@@ -53,7 +53,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
         conv_tmp -= 0.005;
     }
     value->CEL_Int = (int8_t)conv_tmp;
-    value->CEL_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
+    value->CEL_Point = (conv_tmp - (int8_t)conv_tmp) * 100;
 
     conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + HumidityOffset;
     value->RH = conv_tmp;
@@ -66,7 +66,7 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
         conv_tmp -= 0.005;
     }
     value->RH_Int = (int8_t)conv_tmp;
-    value->RH_Poi = (conv_tmp - (int8_t)conv_tmp) * 100;
+    value->RH_Point = (conv_tmp - (int8_t)conv_tmp) * 100;
 }
 
 /**
