@@ -87,6 +87,16 @@ static void Power_DisableADC(void)
     ADC_Disable();
 }
 
+static void Power_EnableBUZZER(void)
+{
+    BUZZER_Enable();
+}
+
+static void Power_DisableBuzzer(void)
+{
+    BUZZER_Disable();
+}
+
 static void DumpRTCReg(void)
 {
     uint8_t i, j, reg_tmp;
@@ -163,9 +173,9 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
-    LL_mDelay(19); /* 防止预复位时打印出来东西，非调试时可以去掉 */
+    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET! *****\r\n");
 
-    SERIAL_DebugPrint("SYSTEM RESET");
+    LL_mDelay(19);                                                   /* 防止下载预复位时打印出来东西，非调试时可以去掉 */
     LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用唤醒中断 */
     LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
     ResetInfo = LP_GetResetInfo();
@@ -181,9 +191,16 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
         SERIAL_DebugPrint("Wakeup from standby");
         break;
     }
+    
     Power_DisableGDEH029A1();
+
     Power_EnableSHT30_I2C();
     Power_EnableADC();
+    Power_EnableBUZZER();
+
+    BUZZER_SetVolume(7);
+    BUZZER_Beep(1000, 49);
+    BUZZER_Beep(4000, 49);
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */

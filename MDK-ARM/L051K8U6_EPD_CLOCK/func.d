@@ -25,4 +25,5 @@ l051k8u6_epd_clock/func.o: ..\Src\USER\func.c ..\Src\USER\func.h \
   ..\Src\USER\lowpower.h ..\Src\USER\analog.h ..\Src\USER\bkpr.h \
   ..\Src\USER\eeprom.h ..\Src\USER\serial.h ..\Src\USER\iic.h \
   ..\Inc\i2c.h ..\Inc\main.h ..\Src\USER\ds3231.h ..\Src\USER\sht30.h \
-  ..\Src\USER\gdeh029A1.h D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h
+  ..\Src\USER\gdeh029A1.h ..\Src\USER\buzzer.h \
+  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h

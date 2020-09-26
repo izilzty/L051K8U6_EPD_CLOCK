@@ -14,6 +14,7 @@
 #include "ds3231.h"
 #include "sht30.h"
 #include "gdeh029A1.h"
+#include "buzzer.h"
 
 void Init(void);
 void Loop(void);
