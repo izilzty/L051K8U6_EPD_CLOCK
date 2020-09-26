@@ -1,6 +1,7 @@
 #include "func.h"
 
 #include <stdio.h>
+#include <math.h>
 
 const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
 
@@ -9,6 +10,16 @@ struct RTC_Time Time;
 struct RTC_Alarm Alarm;
 struct TH_Value Sensor;
 char str_buf[256];
+
+static void Power_EnableGDEH029A1(void);
+static void Power_DisableGDEH029A1(void);
+static void Power_EnableSHT30_I2C(void);
+static void Power_DisableSHT30_I2C(void);
+static void Power_EnableADC(void);
+static void Power_DisableADC(void);
+static void Power_EnableBUZZER(void);
+static void Power_DisableBUZZER(void);
+static void DumpRTCReg(void);
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -23,107 +34,7 @@ static void Delay_100ns(volatile uint16_t nsX100)
     ((void)nsX100);
 }
 
-static void Power_EnableGDEH029A1(void)
-{
-    LL_GPIO_ResetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
-    LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-    LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-    LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    Delay_100ns(100); /* 10us，未要求，短暂延时 */
-    if (LL_SPI_IsEnabled(SPI1) == 0)
-    {
-        LL_SPI_Enable(SPI1);
-    }
-}
-
-static void Power_DisableGDEH029A1(void)
-{
-    if (LL_SPI_IsEnabled(SPI1) != 0)
-    {
-        LL_SPI_Disable(SPI1);
-    }
-    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
-}
-
-static void Power_EnableSHT30_I2C(void)
-{
-    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
-    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
-    LL_mDelay(1);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
-    if (LL_I2C_IsEnabled(I2C1) == 0)                                /* 打开I2C */
-    {
-        LL_I2C_Enable(I2C1);
-    }
-}
-
-static void Power_DisableSHT30_I2C(void)
-{
-    if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
-    {
-        LL_I2C_Disable(I2C1);
-    }
-    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin); /* 关闭I2C上拉电阻 */
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* 拉低SHT30复位引脚 */
-    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
-}
-
-static void Power_EnableADC(void)
-{
-    ADC_Disable();
-    ADC_StartCal();
-    ADC_Enable();
-}
-
-static void Power_DisableADC(void)
-{
-    ADC_Disable();
-}
-
-static void Power_EnableBUZZER(void)
-{
-    BUZZER_Enable();
-}
-
-static void Power_DisableBuzzer(void)
-{
-    BUZZER_Disable();
-}
-
-static void DumpRTCReg(void)
-{
-    uint8_t i, j, reg_tmp;
-    char byte_str[9];
-    SERIAL_SendStringRN("= DS3231 REG =");
-    for (i = 0; i < 19; i++)
-    {
-        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
-        for (j = 0; j < 8; j++)
-        {
-            if ((reg_tmp & (0x80 >> j)) != 0)
-            {
-                byte_str[j] = '1';
-            }
-            else
-            {
-                byte_str[j] = '0';
-            }
-        }
-        byte_str[8] = '\0';
-        SERIAL_SendString(byte_str);
-        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
-        SERIAL_SendStringRN(byte_str);
-    }
-    SERIAL_SendStringRN("==============");
-    SERIAL_SendStringRN("");
-}
+/* ==================== 菜单 ==================== */
 
 static void Menu_MainMenu(void) /* 主菜单 */
 {
@@ -135,10 +46,22 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
 static void FullInit(void) /* 重新初始化全部数据 */
 {
-    SERIAL_DebugPrint("BEGIN ERASE ALL DATA");
+    Power_EnableBUZZER();
+    BUZZER_SetVolume(5);
+
+    BUZZER_Beep(1000, 49);
+    LL_mDelay(49);
+    BUZZER_Beep(1000, 49);
+    LL_mDelay(49);
+    BUZZER_Beep(1000, 49);
+
+    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
     SERIAL_DebugPrint("RTC reset...");
     RTC_ResetAllRegToDefault();
     SERIAL_DebugPrint("RTC reset done");
+    SERIAL_DebugPrint("SENSOR reset...");
+    TH_SoftReset();
+    SERIAL_DebugPrint("SENSOR reset done");
     SERIAL_DebugPrint("BKPR reset...");
     BKPR_ResetAll();
     SERIAL_DebugPrint("BKPR reset done");
@@ -146,13 +69,15 @@ static void FullInit(void) /* 重新初始化全部数据 */
     EEPROM_EraseRange(0, 511);
     SERIAL_DebugPrint("EEPROM reset done");
     SERIAL_DebugPrint("All done");
-    DumpRTCReg();
+
+    BUZZER_Beep(1000, 199);
+    Power_DisableBUZZER();
 }
+
+/* ==================== 主要功能 ==================== */
 
 static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
-    uint16_t adc_val[3];
-
     RTC_GetTime(&Time);
     snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
     SERIAL_SendStringRN(str_buf);
@@ -191,16 +116,12 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
         SERIAL_DebugPrint("Wakeup from standby");
         break;
     }
-    
+
     Power_DisableGDEH029A1();
+    Power_DisableBUZZER();
 
     Power_EnableSHT30_I2C();
     Power_EnableADC();
-    Power_EnableBUZZER();
-
-    BUZZER_SetVolume(7);
-    BUZZER_Beep(1000, 49);
-    BUZZER_Beep(4000, 49);
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -280,3 +201,110 @@ alarm.Seconds = 00;
     SERIAL_SendStringRN(str_buf);
 
 */
+
+/* ==================== 电源控制 ==================== */
+
+static void Power_EnableGDEH029A1(void)
+{
+    LL_GPIO_ResetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+    LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    Delay_100ns(100); /* 10us，未要求，短暂延时 */
+    if (LL_SPI_IsEnabled(SPI1) == 0)
+    {
+        LL_SPI_Enable(SPI1);
+    }
+}
+
+static void Power_DisableGDEH029A1(void)
+{
+    if (LL_SPI_IsEnabled(SPI1) != 0)
+    {
+        LL_SPI_Disable(SPI1);
+    }
+    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+}
+
+static void Power_EnableSHT30_I2C(void)
+{
+    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
+    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
+    LL_mDelay(1);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
+    if (LL_I2C_IsEnabled(I2C1) == 0)                                /* 打开I2C */
+    {
+        LL_I2C_Enable(I2C1);
+    }
+}
+
+static void Power_DisableSHT30_I2C(void)
+{
+    if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
+    {
+        LL_I2C_Disable(I2C1);
+    }
+    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin); /* 关闭I2C上拉电阻 */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* 拉低SHT30复位引脚 */
+    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
+}
+
+static void Power_EnableADC(void)
+{
+    ADC_Disable();
+    ADC_StartCal();
+    ADC_Enable();
+}
+
+static void Power_DisableADC(void)
+{
+    ADC_Disable();
+}
+
+static void Power_EnableBUZZER(void)
+{
+    BUZZER_Enable();
+    BUZZER_SetVolume(10);
+}
+
+static void Power_DisableBUZZER(void)
+{
+    BUZZER_Disable();
+}
+
+/* ==================== 辅助功能 ==================== */
+
+static void DumpRTCReg(void)
+{
+    uint8_t i, j, reg_tmp;
+    char byte_str[9];
+    SERIAL_SendStringRN("= DS3231 REG =");
+    for (i = 0; i < 19; i++)
+    {
+        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
+        for (j = 0; j < 8; j++)
+        {
+            if ((reg_tmp & (0x80 >> j)) != 0)
+            {
+                byte_str[j] = '1';
+            }
+            else
+            {
+                byte_str[j] = '0';
+            }
+        }
+        byte_str[8] = '\0';
+        SERIAL_SendString(byte_str);
+        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
+        SERIAL_SendStringRN(byte_str);
+    }
+    SERIAL_SendStringRN("==============");
+    SERIAL_SendStringRN("");
+}

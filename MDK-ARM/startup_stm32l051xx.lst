@@ -217,9 +217,9 @@ ARM Macro Assembler    Page 4
 WEAK]
   133 00000000                 IMPORT           __main
   134 00000000                 IMPORT           SystemInit
-  135 00000000 4807            LDR              R0, =SystemInit
+  135 00000000 4804            LDR              R0, =SystemInit
   136 00000002 4780            BLX              R0
-  137 00000004 4807            LDR              R0, =__main
+  137 00000004 4804            LDR              R0, =__main
   138 00000006 4700            BX               R0
   139 00000008                 ENDP
   140 00000008         
@@ -360,41 +360,25 @@ ARM Macro Assembler    Page 6
   227 00000014         ;*******************************************************
                        ************************
   228 00000014                 IF               :DEF:__MICROLIB
-  235 00000014         
-  236 00000014                 IMPORT           __use_two_region_memory
-  237 00000014                 EXPORT           __user_initial_stackheap
-  238 00000014         
-  239 00000014         __user_initial_stackheap
-  240 00000014         
-  241 00000014 4804            LDR              R0, =  Heap_Mem
-  242 00000016 4905            LDR              R1, =(Stack_Mem + Stack_Size)
-  243 00000018 4A03            LDR              R2, = (Heap_Mem +  Heap_Size)
-  244 0000001A 4B05            LDR              R3, = Stack_Mem
-  245 0000001C 4770            BX               LR
-  246 0000001E         
-  247 0000001E 00 00           ALIGN
-  248 00000020         
-  249 00000020                 ENDIF
-  250 00000020         
-  251 00000020                 END
+  229 00000014         
+  230 00000014                 EXPORT           __initial_sp
+  231 00000014                 EXPORT           __heap_base
+  232 00000014                 EXPORT           __heap_limit
+  233 00000014         
+  234 00000014                 ELSE
+  249                          ENDIF
+  250 00000014         
+  251 00000014                 END
               00000000 
-              00000000 
-              00000000 
-              00000400 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
 work --depend=l051k8u6_epd_clock\startup_stm32l051xx.d -ol051k8u6_epd_clock\sta
 rtup_stm32l051xx.o -I.\RTE\_L051K8U6_EPD_CLOCK -ID:\Keil_v5\Packs\Arm\Packs\ARM
 \CMSIS\5.7.0\CMSIS\Core\Include -ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP
-\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predefine="__UVISION_VERSION
- SETA 531" --predefine="_RTE_ SETA 1" --predefine="STM32L051xx SETA 1" --predef
-
-
-
-ARM Macro Assembler    Page 7 
-
-
-ine="_RTE_ SETA 1" --list=startup_stm32l051xx.lst startup_stm32l051xx.s
+\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predefine="__MICROLIB SETA 1
+" --predefine="__UVISION_VERSION SETA 531" --predefine="_RTE_ SETA 1" --predefi
+ne="STM32L051xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32l051xx.l
+st startup_stm32l051xx.s
 
 
 
@@ -415,9 +399,8 @@ Symbol: Stack_Mem
    Definitions
       At line 48 in file startup_stm32l051xx.s
    Uses
-      At line 242 in file startup_stm32l051xx.s
-      At line 244 in file startup_stm32l051xx.s
-
+      None
+Comment: Stack_Mem unused
 __initial_sp 00000400
 
 Symbol: __initial_sp
@@ -425,7 +408,8 @@ Symbol: __initial_sp
       At line 49 in file startup_stm32l051xx.s
    Uses
       At line 73 in file startup_stm32l051xx.s
-Comment: __initial_sp used once
+      At line 230 in file startup_stm32l051xx.s
+
 3 symbols
 
 
@@ -447,25 +431,24 @@ Symbol: Heap_Mem
    Definitions
       At line 60 in file startup_stm32l051xx.s
    Uses
-      At line 241 in file startup_stm32l051xx.s
-      At line 243 in file startup_stm32l051xx.s
-
+      None
+Comment: Heap_Mem unused
 __heap_base 00000000
 
 Symbol: __heap_base
    Definitions
       At line 59 in file startup_stm32l051xx.s
    Uses
-      None
-Comment: __heap_base unused
+      At line 231 in file startup_stm32l051xx.s
+Comment: __heap_base used once
 __heap_limit 00000000
 
 Symbol: __heap_limit
    Definitions
       At line 61 in file startup_stm32l051xx.s
    Uses
-      None
-Comment: __heap_limit unused
+      At line 232 in file startup_stm32l051xx.s
+Comment: __heap_limit used once
 4 symbols
 
 
@@ -816,15 +799,7 @@ Symbol: WWDG_IRQHandler
       At line 91 in file startup_stm32l051xx.s
       At line 167 in file startup_stm32l051xx.s
 
-__user_initial_stackheap 00000014
-
-Symbol: __user_initial_stackheap
-   Definitions
-      At line 239 in file startup_stm32l051xx.s
-   Uses
-      At line 237 in file startup_stm32l051xx.s
-Comment: __user_initial_stackheap used once
-33 symbols
+32 symbols
 
 
 
@@ -838,8 +813,7 @@ Symbol: Heap_Size
       At line 56 in file startup_stm32l051xx.s
    Uses
       At line 60 in file startup_stm32l051xx.s
-      At line 243 in file startup_stm32l051xx.s
-
+Comment: Heap_Size used once
 Stack_Size 00000400
 
 Symbol: Stack_Size
@@ -847,8 +821,7 @@ Symbol: Stack_Size
       At line 45 in file startup_stm32l051xx.s
    Uses
       At line 48 in file startup_stm32l051xx.s
-      At line 242 in file startup_stm32l051xx.s
-
+Comment: Stack_Size used once
 __Vectors_Size 000000C0
 
 Symbol: __Vectors_Size
@@ -880,13 +853,5 @@ Symbol: __main
    Uses
       At line 137 in file startup_stm32l051xx.s
 Comment: __main used once
-__use_two_region_memory 00000000
-
-Symbol: __use_two_region_memory
-   Definitions
-      At line 236 in file startup_stm32l051xx.s
-   Uses
-      None
-Comment: __use_two_region_memory unused
-3 symbols
-386 symbols in table
+2 symbols
+383 symbols in table
