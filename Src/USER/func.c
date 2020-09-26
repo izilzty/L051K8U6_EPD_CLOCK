@@ -87,16 +87,14 @@ static void FullInit(void) /* 重新初始化全部数据 */
         SERIAL_DebugPrint("BKPR reset done");
     }
     SERIAL_DebugPrint("EEPROM reset...");
-    snprintf(str_tmp, sizeof(str_tmp), "EEPROM: %d", EEPROM_WriteByte(0, 0xFF));
-    SERIAL_SendStringRN(str_tmp);
-    //if (EEPROM_EraseRange(0, 510) != 0)
-    //{
-    //    SERIAL_DebugPrint("EEPROM reset fail");
-    //}
-    //else
-    //{
-    //    SERIAL_DebugPrint("EEPROM reset done");
-    //}
+    if (EEPROM_EraseRange(0, 511) != 0)
+    {
+        SERIAL_DebugPrint("EEPROM reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("EEPROM reset done");
+    }
     SERIAL_DebugPrint("Process done");
 
     DumpEEPROM();
