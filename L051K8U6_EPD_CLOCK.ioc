@@ -2,7 +2,7 @@
 ADC.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV2
 ADC.EOCSelection=ADC_EOC_SINGLE_CONV
 ADC.IPParameters=SamplingTime,EOCSelection,ClockPrescaler
-ADC.SamplingTime=ADC_SAMPLETIME_39CYCLES_5
+ADC.SamplingTime=ADC_SAMPLETIME_160CYCLES_5
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 I2C1.I2C_Coeff_DF=0

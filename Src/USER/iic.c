@@ -46,16 +46,16 @@ static uint8_t i2c_reset(void)
     volatile uint32_t systick_tmp;
     uint32_t i2c_old_state;
 
-    i2c_old_state = LL_I2C_IsEnabled(I2C_PORT); /* 保存I2C复位前的启用状态 */
-    LL_I2C_Disable(I2C_PORT);                   /* 软复位 */
+    i2c_old_state = LL_I2C_IsEnabled(I2C_NUM); /* 保存I2C复位前的启用状态 */
+    LL_I2C_Disable(I2C_NUM);                   /* 软复位 */
     for (timeout = 0; timeout < 10; timeout++)  /* 等待软复位 */
     {
-        if (LL_I2C_IsEnabled(I2C_PORT) == 0)
+        if (LL_I2C_IsEnabled(I2C_NUM) == 0)
         {
             break;
         }
     }
-    LL_I2C_DeInit(I2C_PORT); /* 释放I2C */
+    LL_I2C_DeInit(I2C_NUM); /* 释放I2C */
 
     /* 切换数据IO到开漏输出 */
     LL_GPIO_SetPinMode(I2C_SDA_PORT, I2C_SDA_PIN, LL_GPIO_MODE_OUTPUT);
@@ -106,7 +106,7 @@ static uint8_t i2c_reset(void)
     I2C_INIT_FUNC();        /* 不管有没有成功恢复，都重新初始化I2C */
     if (i2c_old_state != 0) /* 恢复I2C启用状态 */
     {
-        LL_I2C_Enable(I2C_PORT);
+        LL_I2C_Enable(I2C_NUM);
     }
     if (timeout != 0xFFFFFFFF)
     {
@@ -127,12 +127,12 @@ uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size)
     uint32_t timeout;
     volatile uint32_t systick_tmp;
 
-    if (LL_I2C_IsActiveFlag_BUSY(I2C_PORT) != 0)
+    if (LL_I2C_IsActiveFlag_BUSY(I2C_NUM) != 0)
     {
         timeout = I2C_TIMEOUT_MS;
         systick_tmp = SysTick->CTRL;
         ((void)systick_tmp);
-        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_NUM) == 0)
         {
             if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
             {
@@ -152,50 +152,50 @@ uint8_t I2C_Start(uint8_t addr, uint8_t is_read, uint8_t data_size)
         }
     }
     /* DocID025942 Rev 8 - Page 604 */
-    LL_I2C_SetMasterAddressingMode(I2C_PORT, LL_I2C_ADDRESSING_MODE_7BIT);
-    LL_I2C_SetSlaveAddr(I2C_PORT, addr);
+    LL_I2C_SetMasterAddressingMode(I2C_NUM, LL_I2C_ADDRESSING_MODE_7BIT);
+    LL_I2C_SetSlaveAddr(I2C_NUM, addr);
     if (is_read == 0)
     {
-        LL_I2C_SetTransferRequest(I2C_PORT, LL_I2C_REQUEST_WRITE);
+        LL_I2C_SetTransferRequest(I2C_NUM, LL_I2C_REQUEST_WRITE);
     }
     else
     {
-        LL_I2C_SetTransferRequest(I2C_PORT, LL_I2C_REQUEST_READ);
+        LL_I2C_SetTransferRequest(I2C_NUM, LL_I2C_REQUEST_READ);
     }
-    LL_I2C_DisableReloadMode(I2C_PORT);
-    LL_I2C_SetTransferSize(I2C_PORT, data_size);
+    LL_I2C_DisableReloadMode(I2C_NUM);
+    LL_I2C_SetTransferSize(I2C_NUM, data_size);
     /* DocID025942 Rev 8 - Page 606 */
-    LL_I2C_DisableAutoEndMode(I2C_PORT);
-    LL_I2C_GenerateStartCondition(I2C_PORT);
+    LL_I2C_DisableAutoEndMode(I2C_NUM);
+    LL_I2C_GenerateStartCondition(I2C_NUM);
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
     if (is_read == 0)
     {
-        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+        while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_NUM) == 0)
         {
             if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
             {
                 timeout -= 1;
             }
-            if (LL_I2C_IsActiveFlag_NACK(I2C_PORT) != 0)
+            if (LL_I2C_IsActiveFlag_NACK(I2C_NUM) != 0)
             {
-                LL_I2C_ClearFlag_NACK(I2C_PORT);
+                LL_I2C_ClearFlag_NACK(I2C_NUM);
                 return 3;
             }
         }
     }
     else
     {
-        while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0)
+        while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_NUM) == 0)
         {
             if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
             {
                 timeout -= 1;
             }
-            if (LL_I2C_IsActiveFlag_NACK(I2C_PORT) != 0)
+            if (LL_I2C_IsActiveFlag_NACK(I2C_NUM) != 0)
             {
-                LL_I2C_ClearFlag_NACK(I2C_PORT);
+                LL_I2C_ClearFlag_NACK(I2C_NUM);
                 return 3;
             }
         }
@@ -226,7 +226,7 @@ uint8_t I2C_Stop(void)
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
-    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_NUM) == 0)
     {
         if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
         {
@@ -244,11 +244,11 @@ uint8_t I2C_Stop(void)
             return 2;
         }
     }
-    LL_I2C_GenerateStopCondition(I2C_PORT);
+    LL_I2C_GenerateStopCondition(I2C_NUM);
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
-    while (timeout != 0 && LL_I2C_IsActiveFlag_BUSY(I2C_PORT) != 0)
+    while (timeout != 0 && LL_I2C_IsActiveFlag_BUSY(I2C_NUM) != 0)
     {
         if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
         {
@@ -282,7 +282,7 @@ uint8_t I2C_WriteByte(uint8_t byte)
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
-    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_PORT) == 0)
+    while (timeout != 0 && LL_I2C_IsActiveFlag_TXE(I2C_NUM) == 0)
     {
         if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
         {
@@ -300,7 +300,7 @@ uint8_t I2C_WriteByte(uint8_t byte)
             return 1;
         }
     }
-    LL_I2C_TransmitData8(I2C_PORT, byte);
+    LL_I2C_TransmitData8(I2C_NUM, byte);
     return 0;
 }
 
@@ -316,7 +316,7 @@ uint8_t I2C_ReadByte(void)
     timeout = I2C_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
     ((void)systick_tmp);
-    while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_PORT) == 0)
+    while (timeout != 0 && LL_I2C_IsActiveFlag_RXNE(I2C_NUM) == 0)
     {
         if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0U)
         {
@@ -328,5 +328,5 @@ uint8_t I2C_ReadByte(void)
         i2c_reset();
         return 0x00;
     }
-    return LL_I2C_ReceiveData8(I2C_PORT);
+    return LL_I2C_ReceiveData8(I2C_NUM);
 }

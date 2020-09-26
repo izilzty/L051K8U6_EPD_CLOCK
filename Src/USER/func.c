@@ -151,7 +151,7 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
     snprintf(str_buf, sizeof(str_buf), "TH : TEMP:%02d.%02d RH:%02d.%02d STATUS:0x%02X", Sensor.CEL_Int, Sensor.CEL_Point, Sensor.RH_Int, Sensor.RH_Point, TH_GetStatus());
     USART_SendStringRN(str_buf);
 
-    snprintf(str_buf, sizeof(str_buf), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetBattery());
+    snprintf(str_buf, sizeof(str_buf), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
     USART_SendStringRN(str_buf);
 
     RTC_ModifyAM2Mask(0x07);

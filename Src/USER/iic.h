@@ -5,9 +5,9 @@
 
 #include "i2c.h"
 
-#define I2C_TIMEOUT_MS 3000
+#define I2C_TIMEOUT_MS 1000
 
-#define I2C_PORT I2C1
+#define I2C_NUM I2C1
 
 #define I2C_PULLUP_PORT I2C1_PULLUP_GPIO_Port
 #define I2C_PULLUP_PIN I2C1_PULLUP_Pin
