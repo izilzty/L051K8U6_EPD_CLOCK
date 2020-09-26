@@ -31,15 +31,17 @@
 #define NULL 0
 #endif
 
+void EPD_Init(uint8_t update_mode);
 void EPD_ClearRAM(void);
 void EPD_SetWindow(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8);
 void EPD_SetCursor(uint16_t x, uint8_t y_x8);
 void EPD_SendRAM(const uint8_t *data, uint16_t data_size);
 uint8_t EPD_Show(uint8_t wait_busy);
-void EPD_Init(uint8_t update_mode);
+
 void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const uint8_t *ascii_font, const uint8_t *utf8_font);
 void EPD_DrawHLine(uint16_t x, uint8_t y, uint16_t x_size, uint8_t width);
 void EPD_DrawVLine(uint16_t x, uint8_t y, uint8_t y_size, uint16_t width);
+
 void EPD_EnterSleep(void);
 void EPD_EnterDeepSleep(void);
 

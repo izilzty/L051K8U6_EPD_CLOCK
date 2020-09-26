@@ -11,15 +11,15 @@ void USART_SendData(const uint8_t *tx_data, uint32_t data_size)
 {
     while (data_size != 0)
     {
-        while (LL_USART_IsActiveFlag_TXE(SERIAL_USART) == RESET)
+        while (LL_USART_IsActiveFlag_TXE(SERIAL_NUM) == RESET)
         {
         }
-        LL_USART_ClearFlag_TC(SERIAL_USART);
-        LL_USART_TransmitData8(SERIAL_USART, *tx_data);
+        LL_USART_ClearFlag_TC(SERIAL_NUM);
+        LL_USART_TransmitData8(SERIAL_NUM, *tx_data);
         tx_data += 1;
         data_size -= 1;
     }
-    while (LL_USART_IsActiveFlag_TC(SERIAL_USART) == RESET)
+    while (LL_USART_IsActiveFlag_TC(SERIAL_NUM) == RESET)
     {
     }
 }

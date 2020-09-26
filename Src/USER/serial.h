@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define SERIAL_USART USART1
+#define SERIAL_NUM USART1
 
 #ifdef ENABLE_DEBUG_PRINT
 #define USART_DebugPrint(info_str) _USART_DebugPrint(__FILE__, __FUNCTION__, __LINE__, info_str)
