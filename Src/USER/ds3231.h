@@ -2,10 +2,11 @@
 #define _DS3231_H_
 
 #include "main.h"
-
 #include "iic.h"
 
+/* 可修改 */
 #define RTC_I2C_ADDR ((0x68 & 0xFE) << 1)
+/* 结束 */
 
 #define RTC_REG_SEC 0x00
 #define RTC_REG_MIN 0x01

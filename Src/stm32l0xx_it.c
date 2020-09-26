@@ -89,8 +89,9 @@ void HardFault_Handler(void)
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-    USART_SendStringRN("IN HARD FAULT!");
+    SERIAL_SendStringRN("***** IN HARD FAULT! *****");
     LL_mDelay(999);
+    NVIC_SystemReset();
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }

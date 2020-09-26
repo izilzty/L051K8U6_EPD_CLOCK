@@ -143,7 +143,6 @@ static uint8_t epd_wait_busy(void)
     uint16_t timeout;
     volatile uint32_t systick_tmp;
 
-    LL_GPIO_ResetOutputPin(EPD_LED_PORT, EPD_LED_PIN);
     delay_100ns(10); /* 1us 未要求时间，短暂延时 */
     timeout = EPD_TIMEOUT_MS;
     systick_tmp = SysTick->CTRL;
@@ -155,7 +154,6 @@ static uint8_t epd_wait_busy(void)
             timeout -= 1;
         }
     }
-    LL_GPIO_SetOutputPin(EPD_LED_PORT, EPD_LED_PIN);
     if (timeout == 0)
     {
         return 1;
@@ -245,6 +243,22 @@ uint8_t EPD_Show(uint8_t wait_busy)
         return epd_wait_busy();
     }
     return 0;
+}
+
+/**
+ * @brief  检查EPD是否更新完成。
+ * @return 1：更新未完成，0：更新完成。
+ */
+uint8_t EPD_CheckBusy(void)
+{
+    if (LL_GPIO_IsInputPinSet(EPD_BUSY_PORT, EPD_BUSY_PIN) != 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 /**

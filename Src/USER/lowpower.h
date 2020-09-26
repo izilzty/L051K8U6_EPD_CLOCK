@@ -3,8 +3,10 @@
 
 #include "main.h"
 
+/* 可修改 */
 #define LP_STANDBY_WKUP_PIN LL_PWR_WAKEUP_PIN1
 #define LP_STOP_WKUP_EXTI EPD_BUSY_EXTI0_EXTI_IRQn
+/* 结束 */
 
 #define LP_RESET_NONE 0
 #define LP_RESET_NORMALRESET 1

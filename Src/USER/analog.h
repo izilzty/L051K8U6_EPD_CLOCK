@@ -3,10 +3,12 @@
 
 #include "main.h"
 
+/* 可修改 */
 #define ADC_NUM ADC1
-#define ADC_TIMEOUT_MS 1000
-
 #define ADC_CHANNEL_BATTERY LL_ADC_CHANNEL_1
+/* 结束 */
+
+#define ADC_TIMEOUT_MS 1000
 
 uint8_t ADC_Enable(void);
 uint8_t ADC_Disable(void);

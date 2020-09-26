@@ -2,10 +2,11 @@
 #define _SHT30_H_
 
 #include "main.h"
-
 #include "iic.h"
 
+/* 可修改 */
 #define TH_I2C_ADDR ((0x44 & 0xFE) << 1)
+/* 结束 */
 
 #define TH_ACC_HIGH 0
 #define TH_ACC_MID 1
@@ -21,10 +22,6 @@ struct TH_Value
 {
     float RH;
     float CEL;
-    int8_t RH_Int;
-    uint8_t RH_Point;
-    int8_t CEL_Int;
-    uint8_t CEL_Point;
 };
 
 uint8_t TH_WriteCmd(uint16_t command);

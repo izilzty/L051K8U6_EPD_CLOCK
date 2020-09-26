@@ -3,25 +3,20 @@
 
 #include "main.h"
 
-#define SPI_TIMEOUT_MS 10
-#define EPD_TIMEOUT_MS 10000
-
+/* 可修改 */
 #define EPD_SPI SPI1
-
 #define EPD_RST_PORT EPD_RST_GPIO_Port
 #define EPD_RST_PIN EPD_RST_Pin
-
 #define EPD_BUSY_PORT EPD_BUSY_EXTI0_GPIO_Port
 #define EPD_BUSY_PIN EPD_BUSY_EXTI0_Pin
-
 #define EPD_DC_PORT EPD_DC_GPIO_Port
 #define EPD_DC_PIN EPD_DC_Pin
-
 #define EPD_CS_PORT EPD_CS_GPIO_Port
 #define EPD_CS_PIN EPD_CS_Pin
+/* 结束 */
 
-#define EPD_LED_PORT LED_GPIO_Port
-#define EPD_LED_PIN LED_Pin
+#define SPI_TIMEOUT_MS 100
+#define EPD_TIMEOUT_MS 10000
 
 #define EPD_UPDATE_MODE_FULL 0x00
 #define EPD_UPDATE_MODE_PART 0x01
@@ -37,6 +32,7 @@ void EPD_SetWindow(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8)
 void EPD_SetCursor(uint16_t x, uint8_t y_x8);
 void EPD_SendRAM(const uint8_t *data, uint16_t data_size);
 uint8_t EPD_Show(uint8_t wait_busy);
+uint8_t EPD_CheckBusy(void);
 
 void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const uint8_t *ascii_font, const uint8_t *utf8_font);
 void EPD_DrawHLine(uint16_t x, uint8_t y, uint16_t x_size, uint8_t width);
