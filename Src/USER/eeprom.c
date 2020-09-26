@@ -48,7 +48,7 @@ static uint8_t eeprom_unlock(void)
     {
         return 1;
     }
-    if ((FLASH->PECR & FLASH_PECR_PELOCK) != 0)
+    if ((FLASH->PECR & FLASH_PECR_PELOCK) == 0)
     {
         FLASH->PEKEYR = EEPROM_UNLOCK_KEY1;
         FLASH->PEKEYR = EEPROM_UNLOCK_KEY2;

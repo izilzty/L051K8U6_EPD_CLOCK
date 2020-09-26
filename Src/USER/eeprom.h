@@ -9,7 +9,7 @@
 #define EEPROM_BASE_ADDR 0x08080000
 /* 结束 */
 
-#define EEPROM_TIMEOUT_MS 100
+#define EEPROM_TIMEOUT_MS 1000
 
 uint8_t EEPROM_ReadByte(uint16_t addr);
 uint16_t EEPROM_ReadWORD(uint16_t addr);

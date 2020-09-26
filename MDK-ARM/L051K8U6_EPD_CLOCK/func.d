@@ -36,4 +36,5 @@ l051k8u6_epd_clock\func.o: ..\Src\USER\sht30.h
 l051k8u6_epd_clock\func.o: ..\Src\USER\gdeh029A1.h
 l051k8u6_epd_clock\func.o: ..\Src\USER\buzzer.h
 l051k8u6_epd_clock\func.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+l051k8u6_epd_clock\func.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 l051k8u6_epd_clock\func.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

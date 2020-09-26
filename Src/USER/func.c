@@ -1,15 +1,16 @@
 #include "func.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
 
+char String[256];
 uint8_t ResetInfo;
 struct RTC_Time Time;
 struct RTC_Alarm Alarm;
 struct TH_Value Sensor;
-char str_buf[256];
 
 static void Power_EnableGDEH029A1(void);
 static void Power_DisableGDEH029A1(void);
@@ -20,6 +21,7 @@ static void Power_DisableADC(void);
 static void Power_EnableBUZZER(void);
 static void Power_DisableBUZZER(void);
 static void DumpRTCReg(void);
+static void DumpEEPROM(void);
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -46,6 +48,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
 static void FullInit(void) /* 重新初始化全部数据 */
 {
+    char str_tmp[10];
     Power_EnableBUZZER();
     BUZZER_SetVolume(5);
 
@@ -57,18 +60,46 @@ static void FullInit(void) /* 重新初始化全部数据 */
 
     SERIAL_DebugPrint("BEGIN RESET ALL DATA");
     SERIAL_DebugPrint("RTC reset...");
-    RTC_ResetAllRegToDefault();
-    SERIAL_DebugPrint("RTC reset done");
+    if (RTC_ResetAllRegToDefault() != 0)
+    {
+        SERIAL_DebugPrint("RTC reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("RTC reset done");
+    }
     SERIAL_DebugPrint("SENSOR reset...");
-    TH_SoftReset();
-    SERIAL_DebugPrint("SENSOR reset done");
+    if (TH_SoftReset() != 0)
+    {
+        SERIAL_DebugPrint("SENSOR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("SENSOR reset done");
+    }
     SERIAL_DebugPrint("BKPR reset...");
-    BKPR_ResetAll();
-    SERIAL_DebugPrint("BKPR reset done");
+    if (BKPR_ResetAll() != 0)
+    {
+        SERIAL_DebugPrint("BKPR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("BKPR reset done");
+    }
     SERIAL_DebugPrint("EEPROM reset...");
-    EEPROM_EraseRange(0, 511);
-    SERIAL_DebugPrint("EEPROM reset done");
-    SERIAL_DebugPrint("All done");
+    snprintf(str_tmp, sizeof(str_tmp), "EEPROM: %d", EEPROM_WriteByte(0, 0xFF));
+    SERIAL_SendStringRN(str_tmp);
+    //if (EEPROM_EraseRange(0, 510) != 0)
+    //{
+    //    SERIAL_DebugPrint("EEPROM reset fail");
+    //}
+    //else
+    //{
+    //    SERIAL_DebugPrint("EEPROM reset done");
+    //}
+    SERIAL_DebugPrint("Process done");
+
+    DumpEEPROM();
 
     BUZZER_Beep(1000, 199);
     Power_DisableBUZZER();
@@ -79,15 +110,15 @@ static void FullInit(void) /* 重新初始化全部数据 */
 static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 {
     RTC_GetTime(&Time);
-    snprintf(str_buf, sizeof(str_buf), "RTC: 2%03d %d %d %d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
-    SERIAL_SendStringRN(str_buf);
+    snprintf(String, sizeof(String), "RTC: 2%03d %d %d %d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
+    SERIAL_SendStringRN(String);
 
     TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
-    snprintf(str_buf, sizeof(str_buf), "TH : TEMP:%5.2f RH:%5.2f STATUS:0x%02X", Sensor.CEL, Sensor.RH, TH_GetStatus());
-    SERIAL_SendStringRN(str_buf);
+    snprintf(String, sizeof(String), "TH : TEMP:%5.2f RH:%5.2f STATUS:0x%02X", Sensor.CEL, Sensor.RH, TH_GetStatus());
+    SERIAL_SendStringRN(String);
 
-    snprintf(str_buf, sizeof(str_buf), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
-    SERIAL_SendStringRN(str_buf);
+    snprintf(String, sizeof(String), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
+    SERIAL_SendStringRN(String);
 
     RTC_ModifyAM2Mask(0x07);
     RTC_ModifyA2IE(1);
@@ -98,7 +129,7 @@ static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
-    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET! *****\r\n");
+    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
 
     LL_mDelay(19);                                                   /* 防止下载预复位时打印出来东西，非调试时可以去掉 */
     LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用唤醒中断 */
@@ -117,11 +148,10 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
         break;
     }
 
-    Power_DisableGDEH029A1();
-    Power_DisableBUZZER();
-
-    Power_EnableSHT30_I2C();
-    Power_EnableADC();
+    Power_DisableGDEH029A1(); /* 默认关闭EPD电源 */
+    Power_DisableBUZZER();    /* 默认关闭蜂鸣器电源 */
+    Power_EnableSHT30_I2C();  /* 默认打开SHT30和I2C电源 */
+    Power_EnableADC();        /* 默认打开ADC电源 */
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -178,29 +208,6 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     SERIAL_DebugPrint("Try to reset the system");
     NVIC_SystemReset(); /* 两次未成功进入Standby模式，执行软复位 */
 }
-
-/*
-
-alarm.Seconds = 00;
-    alarm.Minutes = 9;
-
-    alarm.Hours = 9;
-    alarm.Is_12hr = 0;
-    alarm.PM = 0;
-
-    //alarm.DY = 1;
-    //alarm.Day = 5;
-
-    alarm.DY = 1;
-    alarm.Date = 6;
-
-    RTC_ModifyAM2Mask(0xFF);
-    RTC_SetAlarm2(&alarm);
-    RTC_GetAlarm2(&alarm);
-    snprintf(str_buf, sizeof(str_buf), "ALARM1:%02d:%02d:%02d PM:%d 12HR:%d DY:%d DAY:%d DATE:%02d", alarm.Hours, alarm.Minutes, alarm.Seconds, alarm.PM, alarm.Is_12hr, alarm.DY, alarm.Day, alarm.Date);
-    SERIAL_SendStringRN(str_buf);
-
-*/
 
 /* ==================== 电源控制 ==================== */
 
@@ -306,5 +313,24 @@ static void DumpRTCReg(void)
         SERIAL_SendStringRN(byte_str);
     }
     SERIAL_SendStringRN("==============");
+    SERIAL_SendStringRN("");
+}
+
+static void DumpEEPROM(void)
+{
+    uint16_t i;
+    char byte_str[9];
+    SERIAL_SendStringRN("= EEPROM =");
+    for (i = 0; i < 2048; i++)
+    {
+        if (i % 16 == 0)
+        {
+            SERIAL_SendStringRN("");
+        }
+        snprintf(byte_str, sizeof(byte_str), "0x%02X ", EEPROM_ReadByte(i));
+        SERIAL_SendString(byte_str);
+    }
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("==========");
     SERIAL_SendStringRN("");
 }
