@@ -14,7 +14,7 @@ void BUZZER_Enable(void);
 void BUZZER_Disable(void);
 void BUZZER_Start(void);
 void BUZZER_Stop(void);
-void BUZZER_Beep(uint16_t freq, uint16_t time_ms);
+void BUZZER_Beep(uint16_t time_ms);
 void BUZZER_SetVolume(uint8_t vol);
 void BUZZER_SetFrqe(uint32_t freq);
 

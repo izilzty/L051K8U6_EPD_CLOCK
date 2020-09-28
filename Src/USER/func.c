@@ -1,4 +1,4 @@
-﻿#include "func.h"
+#include "func.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -9,6 +9,7 @@ const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10
 
 uint8_t ResetInfo;
 struct RTC_Time Time;
+struct Lunar_Date Lunar;
 struct TH_Value Sensor;
 struct FUNC_Setting Setting;
 char String[256];
@@ -22,10 +23,6 @@ static void Power_DisableADC(void);
 static void Power_EnableBUZZER(void);
 static void Power_DisableBUZZER(void);
 
-static void DumpRTCReg(void);
-static void DumpEEPROM(void);
-static void DumpBKPR(void);
-
 static uint8_t BTN_ReadUP(void);
 static void BTN_WaitUP(void);
 static uint8_t BTN_ReadDOWN(void);
@@ -34,6 +31,7 @@ static uint8_t BTN_ReadSET(void);
 static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
 static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val, uint8_t *wait_btn_release, uint8_t *update_display);
+
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage);
 
 void FUNC_SaveSetting(const struct FUNC_Setting *setting);
@@ -41,6 +39,15 @@ void FUNC_ReadSetting(struct FUNC_Setting *setting);
 
 void BEEP_Button(void);
 void BEEP_OK(void);
+
+static void Menu_SetTime(void);
+static void Menu_MainMenu(void);
+static void Menu_Guide(void);
+
+static void DumpRTCReg(void);
+static void DumpEEPROM(void);
+static void DumpBKPR(void);
+static void FullInit(void);
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -53,180 +60,6 @@ static void Delay_100ns(volatile uint16_t nsX100)
         nsX100--;
     }
     ((void)nsX100);
-}
-
-/* ==================== 子菜单 ==================== */
-
-static void Menu_SetTime(void) /* 时间设置页面 */
-{
-    struct RTC_Time new_time;
-    uint8_t digit_select, save_time, update_display, wait_btn;
-
-    BEEP_OK();
-
-    Power_EnableGDEH029A1();
-
-    EPD_Init(EPD_UPDATE_MODE_FAST);
-    EPD_ClearRAM();
-    EPD_DrawUTF8(0, 0, 0, "时间设置： NEXT + -", Font_ascii_12x24, Font_utf8_24x24);
-    EPD_DrawHLine(0, 27, 296, 2);
-    EPD_Show(1);
-    EPD_Init(EPD_UPDATE_MODE_PART);
-    EPD_ClearRAM();
-    EPD_DrawUTF8(0, 0, 0, "时间设置： NEXT + -", Font_ascii_12x24, Font_utf8_24x24);
-    EPD_DrawHLine(0, 27, 296, 2);
-    EPD_EnterSleep();
-
-    BTN_WaitAll();
-
-    RTC_GetTime(&new_time);
-    if (RTC_GetOSF() != 0 || new_time.Month == 0)
-    {
-        memcpy(&new_time, &DefaultTime, sizeof(struct RTC_Time));
-    }
-
-    digit_select = 0;
-    update_display = 1;
-    wait_btn = 0;
-    save_time = 2;
-    while (save_time == 2)
-    {
-        if (BTN_ReadSET() == 0)
-        {
-            if (digit_select < 17)
-            {
-                digit_select += 1;
-            }
-            else
-            {
-                digit_select = 0;
-            }
-            update_display = 1;
-            wait_btn = 1;
-            BEEP_Button();
-        }
-        switch (digit_select)
-        {
-        case 0:
-            BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0, &wait_btn, &update_display);
-            break;
-        case 1:
-            BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0, &wait_btn, &update_display);
-            break;
-        case 2:
-            BTN_ModifySingleDigit(&new_time.Year, 1, 9, 0, &wait_btn, &update_display);
-            break;
-        case 3:
-            BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 4:
-            BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0, &wait_btn, &update_display);
-            break;
-        case 5:
-            BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 6:
-            BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0, &wait_btn, &update_display);
-            break;
-        case 7:
-            BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 8:
-            BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1, &wait_btn, &update_display);
-            break;
-        case 9:
-            if (new_time.Is_12hr == 0)
-            {
-                digit_select += 1;
-            }
-            BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0, &wait_btn, &update_display);
-            break;
-        case 10:
-            if (new_time.Is_12hr == 0)
-            {
-                BTN_ModifySingleDigit(&new_time.Hours, 1, 2, 0, &wait_btn, &update_display);
-            }
-            else
-            {
-                BTN_ModifySingleDigit(&new_time.Hours, 1, 1, 0, &wait_btn, &update_display);
-            }
-            break;
-        case 11:
-            BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 12:
-            BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0, &wait_btn, &update_display);
-            break;
-        case 13:
-            BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 14:
-            BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0, &wait_btn, &update_display);
-            break;
-        case 15:
-            BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 16:
-            if (BTN_ReadUP() == 0)
-            {
-                save_time = 1;
-                wait_btn = 0;
-                update_display = 0;
-            }
-            break;
-        case 17:
-            if (BTN_ReadUP() == 0)
-            {
-                save_time = 0;
-                wait_btn = 0;
-                update_display = 0;
-            }
-            break;
-        }
-        if (update_display != 0)
-        {
-            if (EPD_CheckBusy() == 0)
-            {
-                update_display = 0;
-                snprintf(String, sizeof(String), "IS12HR:%d 2%03d %02d %02d %01d", new_time.Is_12hr, new_time.Year, new_time.Month, new_time.Date, new_time.Day);
-                EPD_DrawUTF8(0, 4, 0, String, Font_ascii_12x24, Font_utf8_24x24);
-                snprintf(String, sizeof(String), "PM:%d %02d:%02d:%02d", new_time.PM, new_time.Hours, new_time.Minutes, new_time.Seconds);
-                EPD_DrawUTF8(0, 7, 0, String, Font_ascii_12x24, Font_utf8_24x24);
-                EPD_Show(0);
-            }
-        }
-        else
-        {
-            if (EPD_CheckBusy() == 0)
-            {
-                EPD_EnterSleep();
-            }
-        }
-        if (wait_btn != 0)
-        {
-            BTN_WaitAll();
-            wait_btn = 0;
-        }
-        if (save_time != 0)
-        {
-            RTC_SetTime(&new_time);
-            RTC_ClearOSF();
-        }
-    }
-    Power_DisableGDEH029A1();
-    BEEP_OK();
-    BTN_WaitAll();
-}
-
-static void Menu_Guide(void) /* 首次使用时的引导 */
-{
-}
-
-/* ==================== 主菜单 ==================== */
-
-static void Menu_MainMenu(void)
-{
-    Menu_SetTime();
 }
 
 /* ==================== 主要功能 ==================== */
@@ -266,6 +99,8 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
         return;
     }
 
+    LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date);
+
     if (Sensor.CEL < 0)
     {
         temp_value[0] = (int8_t)(Sensor.CEL - 0.05);
@@ -296,31 +131,31 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawVLine(202, 39, 56, 2);
     EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.voltage_min, battery_value);
 
-    snprintf(String, sizeof(String), "2%03d/%d/%02d %01d", Time.Year, Time.Month, Time.Date, Time.Day);
-    EPD_DrawUTF8(0, 0, 1, String, Font_ascii_12x24, Font_utf8_24x24);
+    snprintf(String, sizeof(String), "2%03d/%d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
+    EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
     if (Time.Is_12hr != 0)
     {
         if (Time.PM != 0)
         {
-            EPD_DrawUTF8(0, 9, 2, "PM", Font_ascii_12x24, Font_utf8_24x24);
+            EPD_DrawUTF8(0, 9, 2, "PM", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
         }
         else
         {
-            EPD_DrawUTF8(0, 5, 2, "AM", Font_ascii_12x24, Font_utf8_24x24);
+            EPD_DrawUTF8(0, 5, 2, "AM", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
         }
     }
     snprintf(String, sizeof(String), "%02d:%02d", Time.Hours, Time.Minutes);
     if (Time.Is_12hr != 0)
     {
-        EPD_DrawUTF8(34, 5, 6, String, Font_clock_27x56, Font_utf8_24x24);
+        EPD_DrawUTF8(34, 5, 6, String, EPD_FontAscii_27x56, EPD_FontUTF8_24x24);
     }
     else
     {
-        EPD_DrawUTF8(22, 5, 6, String, Font_clock_27x56, Font_utf8_24x24);
+        EPD_DrawUTF8(22, 5, 6, String, EPD_FontAscii_27x56, EPD_FontUTF8_24x24);
     }
     if (temp_value[0] < -9)
     {
-        snprintf(String, sizeof(String), "%02d ℃", temp_value[0], temp_value[1]);
+        snprintf(String, sizeof(String), "%02d ℃", temp_value[0]);
     }
     else if (temp_value[0] < 100)
     {
@@ -328,88 +163,33 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     }
     else
     {
-        snprintf(String, sizeof(String), "%03d ℃", temp_value[0], temp_value[1]);
+        snprintf(String, sizeof(String), "%03d ℃", temp_value[0]);
     }
-    EPD_DrawUTF8(213, 5, 0, String, Font_ascii_12x24, Font_utf8_24x24);
+    EPD_DrawUTF8(213, 5, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
     if (rh_value[0] < 100)
     {
         snprintf(String, sizeof(String), "%02d.%d％", rh_value[0], rh_value[1]);
     }
     else
     {
-        snprintf(String, sizeof(String), "%03d ％", rh_value[0], rh_value[1]);
+        snprintf(String, sizeof(String), "%03d ％", rh_value[0]);
     }
-    EPD_DrawUTF8(213, 9, 0, String, Font_ascii_12x24, Font_utf8_24x24);
-    snprintf(String, sizeof(String), "农历：", Sensor.CEL);
-    EPD_DrawUTF8(0, 14, 0, String, Font_ascii_12x24, Font_utf8_12x12);
+    EPD_DrawUTF8(213, 9, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+    snprintf(String, sizeof(String), "农历：%s%s%s", Lunar_MonthLeapString[Lunar.IsLeap], Lunar_MonthString[Lunar.Month], Lunar_DateString[Lunar.Date]);
+    EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16);
 
     EPD_Show(0);
     LP_EnterSleep();
 
+    SERIAL_DebugPrint("EXIT SLEEP");
+
     battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
 
+    SERIAL_DebugPrint("ADC OK");
+
     EPD_EnterDeepSleep();
     Power_DisableGDEH029A1();
-}
-
-static void FullInit(void) /* 重新初始化全部数据 */
-{
-    BUZZER_SetFrqe(4000);
-    BUZZER_SetVolume(DefaultSetting.buzzer_volume);
-
-    BUZZER_Beep(1000, 49);
-    LL_mDelay(49);
-    BUZZER_Beep(1000, 49);
-    LL_mDelay(49);
-    BUZZER_Beep(1000, 49);
-
-    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
-    SERIAL_DebugPrint("RTC reset...");
-    if (RTC_ResetAllRegToDefault() != 0)
-    {
-        SERIAL_DebugPrint("RTC reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("RTC reset done");
-    }
-    SERIAL_DebugPrint("SENSOR reset...");
-    if (TH_SoftReset() != 0)
-    {
-        SERIAL_DebugPrint("SENSOR reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("SENSOR reset done");
-    }
-    SERIAL_DebugPrint("BKPR reset...");
-    if (BKPR_ResetAll() != 0)
-    {
-        SERIAL_DebugPrint("BKPR reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("BKPR reset done");
-    }
-    SERIAL_DebugPrint("EEPROM reset...");
-    if (EEPROM_EraseRange(0, 511) != 0)
-    {
-        SERIAL_DebugPrint("EEPROM reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("EEPROM reset done");
-    }
-    SERIAL_DebugPrint("Process done");
-
-#ifdef ENABLE_DEBUG_PRINT
-    DumpEEPROM();
-    DumpRTCReg();
-    DumpBKPR();
-#endif
-
-    BUZZER_Beep(1000, 199);
 }
 
 /* ==================== 主循环 ==================== */
@@ -453,6 +233,8 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     }
 
     FUNC_ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
+
+    Setting.buzzer_enable = 1;
 
     if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < Setting.voltage_boot) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
     {
@@ -579,7 +361,6 @@ static void Power_DisableADC(void)
 static void Power_EnableBUZZER(void)
 {
     BUZZER_Enable();
-    BUZZER_SetVolume(10);
 }
 
 static void Power_DisableBUZZER(void)
@@ -669,6 +450,67 @@ static void DumpBKPR(void)
     SERIAL_SendStringRN("BKPR DUMP END");
     SERIAL_SendStringRN("");
 }
+
+static void FullInit(void) /* 重新初始化全部数据 */
+{
+    BUZZER_SetFrqe(4000);
+    BUZZER_SetVolume(DefaultSetting.buzzer_volume);
+
+    BUZZER_Beep(49);
+    LL_mDelay(49);
+    BUZZER_Beep(49);
+    LL_mDelay(49);
+    BUZZER_Beep(49);
+
+    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
+    SERIAL_DebugPrint("RTC reset...");
+    if (RTC_ResetAllRegToDefault() != 0)
+    {
+        SERIAL_DebugPrint("RTC reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("RTC reset done");
+    }
+    SERIAL_DebugPrint("SENSOR reset...");
+    if (TH_SoftReset() != 0)
+    {
+        SERIAL_DebugPrint("SENSOR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("SENSOR reset done");
+    }
+    SERIAL_DebugPrint("BKPR reset...");
+    if (BKPR_ResetAll() != 0)
+    {
+        SERIAL_DebugPrint("BKPR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("BKPR reset done");
+    }
+    SERIAL_DebugPrint("EEPROM reset...");
+    if (EEPROM_EraseRange(0, 511) != 0)
+    {
+        SERIAL_DebugPrint("EEPROM reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("EEPROM reset done");
+    }
+    SERIAL_DebugPrint("Process done");
+
+#ifdef ENABLE_DEBUG_PRINT
+    DumpEEPROM();
+    DumpRTCReg();
+    DumpBKPR();
+#endif
+
+    BUZZER_Beep(199);
+}
+
+/* ==================== 按键读取 ==================== */
 
 static uint8_t BTN_ReadUP()
 {
@@ -807,6 +649,8 @@ static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t
     *number = digit[0] * 1000 + digit[1] * 100 + digit[2] * 10 + digit[3];
 }
 
+/* ==================== 图形绘制 ==================== */
+
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage)
 {
     uint8_t dis_ram[98];
@@ -814,7 +658,7 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float m
 
     if (voltage < min_voltage)
     {
-        EPD_DrawImage(x, y_x8, ICON_BATT_WARN);
+        EPD_DrawImage(x, y_x8, EPD_Image_BattWarn);
         return;
     }
     voltage -= min_voltage;
@@ -827,7 +671,7 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float m
     {
         bar_size = 20;
     }
-    memcpy(dis_ram, ICON_BATT_FRAME, sizeof(dis_ram));
+    memcpy(dis_ram, EPD_Image_BattFrame, sizeof(dis_ram));
     for (i = 0; i < bar_size; i++)
     {
         dis_ram[83 - (i * 3) + 0] &= 0xF8;
@@ -836,6 +680,8 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float m
     }
     EPD_DrawImage(x, y_x8, dis_ram);
 }
+
+/* ==================== 设置存储 ==================== */
 
 void FUNC_SaveSetting(const struct FUNC_Setting *setting)
 {
@@ -868,25 +714,308 @@ void FUNC_ReadSetting(struct FUNC_Setting *setting)
     }
 }
 
+/* ==================== 蜂鸣器 ==================== */
+
 void BEEP_Button(void)
 {
     if (Setting.buzzer_enable != 0)
     {
         BUZZER_SetFrqe(4000);
         BUZZER_SetVolume(Setting.buzzer_volume);
-        BUZZER_Beep(4000, 19);
+        BUZZER_Beep(19);
     }
 }
 
 void BEEP_OK(void)
 {
     if (Setting.buzzer_enable != 0)
-    {
+    {        
         BUZZER_SetFrqe(4000);
         BUZZER_SetVolume(Setting.buzzer_volume);
-        BUZZER_Beep(1000, 29);
-        BUZZER_Beep(4000, 29);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(29);
+        BUZZER_SetFrqe(4000);
+        BUZZER_Beep(29);
     }
+}
+
+/* ==================== 子菜单 ==================== */
+
+static void Menu_SetTime(void) /* 时间设置页面 */
+{
+    struct RTC_Time new_time;
+    uint8_t i, digit_select, save_time, update_display, wait_btn, arrow_y;
+    uint16_t arrow_x;
+    float battery_value;
+
+    BEEP_OK();
+
+    Power_EnableGDEH029A1();
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 0, "时间设置：", NULL, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStop();
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+            EPD_EnterSleep();
+        }
+    }
+    BTN_WaitAll();
+
+    RTC_GetTime(&new_time);
+    if (RTC_GetOSF() != 0 || new_time.Month == 0)
+    {
+        memcpy(&new_time, &DefaultTime, sizeof(struct RTC_Time));
+    }
+
+    digit_select = 0;
+    update_display = 1;
+    wait_btn = 0;
+    save_time = 2;
+    while (save_time == 2)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (digit_select < 17)
+            {
+                digit_select += 1;
+            }
+            else
+            {
+                digit_select = 0;
+            }
+            update_display = 1;
+            wait_btn = 1;
+            BEEP_Button();
+        }
+        switch (digit_select)
+        {
+        case 0:
+            BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0, &wait_btn, &update_display);
+            break;
+        case 1:
+            BTN_ModifySingleDigit(&new_time.Year, 1, 9, 0, &wait_btn, &update_display);
+            break;
+        case 2:
+            BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 3:
+            BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0, &wait_btn, &update_display);
+            break;
+        case 4:
+            BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 5:
+            BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0, &wait_btn, &update_display);
+            break;
+        case 6:
+            BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 7:
+            BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1, &wait_btn, &update_display);
+            break;
+        case 8:
+            BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0, &wait_btn, &update_display);
+            break;
+        case 9:
+            if (new_time.Is_12hr == 0)
+            {
+                digit_select += 1;
+            }
+            BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0, &wait_btn, &update_display);
+            break;
+        case 10:
+            if (new_time.Is_12hr == 0)
+            {
+                BTN_ModifySingleDigit(&new_time.Hours, 1, 2, 0, &wait_btn, &update_display);
+            }
+            else
+            {
+                BTN_ModifySingleDigit(&new_time.Hours, 1, 1, 0, &wait_btn, &update_display);
+            }
+            break;
+        case 11:
+            BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 12:
+            BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0, &wait_btn, &update_display);
+            break;
+        case 13:
+            BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 14:
+            BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0, &wait_btn, &update_display);
+            break;
+        case 15:
+            BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 16:
+            if (BTN_ReadUP() == 0)
+            {
+                save_time = 1;
+                wait_btn = 0;
+                update_display = 0;
+            }
+            break;
+        case 17:
+            if (BTN_ReadUP() == 0)
+            {
+                save_time = 0;
+                wait_btn = 0;
+                update_display = 0;
+            }
+            break;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+
+                if (digit_select == 16 || digit_select == 17)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+
+                snprintf(String, sizeof(String), "2%03d年%02d月%02d日 周%d", new_time.Year, new_time.Month, new_time.Date, new_time.Day);
+                EPD_DrawUTF8(7, 4, 5, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+
+                if (new_time.Is_12hr != 0)
+                {
+                    snprintf(String, sizeof(String), "时间格式：12小时制");
+                }
+                else
+                {
+                    snprintf(String, sizeof(String), "时间格式：24小时制");
+                }
+                EPD_DrawUTF8(5, 8, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+
+                if (new_time.Is_12hr != 0)
+                {
+                    if (new_time.PM != 0)
+                    {
+                        snprintf(String, sizeof(String), "下午");
+                    }
+                    else
+                    {
+                        snprintf(String, sizeof(String), "上午");
+                    }
+                }
+                else
+                {
+                    snprintf(String, sizeof(String), "    ");
+                }
+                EPD_DrawUTF8(5, 12, 0, String, NULL, EPD_FontUTF8_24x24);
+
+                snprintf(String, sizeof(String), "%02d:%02d:%02d", new_time.Hours, new_time.Minutes, new_time.Seconds);
+                EPD_DrawUTF8(58, 12, 5, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+
+                if (digit_select >= 0 && digit_select <= 2)
+                {
+                    arrow_x = 24 + (digit_select * 17);
+                    arrow_y = 7;
+                }
+                else if (digit_select >= 3 && digit_select <= 4)
+                {
+                    arrow_x = 104 + ((digit_select - 3) * 17);
+                    arrow_y = 7;
+                }
+                else if (digit_select >= 5 && digit_select <= 6)
+                {
+                    arrow_x = 167 + ((digit_select - 5) * 17);
+                    arrow_y = 7;
+                }
+                else if (digit_select >= 7 && digit_select <= 7)
+                {
+                    arrow_x = 276 + ((digit_select - 7) * 17);
+                    arrow_y = 7;
+                }
+                else if (digit_select >= 8 && digit_select <= 8)
+                {
+                    arrow_x = 132;
+                    arrow_y = 11;
+                }
+                else if (digit_select >= 9 && digit_select <= 9)
+                {
+                    arrow_x = 23;
+                    arrow_y = 15;
+                }
+                else if (digit_select >= 10 && digit_select <= 11)
+                {
+                    arrow_x = 58 + ((digit_select - 10) * 17);
+                    arrow_y = 15;
+                }
+                else if (digit_select >= 12 && digit_select <= 13)
+                {
+                    arrow_x = 109 + ((digit_select - 12) * 17);
+                    arrow_y = 15;
+                }
+                else if (digit_select >= 14 && digit_select <= 15)
+                {
+                    arrow_x = 160 + ((digit_select - 14) * 17);
+                    arrow_y = 15;
+                }
+                else if (digit_select >= 16 && digit_select <= 17)
+                {
+                    arrow_x = 221 + ((digit_select - 16) * 47);
+                    arrow_y = 15;
+                }
+                EPD_ClearArea(5, 7, 283, 1, 0xFF);
+                EPD_ClearArea(5, 11, 283, 1, 0xFF);
+                EPD_ClearArea(5, 15, 283, 1, 0xFF);
+                EPD_DrawImage(arrow_x, arrow_y, EPD_Image_Arrow_12x8);
+
+                EPD_Show(0);
+            }
+        }
+        if (wait_btn != 0)
+        {
+            BTN_WaitAll();
+            wait_btn = 0;
+        }
+        if (save_time == 1)
+        {
+            RTC_SetTime(&new_time);
+            RTC_ClearOSF();
+        }
+    }
+    Power_DisableGDEH029A1();
+    BEEP_OK();
+    BTN_WaitAll();
+}
+
+static void Menu_Guide(void) /* 首次使用时的引导 */
+{
+}
+
+/* ==================== 主菜单 ==================== */
+
+static void Menu_MainMenu(void)
+{
+    Menu_SetTime();
 }
 
 /*

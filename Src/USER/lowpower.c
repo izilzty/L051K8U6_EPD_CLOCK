@@ -79,6 +79,7 @@ void LP_EnterStop(void)
     __WFI();                                                     /* 进入Stop模式，等待中断唤醒 */
     /* 唤醒后首先会进入EXTI0_1_IRQHandler()，在中断函数里由LL_EXTI_ClearFlag_0_31()清除中断标志并返回（中断函数的内容全部由CubeMX自动生成，不需要进行修改。） */
     EXTI->IMR = it_save; /* 恢复中断寄存器设置 */
+    LL_PWR_DisableUltraLowPower(); /* 恢复电源配置 */
 }
 
 /**

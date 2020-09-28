@@ -218,6 +218,24 @@ void EPD_ClearRAM(void)
 }
 
 /**
+ * @brief  清除EPD控制器指定区域显示RAM。
+ * @note   执行完成后窗口会恢复至全屏幕。
+ */
+void EPD_ClearArea(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8, uint8_t color)
+{
+    uint16_t i, data_size;
+
+    data_size = x_size * y_size_x8;
+    EPD_SetWindow(x, y_x8, x_size, y_size_x8);
+    epd_send_cmd(0x24);
+    for (i = 0; i < data_size; i++)
+    {
+        epd_send_data(color);
+    }
+    EPD_SetWindow(0, 0, 296, 16);
+}
+
+/**
  * @brief  向EPD控制器发送指定大小的显示数据。
  * @param  data 要发送数据的指针。
  * @param  data_size 要发送数据的大小。
@@ -236,7 +254,7 @@ void EPD_SendRAM(const uint8_t *data, uint16_t data_size)
 uint8_t EPD_Show(uint8_t wait_busy)
 {
     epd_send_cmd(0x22);
-    epd_send_data(0xC4);
+    epd_send_data(0xC6); /* 更新完成后自动关闭DC-DC转换器 */
     epd_send_cmd(0x20);
     if (wait_busy != 0)
     {
@@ -371,9 +389,9 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
     x_count = 0;
     while (*str != '\0')
     {
-        if (ascii_font != NULL && (*str & 0x80) == 0x00) /* 普通ASCII字符 */
+        if ((*str & 0x80) == 0x00) /* 普通ASCII字符 */
         {
-            if (*str != ' ')
+            if (ascii_font != NULL)
             {
                 font_size = ascii_font[1] * ascii_font[2] / 8;
                 ascii_base_addr = ascii_font + (*str - ascii_font[0]) * font_size + 4;
@@ -382,8 +400,19 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
                     EPD_SetWindow(x + x_count, y_x8, ascii_font[1], ascii_font[2] / 8);
                     EPD_SendRAM(ascii_base_addr, font_size);
                 }
+                x_count += ascii_font[1] + gap;
             }
-            x_count += ascii_font[1] + gap;
+            else if (*str == ' ' && utf8_font != NULL) /* 未指定ASCII字体时空格为UTF8字体宽度除2 */
+            {
+                font_size = (utf8_font[1] / 2) * (utf8_font[2] / 8);
+                EPD_SetWindow(x + x_count, y_x8, utf8_font[1] / 2, utf8_font[2] / 8);
+                for (i = 0; i < font_size; i++)
+                {
+                    utf8_size = 0xFF; /* 借用 */
+                    EPD_SendRAM(&utf8_size, 1);
+                }
+                x_count += utf8_font[1] / 2 + gap;
+            }
         }
         else if (utf8_font != NULL) /* UTF8字符 */
         {
@@ -466,7 +495,7 @@ void EPD_DrawImage(uint16_t x, uint8_t y_x8, const uint8_t *image)
     uint8_t y_size;
     y_size = image[1] / 8;
     EPD_SetWindow(x, y_x8, image[0], y_size);
-    EPD_SendRAM(image + 2, image[0] * y_size - 2);
+    EPD_SendRAM(image + 2, image[0] * y_size);
 }
 
 /**

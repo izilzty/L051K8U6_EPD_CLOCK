@@ -15,6 +15,7 @@
 #include "sht30.h"
 #include "gdeh029A1.h"
 #include "buzzer.h"
+#include "lunar.h"
 
 #define BTN_DEBOUNCE_MS 19
 

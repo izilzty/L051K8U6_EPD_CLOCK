@@ -42,16 +42,16 @@ void BUZZER_SetFrqe(uint32_t freq)
 {
     uint32_t autoreload;
 
-    if (autoreload > BUZZER_CLOCK)
+    if (freq > BUZZER_CLOCK)
     {
         autoreload = 1;
     }
     else
     {
-        autoreload = BUZZER_CLOCK / freq;
+        autoreload = (BUZZER_CLOCK / freq) - 1;
         if (autoreload > 0xFFFF)
         {
-            autoreload = 0;
+            autoreload = 1;
         }
     }
     LL_TIM_SetAutoReload(BUZZER_TIMER, autoreload);
@@ -63,14 +63,12 @@ void BUZZER_SetFrqe(uint32_t freq)
 
 /**
  * @brief  蜂鸣器响一声。
- * @param  freq 鸣响频率。
  * @param  time_ms 持续时间。
  */
-void BUZZER_Beep(uint16_t freq, uint16_t time_ms)
+void BUZZER_Beep(uint16_t time_ms)
 {
-    if (freq != 0)
+    if (time_ms != 0)
     {
-        BUZZER_SetFrqe(freq);
         LL_TIM_CC_EnableChannel(BUZZER_TIMER, BUZZER_CHANNEL);
     }
     LL_mDelay(time_ms);

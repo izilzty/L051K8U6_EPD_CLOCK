@@ -9,12 +9,12 @@ License Information: izilzty lis, na, LIC=EXJT4-F3PC0-56GQ2-9G1D4-5GI9Y-GH7V6
  
 Tool Versions:
 Toolchain:       MDK-ARM Plus  Version: 5.31.0.0
-Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
-C Compiler:      Armcc.exe V5.06 update 6 (build 750)
-Assembler:       Armasm.exe V5.06 update 6 (build 750)
-Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
-Library Manager: ArmAr.exe V5.06 update 6 (build 750)
-Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
+Toolchain Path:  D:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.14
+Assembler:       Armasm.exe V6.14
+Linker/Locator:  ArmLink.exe V6.14
+Library Manager: ArmAr.exe V6.14
+Hex Converter:   FromElf.exe V6.14
 CPU DLL:         SARMCM3.DLL V5.31.0.0
 Dialog DLL:      DARMCM1.DLL V1.19.3.0
 Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.7.0
@@ -22,33 +22,17 @@ Dialog DLL:      TARMCM1.DLL V1.14.2.0
  
 <h2>Project:</h2>
 E:\Projects\STM32CubeMX\L051K8U6_EPD_CLOCK\MDK-ARM\L051K8U6_EPD_CLOCK.uvprojx
-Project File Date:  09/27/2020
+Project File Date:  09/29/2020
 
 <h2>Output:</h2>
-*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+*** Using Compiler 'V6.14', folder: 'D:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'L051K8U6_EPD_CLOCK'
+compiling buzzer.c...
 compiling func.c...
-..\Src\USER\func.c(323): warning:  #225-D: the format string ends before this argument
-          snprintf(String, sizeof(String), "%02d â„?", temp_value[0], temp_value[1]);
-..\Src\USER\func.c(331): warning:  #225-D: the format string ends before this argument
-          snprintf(String, sizeof(String), "%03d â„?", temp_value[0], temp_value[1]);
-..\Src\USER\func.c(340): warning:  #225-D: the format string ends before this argument
-          snprintf(String, sizeof(String), "%03d ï¼?", rh_value[0], rh_value[1]);
-..\Src\USER\func.c(343): warning:  #225-D: the format string ends before this argument
-      snprintf(String, sizeof(String), "å†?åŽ?ï¼?", Sensor.CEL);
-..\Src\USER\func.c(574): warning:  #177-D: function "Power_DisableADC"  was declared but never referenced
-  static void Power_DisableADC(void)
-..\Src\USER\func.c(585): warning:  #177-D: function "Power_DisableBUZZER"  was declared but never referenced
-  static void Power_DisableBUZZER(void)
-..\Src\USER\func.c(686): warning:  #177-D: function "BTN_WaitUP"  was declared but never referenced
-  static void BTN_WaitUP(void)
-..\Src\USER\func.c(714): warning:  #177-D: function "BTN_WaitDOWN"  was declared but never referenced
-  static void BTN_WaitDOWN(void)
-..\Src\USER\func.c: 8 warnings, 0 errors
 linking...
-Program Size: Code=26912 RO-data=8888 RW-data=24 ZI-data=1408  
+Program Size: Code=34192 RO-data=12916 RW-data=8 ZI-data=1328  
 FromELF: creating hex file...
-"L051K8U6_EPD_CLOCK\L051K8U6_EPD_CLOCK.axf" - 0 Error(s), 8 Warning(s).
+"L051K8U6_EPD_CLOCK\L051K8U6_EPD_CLOCK.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 

@@ -1,669 +1,698 @@
 Dependencies for Project 'L051K8U6_EPD_CLOCK', Target 'L051K8U6_EPD_CLOCK': (DO NOT MODIFY !)
-CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
-F (startup_stm32l051xx.s)(0x5F708DDA)(--cpu Cortex-M0+ -g --apcs=interwork -I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include--pd "__UVISION_VERSION SETA 531" --pd "_RTE_ SETA 1" --pd "STM32L051xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32l051xx.lst --xref -o l051k8u6_epd_clock\startup_stm32l051xx.o --depend l051k8u6_epd_clock\startup_stm32l051xx.d)
-F (../Src/main.c)(0x5F708DD6)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\main.o --omf_browse l051k8u6_epd_clock\main.crf --depend l051k8u6_epd_clock\main.d)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (../Inc/adc.h)(0x5F708DD5)
-I (../Inc/i2c.h)(0x5F708DD5)
-I (../Inc/spi.h)(0x5F708DD5)
-I (../Inc/tim.h)(0x5F708DD6)
-I (../Inc/usart.h)(0x5F708DD6)
-I (../Inc/gpio.h)(0x5F708DD1)
-I (../Src/USER/func.h)(0x5F70B1C5)
-I (../Src/USER/lowpower.h)(0x5F6EB8E7)
-I (../Src/USER/analog.h)(0x5F6EB999)
-I (../Src/USER/bkpr.h)(0x5F6EB999)
-I (../Src/USER/eeprom.h)(0x5F6F4C57)
-I (../Src/USER/serial.h)(0x5F6EB9C3)
-I (../Src/USER/iic.h)(0x5F6EB8DF)
-I (../Src/USER/ds3231.h)(0x5F6FFA12)
-I (../Src/USER/sht30.h)(0x5F6EB8FF)
-I (../Src/USER/gdeh029A1.h)(0x5F708BF7)
-I (../Src/USER/buzzer.h)(0x5F70A9FE)
-F (../Src/gpio.c)(0x5F708DD1)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\gpio.o --omf_browse l051k8u6_epd_clock\gpio.crf --depend l051k8u6_epd_clock\gpio.d)
-I (../Inc/gpio.h)(0x5F708DD1)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/adc.c)(0x5F708DD5)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\adc.o --omf_browse l051k8u6_epd_clock\adc.crf --depend l051k8u6_epd_clock\adc.d)
-I (../Inc/adc.h)(0x5F708DD5)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/i2c.c)(0x5F708DD5)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\i2c.o --omf_browse l051k8u6_epd_clock\i2c.crf --depend l051k8u6_epd_clock\i2c.d)
-I (../Inc/i2c.h)(0x5F708DD5)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/spi.c)(0x5F708DD5)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\spi.o --omf_browse l051k8u6_epd_clock\spi.crf --depend l051k8u6_epd_clock\spi.d)
-I (../Inc/spi.h)(0x5F708DD5)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/tim.c)(0x5F708DD5)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\tim.o --omf_browse l051k8u6_epd_clock\tim.crf --depend l051k8u6_epd_clock\tim.d)
-I (../Inc/tim.h)(0x5F708DD6)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/usart.c)(0x5F708DD6)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\usart.o --omf_browse l051k8u6_epd_clock\usart.crf --depend l051k8u6_epd_clock\usart.d)
-I (../Inc/usart.h)(0x5F708DD6)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/stm32l0xx_it.c)(0x5F708DD6)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_it.o --omf_browse l051k8u6_epd_clock\stm32l0xx_it.crf --depend l051k8u6_epd_clock\stm32l0xx_it.d)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (../Inc/stm32l0xx_it.h)(0x5F708DD6)
-I (../Src/USER/serial.h)(0x5F6EB9C3)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_gpio.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_gpio.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_gpio.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_gpio.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_adc.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_adc.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_adc.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_adc.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_dma.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_dma.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_dma.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_dma.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_rcc.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_rcc.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_rcc.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_rcc.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_utils.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_utils.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_utils.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_utils.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_exti.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_exti.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_exti.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_exti.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_i2c.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_i2c.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_i2c.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_i2c.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_spi.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_spi.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_spi.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_spi.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_pwr.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_pwr.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_pwr.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_pwr.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_tim.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_tim.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_tim.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_tim.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_usart.c)(0x5F61E26B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\stm32l0xx_ll_usart.o --omf_browse l051k8u6_epd_clock\stm32l0xx_ll_usart.crf --depend l051k8u6_epd_clock\stm32l0xx_ll_usart.d)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-F (../Src/system_stm32l0xx.c)(0x5F61E260)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\system_stm32l0xx.o --omf_browse l051k8u6_epd_clock\system_stm32l0xx.crf --depend l051k8u6_epd_clock\system_stm32l0xx.d)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-F (..\Src\USER\eeprom.c)(0x5F6F52B7)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\eeprom.o --omf_browse l051k8u6_epd_clock\eeprom.crf --depend l051k8u6_epd_clock\eeprom.d)
-I (..\Src\USER\eeprom.h)(0x5F6F4C57)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\func.c)(0x5F70B302)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\func.o --omf_browse l051k8u6_epd_clock\func.crf --depend l051k8u6_epd_clock\func.d)
-I (..\Src\USER\func.h)(0x5F70B1C5)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
+CompilerVersion: 6140000::V6.14::ARMCLANG
+F (startup_stm32l051xx.s)(0x5F721117)(--target=arm-arm-none-eabi -mcpu=cortex-m0plus -masm=auto -c-gdwarf-3 -Wa,armasm,--pd,"__MICROLIB SETA 1"-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-Wa,armasm,--pd,"__UVISION_VERSION SETA 531" -Wa,armasm,--pd,"_RTE_ SETA 1" -Wa,armasm,--pd,"STM32L051xx SETA 1" -Wa,armasm,--pd,"_RTE_ SETA 1"-o l051k8u6_epd_clock/startup_stm32l051xx.o)
+F (../Src/main.c)(0x5F708DD6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/main.o -MD)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Inc\adc.h)(0x5F708DD5)
+I (..\Inc\i2c.h)(0x5F708DD5)
+I (..\Inc\spi.h)(0x5F708DD5)
+I (..\Inc\tim.h)(0x5F708DD6)
+I (..\Inc\usart.h)(0x5F708DD6)
+I (..\Inc\gpio.h)(0x5F708DD1)
+I (..\Src\USER\func.h)(0x5F71509D)
 I (..\Src\USER\lowpower.h)(0x5F6EB8E7)
 I (..\Src\USER\analog.h)(0x5F6EB999)
 I (..\Src\USER\bkpr.h)(0x5F6EB999)
 I (..\Src\USER\eeprom.h)(0x5F6F4C57)
 I (..\Src\USER\serial.h)(0x5F6EB9C3)
 I (..\Src\USER\iic.h)(0x5F6EB8DF)
-I (../Inc/i2c.h)(0x5F708DD5)
 I (..\Src\USER\ds3231.h)(0x5F6FFA12)
 I (..\Src\USER\sht30.h)(0x5F6EB8FF)
-I (..\Src\USER\gdeh029A1.h)(0x5F708BF7)
-I (..\Src\USER\buzzer.h)(0x5F70A9FE)
-I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
-I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
-I (D:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
-F (..\Src\USER\serial.c)(0x5F6EB6E9)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\serial.o --omf_browse l051k8u6_epd_clock\serial.crf --depend l051k8u6_epd_clock\serial.d)
+I (..\Src\USER\gdeh029A1.h)(0x5F71EFC9)
+I (..\Src\USER\buzzer.h)(0x5F720F89)
+I (..\Src\USER\lunar.h)(0x5F71AFB3)
+F (../Src/gpio.c)(0x5F708DD1)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/gpio.o -MD)
+I (..\Inc\gpio.h)(0x5F708DD1)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/adc.c)(0x5F708DD5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/adc.o -MD)
+I (..\Inc\adc.h)(0x5F708DD5)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/i2c.c)(0x5F708DD5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/i2c.o -MD)
+I (..\Inc\i2c.h)(0x5F708DD5)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/spi.c)(0x5F708DD5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/spi.o -MD)
+I (..\Inc\spi.h)(0x5F708DD5)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/tim.c)(0x5F708DD5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/tim.o -MD)
+I (..\Inc\tim.h)(0x5F708DD6)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/usart.c)(0x5F708DD6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/usart.o -MD)
+I (..\Inc\usart.h)(0x5F708DD6)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (../Src/stm32l0xx_it.c)(0x5F708DD6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_it.o -MD)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Inc\stm32l0xx_it.h)(0x5F708DD6)
 I (..\Src\USER\serial.h)(0x5F6EB9C3)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
-F (..\Src\USER\bkpr.c)(0x5F6AF166)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\bkpr.o --omf_browse l051k8u6_epd_clock\bkpr.crf --depend l051k8u6_epd_clock\bkpr.d)
-I (..\Src\USER\bkpr.h)(0x5F6EB999)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\iic.c)(0x5F6EB3C4)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\iic.o --omf_browse l051k8u6_epd_clock\iic.crf --depend l051k8u6_epd_clock\iic.d)
-I (..\Src\USER\iic.h)(0x5F6EB8DF)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (../Inc/i2c.h)(0x5F708DD5)
-F (..\Src\USER\lowpower.c)(0x5F7090C5)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\lowpower.o --omf_browse l051k8u6_epd_clock\lowpower.crf --depend l051k8u6_epd_clock\lowpower.d)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_gpio.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_gpio.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_adc.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_adc.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_dma.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_dma.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_rcc.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_rcc.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_utils.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_utils.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_exti.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_exti.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_i2c.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_i2c.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_spi.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_spi.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_pwr.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_pwr.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_tim.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_tim.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_usart.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_usart.o -MD)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+F (../Src/system_stm32l0xx.c)(0x5F61E260)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/system_stm32l0xx.o -MD)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+F (..\Src\USER\eeprom.c)(0x5F6F52B7)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/eeprom.o -MD)
+I (..\Src\USER\eeprom.h)(0x5F6F4C57)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (..\Src\USER\func.c)(0x5F72142E)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/func.o -MD)
+I (..\Src\USER\func.h)(0x5F71509D)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Src\USER\lowpower.h)(0x5F6EB8E7)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\ds3231.c)(0x5F6B4386)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\ds3231.o --omf_browse l051k8u6_epd_clock\ds3231.crf --depend l051k8u6_epd_clock\ds3231.d)
-I (..\Src\USER\ds3231.h)(0x5F6FFA12)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (..\Src\USER\iic.h)(0x5F6EB8DF)
-I (../Inc/i2c.h)(0x5F708DD5)
-I (..\Src\USER\serial.h)(0x5F6EB9C3)
-I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
-F (..\Src\USER\gdeh029a1.c)(0x5F708BF2)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\gdeh029a1.o --omf_browse l051k8u6_epd_clock\gdeh029a1.crf --depend l051k8u6_epd_clock\gdeh029a1.d)
-I (..\Src\USER\gdeh029a1.h)(0x5F708BF7)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\sht30.c)(0x5F6EB926)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\sht30.o --omf_browse l051k8u6_epd_clock\sht30.crf --depend l051k8u6_epd_clock\sht30.d)
-I (..\Src\USER\sht30.h)(0x5F6EB8FF)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (..\Src\USER\iic.h)(0x5F6EB8DF)
-I (../Inc/i2c.h)(0x5F708DD5)
-F (..\Src\USER\analog.c)(0x5F6EB43A)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\analog.o --omf_browse l051k8u6_epd_clock\analog.crf --depend l051k8u6_epd_clock\analog.d)
 I (..\Src\USER\analog.h)(0x5F6EB999)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\buzzer.c)(0x5F70AC1B)(--c99 -c --cpu Cortex-M0+ -g -O3 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I.\RTE\_L051K8U6_EPD_CLOCK-ID:\Keil_v5\Packs\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\Packs\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock\buzzer.o --omf_browse l051k8u6_epd_clock\buzzer.crf --depend l051k8u6_epd_clock\buzzer.d)
-I (..\Src\USER\buzzer.h)(0x5F70A9FE)
-I (../Inc/main.h)(0x5F708DD6)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_adc.h)(0x5F61E26B)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h)(0x5F61E260)
-I (../Drivers/CMSIS/Include/core_cm0plus.h)(0x5F61E262)
-I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5F61E262)
-I (../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h)(0x5F61E260)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_i2c.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_crs.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_system.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_exti.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_cortex.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_utils.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_pwr.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_dma.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_spi.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_tim.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h)(0x5F61E26B)
-I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (D:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
+I (..\Src\USER\bkpr.h)(0x5F6EB999)
+I (..\Src\USER\eeprom.h)(0x5F6F4C57)
+I (..\Src\USER\serial.h)(0x5F6EB9C3)
+I (..\Src\USER\iic.h)(0x5F6EB8DF)
+I (..\Inc\i2c.h)(0x5F708DD5)
+I (..\Src\USER\ds3231.h)(0x5F6FFA12)
+I (..\Src\USER\sht30.h)(0x5F6EB8FF)
+I (..\Src\USER\gdeh029A1.h)(0x5F71EFC9)
+I (..\Src\USER\buzzer.h)(0x5F720F89)
+I (..\Src\USER\lunar.h)(0x5F71AFB3)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5ED60BE4)
+I (D:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5ED60BE4)
+I (D:\Keil_v5\ARM\ARMCLANG\include\math.h)(0x5ED60BE4)
+F (..\Src\USER\serial.c)(0x5F6EB6E9)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/serial.o -MD)
+I (..\Src\USER\serial.h)(0x5F6EB9C3)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5ED60BE4)
+F (..\Src\USER\bkpr.c)(0x5F6AF166)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/bkpr.o -MD)
+I (..\Src\USER\bkpr.h)(0x5F6EB999)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (..\Src\USER\iic.c)(0x5F6EB3C4)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/iic.o -MD)
+I (..\Src\USER\iic.h)(0x5F6EB8DF)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Inc\i2c.h)(0x5F708DD5)
+F (..\Src\USER\lowpower.c)(0x5F720CF1)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/lowpower.o -MD)
+I (..\Src\USER\lowpower.h)(0x5F6EB8E7)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (..\Src\USER\ds3231.c)(0x5F6B4386)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/ds3231.o -MD)
+I (..\Src\USER\ds3231.h)(0x5F6FFA12)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Src\USER\iic.h)(0x5F6EB8DF)
+I (..\Inc\i2c.h)(0x5F708DD5)
+I (..\Src\USER\serial.h)(0x5F6EB9C3)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5ED60BE4)
+F (..\Src\USER\gdeh029a1.c)(0x5F71F8EE)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/gdeh029a1.o -MD)
+I (..\Src\USER\gdeh029a1.h)(0x5F71EFC9)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (..\Src\USER\sht30.c)(0x5F6EB926)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/sht30.o -MD)
+I (..\Src\USER\sht30.h)(0x5F6EB8FF)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (..\Src\USER\iic.h)(0x5F6EB8DF)
+I (..\Inc\i2c.h)(0x5F708DD5)
+F (..\Src\USER\analog.c)(0x5F6EB43A)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/analog.o -MD)
+I (..\Src\USER\analog.h)(0x5F6EB999)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+F (..\Src\USER\buzzer.c)(0x5F72141C)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/buzzer.o -MD)
+I (..\Src\USER\buzzer.h)(0x5F720F89)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (D:\Keil_v5\ARM\ARMCLANG\include\math.h)(0x5ED60BE4)
+F (..\Src\USER\lunar.c)(0x5F71B657)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER-I./RTE/_L051K8U6_EPD_CLOCK-ID:/Keil_v5/Packs/Arm/Packs/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/Packs/Arm/Packs/Keil/STM32L0xx_DFP/2.1.0/Drivers/CMSIS/Device/ST/STM32L0xx/Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/lunar.o -MD)
+I (..\Src\USER\lunar.h)(0x5F71AFB3)
+I (..\Inc\main.h)(0x5F708DD6)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h)(0x5F61E260)
+I (..\Drivers\CMSIS\Include\core_cm0plus.h)(0x5F61E262)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5ED60BE4)
+I (..\Drivers\CMSIS\Include\core_cmInstr.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\cmsis_armcc_V6.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Include\core_cmFunc.h)(0x5F61E262)
+I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h)(0x5F61E260)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_system.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_exti.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_cortex.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_utils.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_pwr.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_dma.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
+I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
+I (D:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5ED60BE4)

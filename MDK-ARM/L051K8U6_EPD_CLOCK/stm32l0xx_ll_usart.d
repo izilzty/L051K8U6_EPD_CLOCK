@@ -1,12 +1,13 @@
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_usart.c
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_usart.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l051xx.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Include/core_cm0plus.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Include/core_cmInstr.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Include/core_cmFunc.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_rcc.h
-l051k8u6_epd_clock\stm32l0xx_ll_usart.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_ll_bus.h
+l051k8u6_epd_clock/stm32l0xx_ll_usart.o: \
+  ..\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_ll_usart.c \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h \
+  ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h \
+  ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h \
+  ..\Drivers\CMSIS\Include\core_cm0plus.h \
+  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
+  ..\Drivers\CMSIS\Include\core_cmInstr.h \
+  ..\Drivers\CMSIS\Include\cmsis_armcc_V6.h \
+  ..\Drivers\CMSIS\Include\core_cmFunc.h \
+  ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h
