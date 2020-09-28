@@ -44,9 +44,10 @@ void LP_EnterSleep(void)
     EXTI->PR = 0x007BFFFF;                     /* 清除所有待执行中断 */
     LL_EXTI_EnableIT_0_31(LP_STOP_WKUP_EXTI);  /* 启用唤醒中断 */
 
-    LL_LPM_EnableSleep();             /* 准备进入Sleep模式 */
-    LL_FLASH_DisableSleepPowerDown(); /* 进入Sleep模式后，不关闭Flash电源，增加唤醒速度 */
-    __WFI();                          /* 进入Sleep模式，等待唤醒引脚唤醒 */
+    LL_LPM_EnableSleep(); /* 准备进入Sleep模式 */
+    // LL_FLASH_DisableSleepPowerDown(); /* 进入Sleep模式后，不关闭Flash电源，增加唤醒速度 */
+    LL_FLASH_EnableSleepPowerDown(); /* 进入Sleep模式后，关闭Flash电源，减小电流消耗 */
+    __WFI();                         /* 进入Sleep模式，等待唤醒引脚唤醒 */
     /* 唤醒后首先会进入EXTI0_1_IRQHandler()，在中断函数里由LL_EXTI_ClearFlag_0_31()清除中断标志并返回（中断函数的内容全部由CubeMX自动生成，不需要进行修改。） */
     EXTI->IMR = it_save; /* 恢复中断寄存器设置 */
 }

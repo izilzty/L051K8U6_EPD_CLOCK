@@ -40,8 +40,8 @@ struct RTC_Time
     uint8_t Date;
     uint8_t Month;
     uint8_t Year;
-    uint8_t Is_12hr;
     uint8_t PM;
+    uint8_t Is_12hr;
 };
 
 struct RTC_Alarm
@@ -52,8 +52,8 @@ struct RTC_Alarm
     uint8_t Day;
     uint8_t Date;
     uint8_t DY;
-    uint8_t Is_12hr;
     uint8_t PM;
+    uint8_t Is_12hr;
 };
 
 uint8_t RTC_ReadREG(uint8_t reg);

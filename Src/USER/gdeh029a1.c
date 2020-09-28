@@ -253,12 +253,9 @@ uint8_t EPD_CheckBusy(void)
 {
     if (LL_GPIO_IsInputPinSet(EPD_BUSY_PORT, EPD_BUSY_PIN) != 0)
     {
-        return 0;
-    }
-    else
-    {
         return 1;
     }
+    return 0;
 }
 
 /**
@@ -353,8 +350,6 @@ void EPD_Init(uint8_t update_mode)
         epd_send_data_multi(LUT_Fast, sizeof(LUT_Fast));
         break;
     }
-
-    EPD_ClearRAM();
 }
 
 /**
@@ -458,6 +453,20 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
         }
         str += 1;
     }
+}
+
+/**
+ * @brief  绘制图像。
+ * @param  x 绘制起始X位置。
+ * @param  y_x8 绘制起始Y位置，设置1等于8像素。
+ * @param  str 要绘制的图像指针。
+ */
+void EPD_DrawImage(uint16_t x, uint8_t y_x8, const uint8_t *image)
+{
+    uint8_t y_size;
+    y_size = image[1] / 8;
+    EPD_SetWindow(x, y_x8, image[0], y_size);
+    EPD_SendRAM(image + 2, image[0] * y_size - 2);
 }
 
 /**

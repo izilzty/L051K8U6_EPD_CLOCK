@@ -1,27 +1,46 @@
-#include "func.h"
+﻿#include "func.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
-const struct RTC_Time DefaultTime = {0, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，00:00:00，Is_12hr = 0，PM = 0  */
+const struct FUNC_Setting DefaultSetting = {0xAA, 1.2, 1.0, 1, 3, 0.1};
+const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
 
-char String[256];
 uint8_t ResetInfo;
 struct RTC_Time Time;
-struct RTC_Alarm Alarm;
 struct TH_Value Sensor;
+struct FUNC_Setting Setting;
+char String[256];
 
 static void Power_EnableGDEH029A1(void);
 static void Power_DisableGDEH029A1(void);
-static void Power_EnableSHT30_I2C(void);
-static void Power_DisableSHT30_I2C(void);
+static void Power_Enable_SHT30_I2C(void);
+static void Power_Disable_I2C_SHT30(void);
 static void Power_EnableADC(void);
 static void Power_DisableADC(void);
 static void Power_EnableBUZZER(void);
 static void Power_DisableBUZZER(void);
+
 static void DumpRTCReg(void);
 static void DumpEEPROM(void);
+static void DumpBKPR(void);
+
+static uint8_t BTN_ReadUP(void);
+static void BTN_WaitUP(void);
+static uint8_t BTN_ReadDOWN(void);
+static void BTN_WaitDOWN(void);
+static uint8_t BTN_ReadSET(void);
+static void BTN_WaitSET(void);
+static void BTN_WaitAll(void);
+static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val, uint8_t *wait_btn_release, uint8_t *update_display);
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage);
+
+void FUNC_SaveSetting(const struct FUNC_Setting *setting);
+void FUNC_ReadSetting(struct FUNC_Setting *setting);
+
+void BEEP_Button(void);
+void BEEP_OK(void);
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -36,21 +55,308 @@ static void Delay_100ns(volatile uint16_t nsX100)
     ((void)nsX100);
 }
 
-/* ==================== 菜单 ==================== */
-
-static void Menu_MainMenu(void) /* 主菜单 */
-{
-}
+/* ==================== 子菜单 ==================== */
 
 static void Menu_SetTime(void) /* 时间设置页面 */
 {
+    struct RTC_Time new_time;
+    uint8_t digit_select, save_time, update_display, wait_btn;
+
+    BEEP_OK();
+
+    Power_EnableGDEH029A1();
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    EPD_DrawUTF8(0, 0, 0, "时间设置： NEXT + -", Font_ascii_12x24, Font_utf8_24x24);
+    EPD_DrawHLine(0, 27, 296, 2);
+    EPD_Show(1);
+    EPD_Init(EPD_UPDATE_MODE_PART);
+    EPD_ClearRAM();
+    EPD_DrawUTF8(0, 0, 0, "时间设置： NEXT + -", Font_ascii_12x24, Font_utf8_24x24);
+    EPD_DrawHLine(0, 27, 296, 2);
+    EPD_EnterSleep();
+
+    BTN_WaitAll();
+
+    RTC_GetTime(&new_time);
+    if (RTC_GetOSF() != 0 || new_time.Month == 0)
+    {
+        memcpy(&new_time, &DefaultTime, sizeof(struct RTC_Time));
+    }
+
+    digit_select = 0;
+    update_display = 1;
+    wait_btn = 0;
+    save_time = 2;
+    while (save_time == 2)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (digit_select < 17)
+            {
+                digit_select += 1;
+            }
+            else
+            {
+                digit_select = 0;
+            }
+            update_display = 1;
+            wait_btn = 1;
+            BEEP_Button();
+        }
+        switch (digit_select)
+        {
+        case 0:
+            BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0, &wait_btn, &update_display);
+            break;
+        case 1:
+            BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0, &wait_btn, &update_display);
+            break;
+        case 2:
+            BTN_ModifySingleDigit(&new_time.Year, 1, 9, 0, &wait_btn, &update_display);
+            break;
+        case 3:
+            BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 4:
+            BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0, &wait_btn, &update_display);
+            break;
+        case 5:
+            BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 6:
+            BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0, &wait_btn, &update_display);
+            break;
+        case 7:
+            BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 8:
+            BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1, &wait_btn, &update_display);
+            break;
+        case 9:
+            if (new_time.Is_12hr == 0)
+            {
+                digit_select += 1;
+            }
+            BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0, &wait_btn, &update_display);
+            break;
+        case 10:
+            if (new_time.Is_12hr == 0)
+            {
+                BTN_ModifySingleDigit(&new_time.Hours, 1, 2, 0, &wait_btn, &update_display);
+            }
+            else
+            {
+                BTN_ModifySingleDigit(&new_time.Hours, 1, 1, 0, &wait_btn, &update_display);
+            }
+            break;
+        case 11:
+            BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 12:
+            BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0, &wait_btn, &update_display);
+            break;
+        case 13:
+            BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 14:
+            BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0, &wait_btn, &update_display);
+            break;
+        case 15:
+            BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0, &wait_btn, &update_display);
+            break;
+        case 16:
+            if (BTN_ReadUP() == 0)
+            {
+                save_time = 1;
+                wait_btn = 0;
+                update_display = 0;
+            }
+            break;
+        case 17:
+            if (BTN_ReadUP() == 0)
+            {
+                save_time = 0;
+                wait_btn = 0;
+                update_display = 0;
+            }
+            break;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                snprintf(String, sizeof(String), "IS12HR:%d 2%03d %02d %02d %01d", new_time.Is_12hr, new_time.Year, new_time.Month, new_time.Date, new_time.Day);
+                EPD_DrawUTF8(0, 4, 0, String, Font_ascii_12x24, Font_utf8_24x24);
+                snprintf(String, sizeof(String), "PM:%d %02d:%02d:%02d", new_time.PM, new_time.Hours, new_time.Minutes, new_time.Seconds);
+                EPD_DrawUTF8(0, 7, 0, String, Font_ascii_12x24, Font_utf8_24x24);
+                EPD_Show(0);
+            }
+        }
+        else
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                EPD_EnterSleep();
+            }
+        }
+        if (wait_btn != 0)
+        {
+            BTN_WaitAll();
+            wait_btn = 0;
+        }
+        if (save_time != 0)
+        {
+            RTC_SetTime(&new_time);
+            RTC_ClearOSF();
+        }
+    }
+    Power_DisableGDEH029A1();
+    BEEP_OK();
+    BTN_WaitAll();
+}
+
+static void Menu_Guide(void) /* 首次使用时的引导 */
+{
+}
+
+/* ==================== 主菜单 ==================== */
+
+static void Menu_MainMenu(void)
+{
+    Menu_SetTime();
+}
+
+/* ==================== 主要功能 ==================== */
+
+static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
+{
+    uint32_t adc_val_stor;
+    float battery_value;
+    int8_t temp_value[2];
+    int8_t rh_value[2];
+
+    RTC_GetTime(&Time);
+    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
+
+    RTC_ModifyINTCN(0);
+    RTC_ModifyAM1Mask(0x00);
+    RTC_ModifyA1IE(0);
+    RTC_ClearA1F();
+    RTC_ModifyAM2Mask(0x07);
+    RTC_ModifyA2IE(1);
+    RTC_ClearA2F();
+    RTC_ModifyINTCN(1);
+
+    Power_Disable_I2C_SHT30();
+
+    adc_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL);
+    battery_value = *(float *)&adc_val_stor;
+    if (battery_value < 0.1 || battery_value > 5.0)
+    {
+        battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
+    }
+
+    if (battery_value <= DCDC_MIN_VOLTAGE) /* 电池已经低于DC-DC最低工作电压，不更新显示直接进入Standby */
+    {
+        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
+        LP_EnterStandby();
+        return;
+    }
+
+    if (Sensor.CEL < 0)
+    {
+        temp_value[0] = (int8_t)(Sensor.CEL - 0.05);
+    }
+    else
+    {
+        temp_value[0] = (int8_t)(Sensor.CEL + 0.05);
+    }
+    temp_value[1] = (uint8_t)((Sensor.CEL - temp_value[0]) * 10);
+
+    if (Sensor.RH < 0)
+    {
+        rh_value[0] = (int8_t)(Sensor.RH - 0.05);
+    }
+    else
+    {
+        rh_value[0] = (int8_t)(Sensor.RH + 0.05);
+    }
+    rh_value[1] = (uint8_t)((Sensor.RH - rh_value[0]) * 10);
+
+    Power_EnableGDEH029A1();
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+
+    EPD_DrawHLine(0, 28, 296, 2);
+    EPD_DrawHLine(0, 104, 296, 2);
+    EPD_DrawHLine(213, 67, 76, 2);
+    EPD_DrawVLine(202, 39, 56, 2);
+    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.voltage_min, battery_value);
+
+    snprintf(String, sizeof(String), "2%03d/%d/%02d %01d", Time.Year, Time.Month, Time.Date, Time.Day);
+    EPD_DrawUTF8(0, 0, 1, String, Font_ascii_12x24, Font_utf8_24x24);
+    if (Time.Is_12hr != 0)
+    {
+        if (Time.PM != 0)
+        {
+            EPD_DrawUTF8(0, 9, 2, "PM", Font_ascii_12x24, Font_utf8_24x24);
+        }
+        else
+        {
+            EPD_DrawUTF8(0, 5, 2, "AM", Font_ascii_12x24, Font_utf8_24x24);
+        }
+    }
+    snprintf(String, sizeof(String), "%02d:%02d", Time.Hours, Time.Minutes);
+    if (Time.Is_12hr != 0)
+    {
+        EPD_DrawUTF8(34, 5, 6, String, Font_clock_27x56, Font_utf8_24x24);
+    }
+    else
+    {
+        EPD_DrawUTF8(22, 5, 6, String, Font_clock_27x56, Font_utf8_24x24);
+    }
+    if (temp_value[0] < -9)
+    {
+        snprintf(String, sizeof(String), "%02d ℃", temp_value[0], temp_value[1]);
+    }
+    else if (temp_value[0] < 100)
+    {
+        snprintf(String, sizeof(String), "%02d.%d℃", temp_value[0], temp_value[1]);
+    }
+    else
+    {
+        snprintf(String, sizeof(String), "%03d ℃", temp_value[0], temp_value[1]);
+    }
+    EPD_DrawUTF8(213, 5, 0, String, Font_ascii_12x24, Font_utf8_24x24);
+    if (rh_value[0] < 100)
+    {
+        snprintf(String, sizeof(String), "%02d.%d％", rh_value[0], rh_value[1]);
+    }
+    else
+    {
+        snprintf(String, sizeof(String), "%03d ％", rh_value[0], rh_value[1]);
+    }
+    EPD_DrawUTF8(213, 9, 0, String, Font_ascii_12x24, Font_utf8_24x24);
+    snprintf(String, sizeof(String), "农历：", Sensor.CEL);
+    EPD_DrawUTF8(0, 14, 0, String, Font_ascii_12x24, Font_utf8_12x12);
+
+    EPD_Show(0);
+    LP_EnterSleep();
+
+    battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
+    BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
+
+    EPD_EnterDeepSleep();
+    Power_DisableGDEH029A1();
 }
 
 static void FullInit(void) /* 重新初始化全部数据 */
 {
-    char str_tmp[10];
-    Power_EnableBUZZER();
-    BUZZER_SetVolume(5);
+    BUZZER_SetFrqe(4000);
+    BUZZER_SetVolume(DefaultSetting.buzzer_volume);
 
     BUZZER_Beep(1000, 49);
     LL_mDelay(49);
@@ -97,40 +403,24 @@ static void FullInit(void) /* 重新初始化全部数据 */
     }
     SERIAL_DebugPrint("Process done");
 
+#ifdef ENABLE_DEBUG_PRINT
     DumpEEPROM();
+    DumpRTCReg();
+    DumpBKPR();
+#endif
 
     BUZZER_Beep(1000, 199);
-    Power_DisableBUZZER();
-}
-
-/* ==================== 主要功能 ==================== */
-
-static void UpdateDisplay(void) /* 更新显示时间和温度等数据 */
-{
-    RTC_GetTime(&Time);
-    snprintf(String, sizeof(String), "RTC: 2%03d %d %d %d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
-    SERIAL_SendStringRN(String);
-
-    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
-    snprintf(String, sizeof(String), "TH : TEMP:%5.2f RH:%5.2f STATUS:0x%02X", Sensor.CEL, Sensor.RH, TH_GetStatus());
-    SERIAL_SendStringRN(String);
-
-    snprintf(String, sizeof(String), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
-    SERIAL_SendStringRN(String);
-
-    RTC_ModifyAM2Mask(0x07);
-    RTC_ModifyA2IE(1);
-    RTC_ModifyINTCN(1);
 }
 
 /* ==================== 主循环 ==================== */
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
+#ifdef ENABLE_DEBUG_PRINT
     SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
-
-    LL_mDelay(19);                                                   /* 防止下载预复位时打印出来东西，非调试时可以去掉 */
-    LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用唤醒中断 */
+    LL_mDelay(19);
+#endif
+    LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用电子纸唤醒中断 */
     LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
     ResetInfo = LP_GetResetInfo();
     switch (ResetInfo)
@@ -144,12 +434,33 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     case LP_RESET_WKUPSTANDBY:
         SERIAL_DebugPrint("Wakeup from standby");
         break;
+    default:
+        SERIAL_DebugPrint("Unknow reset");
+        break;
     }
 
-    Power_DisableGDEH029A1(); /* 默认关闭EPD电源 */
-    Power_DisableBUZZER();    /* 默认关闭蜂鸣器电源 */
-    Power_EnableSHT30_I2C();  /* 默认打开SHT30和I2C电源 */
+    Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
     Power_EnableADC();        /* 默认打开ADC电源 */
+    Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
+
+    if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == 0xAA))
+    {
+        FullInit();
+        FUNC_SaveSetting(&DefaultSetting);
+        memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+        Menu_Guide();
+        Menu_SetTime();
+    }
+
+    FUNC_ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
+
+    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < Setting.voltage_boot) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
+    {
+        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
+        RTC_ClearA2F();
+        RTC_ClearA1F();
+        LP_EnterStandby();
+    }
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -159,20 +470,13 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     case LP_RESET_POWERON:
         if (RTC_GetOSF() != 0)
         {
-            RTC_SetTime(&DefaultTime);
+            Menu_Guide();
             Menu_SetTime();
         }
+        BKPR_ResetAll();
         break;
     case LP_RESET_NORMALRESET:
-        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0 && LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
-        {
-            LL_mDelay(9);
-            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0 && LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
-            {
-                FullInit();
-                Menu_SetTime();
-            }
-        }
+        BKPR_ResetAll();
         break;
     case LP_RESET_WKUPSTANDBY:
         if (RTC_GetA2F() != 0)
@@ -181,17 +485,16 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         }
         else
         {
-            LL_mDelay(9);
-            while (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
-            {
-                LL_mDelay(0);
-            }
             Menu_MainMenu();
         }
         break;
     }
 
-    UpdateDisplay();
+    SERIAL_DebugPrint("Begin homepage update");
+    UpdateHomeDisplay();
+    SERIAL_DebugPrint("Homepage update done");
+
+    BTN_WaitSET(); /* 等待设置按钮释放 */
 
     SERIAL_DebugPrint("Ready to enter standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
@@ -234,7 +537,7 @@ static void Power_DisableGDEH029A1(void)
     LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
 }
 
-static void Power_EnableSHT30_I2C(void)
+static void Power_Enable_SHT30_I2C(void)
 {
     LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
     LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
@@ -250,7 +553,7 @@ static void Power_EnableSHT30_I2C(void)
     }
 }
 
-static void Power_DisableSHT30_I2C(void)
+static void Power_Disable_I2C_SHT30(void)
 {
     if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
     {
@@ -290,7 +593,8 @@ static void DumpRTCReg(void)
 {
     uint8_t i, j, reg_tmp;
     char byte_str[9];
-    SERIAL_SendStringRN("= DS3231 REG =");
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("DS3231 REG DUMP:");
     for (i = 0; i < 19; i++)
     {
         reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
@@ -310,25 +614,293 @@ static void DumpRTCReg(void)
         snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
         SERIAL_SendStringRN(byte_str);
     }
-    SERIAL_SendStringRN("==============");
+    SERIAL_SendStringRN("DS3231 REG DUMP END");
     SERIAL_SendStringRN("");
 }
 
 static void DumpEEPROM(void)
 {
     uint16_t i;
-    char byte_str[9];
-    SERIAL_SendStringRN("= EEPROM =");
+    char str_buffer[10];
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("EEPROM DUMP:");
+    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
     for (i = 0; i < 2048; i++)
     {
         if (i % 16 == 0)
         {
             SERIAL_SendStringRN("");
         }
-        snprintf(byte_str, sizeof(byte_str), "0x%02X ", EEPROM_ReadByte(i));
-        SERIAL_SendString(byte_str);
+        if (i % 16 == 0)
+        {
+            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
+            SERIAL_SendString(str_buffer);
+        }
+        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", EEPROM_ReadByte(i));
+        SERIAL_SendString(str_buffer);
     }
     SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("==========");
+    SERIAL_SendStringRN("EEPROM DUMP END");
     SERIAL_SendStringRN("");
 }
+
+static void DumpBKPR(void)
+{
+    uint16_t i;
+    char str_buffer[10];
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("BKPR DUMP:");
+    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
+    for (i = 0; i < 20; i++)
+    {
+        if (i % 16 == 0)
+        {
+            SERIAL_SendStringRN("");
+        }
+        if (i % 16 == 0)
+        {
+            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
+            SERIAL_SendString(str_buffer);
+        }
+        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", BKPR_ReadByte(i));
+        SERIAL_SendString(str_buffer);
+    }
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("BKPR DUMP END");
+    SERIAL_SendStringRN("");
+}
+
+static uint8_t BTN_ReadUP()
+{
+    if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitUP(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static uint8_t BTN_ReadDOWN(void)
+{
+    if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitDOWN(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static uint8_t BTN_ReadSET(void)
+{
+    if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitSET(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static void BTN_WaitAll(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
+            LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
+            LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
+                LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
+                LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val, uint8_t *wait_btn_release, uint8_t *update_display)
+{
+    uint8_t digit[4];
+
+    digit[0] = *number / 1000;
+    digit[1] = (*number - (digit[0] * 1000)) / 100;
+    digit[2] = (*number - (digit[0] * 1000) - (digit[1] * 100)) / 10;
+    digit[3] = *number - (digit[0] * 1000) - (digit[1] * 100) - (digit[2] * 10);
+
+    modify_digit = (3 - modify_digit) % 4;
+    if (BTN_ReadUP() == 0)
+    {
+        if (digit[modify_digit] < max_val)
+            digit[modify_digit] += 1;
+        else
+            digit[modify_digit] = min_val;
+        *wait_btn_release = 1;
+        *update_display = 1;
+        BEEP_Button();
+    }
+    else if (BTN_ReadDOWN() == 0)
+    {
+        if (digit[modify_digit] > min_val)
+            digit[modify_digit] -= 1;
+        else
+            digit[modify_digit] = max_val;
+        *wait_btn_release = 1;
+        *update_display = 1;
+        BEEP_Button();
+    }
+
+    *number = digit[0] * 1000 + digit[1] * 100 + digit[2] * 10 + digit[3];
+}
+
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage)
+{
+    uint8_t dis_ram[98];
+    uint8_t i, bar_size;
+
+    if (voltage < min_voltage)
+    {
+        EPD_DrawImage(x, y_x8, ICON_BATT_WARN);
+        return;
+    }
+    voltage -= min_voltage;
+    bar_size = (voltage / ((bat_voltage - min_voltage) / 20)) + 0.5;
+    if (bar_size == 0)
+    {
+        bar_size = 1;
+    }
+    else if (bar_size > 20)
+    {
+        bar_size = 20;
+    }
+    memcpy(dis_ram, ICON_BATT_FRAME, sizeof(dis_ram));
+    for (i = 0; i < bar_size; i++)
+    {
+        dis_ram[83 - (i * 3) + 0] &= 0xF8;
+        dis_ram[83 - (i * 3) + 1] &= 0x00;
+        dis_ram[83 - (i * 3) + 2] &= 0x1F;
+    }
+    EPD_DrawImage(x, y_x8, dis_ram);
+}
+
+void FUNC_SaveSetting(const struct FUNC_Setting *setting)
+{
+    uint8_t i;
+    uint8_t *setting_ptr;
+    setting_ptr = (uint8_t *)setting;
+    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    {
+        if (EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i) != setting_ptr[i])
+        {
+            EEPROM_WriteByte(EEPROM_ADDR_BYTE_SETTING + i, setting_ptr[i]);
+        }
+    }
+    DumpEEPROM();
+}
+
+void FUNC_ReadSetting(struct FUNC_Setting *setting)
+{
+    uint8_t i;
+    uint8_t *setting_ptr;
+    setting_ptr = (uint8_t *)setting;
+    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    {
+        setting_ptr[i] = EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i);
+    }
+    if (setting->available != 0xAA)
+    {
+        SERIAL_DebugPrint("Read setting fail, use default setting");
+        memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+    }
+}
+
+void BEEP_Button(void)
+{
+    if (Setting.buzzer_enable != 0)
+    {
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(Setting.buzzer_volume);
+        BUZZER_Beep(4000, 19);
+    }
+}
+
+void BEEP_OK(void)
+{
+    if (Setting.buzzer_enable != 0)
+    {
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(Setting.buzzer_volume);
+        BUZZER_Beep(1000, 29);
+        BUZZER_Beep(4000, 29);
+    }
+}
+
+/*
+
+ RTC_GetTime(&Time);
+    snprintf(String, sizeof(String), "RTC: 2%03d %d %d %d PM:%d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.PM, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
+    SERIAL_SendStringRN(String);
+
+    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
+    snprintf(String, sizeof(String), "TH : TEMP:%5.2f RH:%5.2f STATUS:0x%02X", Sensor.CEL, Sensor.RH, TH_GetStatus());
+    SERIAL_SendStringRN(String);
+
+    snprintf(String, sizeof(String), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
+    SERIAL_SendStringRN(String);
+
+
+*/
