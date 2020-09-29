@@ -66,43 +66,42 @@ static void Delay_100ns(volatile uint16_t nsX100)
 
 static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 {
-    uint32_t adc_val_stor;
+    uint32_t battery_val_stor;
     float battery_value;
     int8_t temp_value[2];
     int8_t rh_value[2];
 
     RTC_GetTime(&Time);
-    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
 
-    RTC_ModifyINTCN(0);
-    RTC_ModifyAM1Mask(0x00);
-    RTC_ModifyA1IE(0);
-    RTC_ClearA1F();
     RTC_ModifyAM2Mask(0x07);
     RTC_ModifyA2IE(1);
     RTC_ClearA2F();
+    RTC_ModifyAM1Mask(0x00);
+    RTC_ModifyA1IE(0);
+    RTC_ClearA1F();
     RTC_ModifyINTCN(1);
+
+    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
 
     Power_Disable_I2C_SHT30();
 
-    adc_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL);
-    battery_value = *(float *)&adc_val_stor;
-    if (battery_value < 0.1 || battery_value > 5.0)
+    battery_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL);
+    battery_value = *(float *)&battery_val_stor;
+    if (battery_value < 0.1 || battery_value > 3.6) /* 超出此范围则判断为备份寄存器数据丢失，重新读取当前电池数据 */
     {
         battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     }
 
-    if (battery_value <= DCDC_MIN_VOLTAGE) /* 电池已经低于DC-DC最低工作电压，不更新显示直接进入Standby */
+    if (battery_value < Setting.voltage_min) /* 电池已经低于最低工作电压，不更新显示直接进入Standby */
     {
         SERIAL_DebugPrint("Battery low, Direct enter standby mode");
         LP_EnterStandby();
         return;
     }
 
-    LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date);
+    LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date); /* RTC读出的年份省去了2000，计算农历前要手动加上 */
 
-    Lunar.Month = 11;
-
+    /* 将浮点温度分为两个整数温度 */
     if (Sensor.CEL < 0)
     {
         temp_value[0] = (int8_t)(Sensor.CEL - 0.05);
@@ -111,17 +110,11 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     {
         temp_value[0] = (int8_t)(Sensor.CEL + 0.05);
     }
-    temp_value[1] = (uint8_t)((Sensor.CEL - temp_value[0]) * 10);
+    temp_value[1] = (int8_t)((Sensor.CEL - temp_value[0]) * 10);
 
-    if (Sensor.RH < 0)
-    {
-        rh_value[0] = (int8_t)(Sensor.RH - 0.05);
-    }
-    else
-    {
-        rh_value[0] = (int8_t)(Sensor.RH + 0.05);
-    }
-    rh_value[1] = (uint8_t)((Sensor.RH - rh_value[0]) * 10);
+    /* 将浮点湿度分为两个整数温度 */
+    rh_value[0] = (int8_t)(Sensor.RH + 0.05);
+    rh_value[1] = (int8_t)((Sensor.RH - rh_value[0]) * 10);
 
     Power_EnableGDEH029A1();
     EPD_Init(EPD_UPDATE_MODE_FAST);
@@ -190,7 +183,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     Power_DisableGDEH029A1();
 }
 
-/* ==================== 主循环 ==================== */
+/* ==================== 主函数 ==================== */
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
@@ -221,6 +214,14 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
 
+    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
+    {
+        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
+        RTC_ClearA2F();
+        RTC_ClearA1F();
+        LP_EnterStandby();
+    }
+
     if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == 0xAA))
     {
         FullInit();
@@ -231,16 +232,6 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     }
 
     FUNC_ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
-
-    Setting.buzzer_enable = 1;
-
-    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < Setting.voltage_boot) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
-    {
-        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
-        RTC_ClearA2F();
-        RTC_ClearA1F();
-        LP_EnterStandby();
-    }
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -248,6 +239,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     switch (ResetInfo)
     {
     case LP_RESET_POWERON:
+    case LP_RESET_NORMALRESET:
         if (RTC_GetOSF() != 0)
         {
             Menu_Guide();
@@ -255,11 +247,8 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         }
         BKPR_ResetAll();
         break;
-    case LP_RESET_NORMALRESET:
-        BKPR_ResetAll();
-        break;
     case LP_RESET_WKUPSTANDBY:
-        if (RTC_GetA2F() != 0)
+        if (RTC_GetA2F() != 0 || (BTN_ReadSET() == 0 && BTN_ReadDOWN() == 0 && BTN_ReadUP() == 1)) /* 同时按下“菜单”和“下”按钮立刻更新显示 */
         {
             RTC_ClearA2F();
         }
@@ -725,7 +714,7 @@ void BEEP_Button(void)
 void BEEP_OK(void)
 {
     if (Setting.buzzer_enable != 0)
-    {        
+    {
         BUZZER_SetFrqe(4000);
         BUZZER_SetVolume(Setting.buzzer_volume);
         BUZZER_SetFrqe(1000);

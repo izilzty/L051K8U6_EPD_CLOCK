@@ -25,7 +25,7 @@
 #define EEPROM_ADDR_BYTE_SETTING 0x00
 
 #define DCDC_MIN_VOLTAGE 0.85
-#define BATT_MAX_VOLTAGE 3
+#define BATT_MAX_VOLTAGE 3.00
 
 struct FUNC_Setting
 {
