@@ -30,11 +30,9 @@
 struct FUNC_Setting
 {
     uint8_t available;
-    float voltage_min;
-    float voltage_boot;
     uint8_t buzzer_enable;
     uint8_t buzzer_volume;
-    float soft_ver;
+    float battery_drop;
 };
 
 void Init(void);

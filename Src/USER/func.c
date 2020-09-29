@@ -4,7 +4,7 @@
 #include <string.h>
 #include <math.h>
 
-const struct FUNC_Setting DefaultSetting = {0xAA, 1.2, 1.0, 1, 3, 0.1};
+const struct FUNC_Setting DefaultSetting = {0xAA, 1, 3, 0.35};      /* 设置有效标志，蜂鸣器打开，默认蜂鸣器音量3，电池压降0.35伏  */
 const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
 
 uint8_t ResetInfo;
@@ -30,19 +30,20 @@ static void BTN_WaitDOWN(void);
 static uint8_t BTN_ReadSET(void);
 static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
-static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val, uint8_t *wait_btn_release, uint8_t *update_display);
+static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
 
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage);
-
-void FUNC_SaveSetting(const struct FUNC_Setting *setting);
-void FUNC_ReadSetting(struct FUNC_Setting *setting);
 
 void BEEP_Button(void);
 void BEEP_OK(void);
 
+static void UpdateHomeDisplay(void);
 static void Menu_SetTime(void);
 static void Menu_MainMenu(void);
 static void Menu_Guide(void);
+
+void SaveSetting(const struct FUNC_Setting *setting);
+void ReadSetting(struct FUNC_Setting *setting);
 
 static void DumpRTCReg(void);
 static void DumpEEPROM(void);
@@ -60,6 +61,99 @@ static void Delay_100ns(volatile uint16_t nsX100)
         nsX100--;
     }
     ((void)nsX100);
+}
+
+/* ==================== 主函数 ==================== */
+
+void Init(void) /* 系统复位后首先进入此函数并执行一次 */
+{
+#ifdef ENABLE_DEBUG_PRINT
+    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
+    LL_mDelay(19);
+#endif
+    LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用电子纸唤醒中断 */
+    LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
+    ResetInfo = LP_GetResetInfo();
+    switch (ResetInfo)
+    {
+    case LP_RESET_POWERON:
+        SERIAL_DebugPrint("Power on reset");
+        break;
+    case LP_RESET_NORMALRESET:
+        SERIAL_DebugPrint("Normal reset");
+        break;
+    case LP_RESET_WKUPSTANDBY:
+        SERIAL_DebugPrint("Wakeup from standby");
+        break;
+    default:
+        SERIAL_DebugPrint("Unknow reset");
+        break;
+    }
+
+    Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
+    Power_EnableADC();        /* 默认打开ADC电源 */
+    Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
+
+    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
+    {
+        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
+        RTC_ClearA2F();
+        RTC_ClearA1F();
+        LP_EnterStandby();
+    }
+
+    if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == 0xAA))
+    {
+        FullInit();
+        SaveSetting(&DefaultSetting);
+        Menu_Guide();
+        Menu_SetTime();
+    }
+
+    ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
+}
+
+void Loop(void) /* 在Init()执行完成后循环执行 */
+{
+    switch (ResetInfo)
+    {
+    case LP_RESET_POWERON:
+    case LP_RESET_NORMALRESET:
+        if (RTC_GetOSF() != 0)
+        {
+            Menu_Guide();
+            Menu_SetTime();
+        }
+        BKPR_ResetAll();
+        break;
+    case LP_RESET_WKUPSTANDBY:
+        if (RTC_GetA2F() != 0 || (BTN_ReadSET() == 0 && BTN_ReadDOWN() == 0 && BTN_ReadUP() == 1)) /* 同时按下“菜单”和“下”按钮立刻更新显示 */
+        {
+            RTC_ClearA2F();
+        }
+        else
+        {
+            Menu_MainMenu();
+        }
+        break;
+    }
+
+    UpdateHomeDisplay();
+
+    BTN_WaitSET(); /* 等待设置按钮释放 */
+
+    SERIAL_DebugPrint("Ready to enter standby mode");
+    LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
+
+    /* 正常情况下进入Standby模式后，程序会停止在此处，直到下次复位或唤醒再重头开始执行 */
+
+    SERIAL_DebugPrint("Enter standby mode fail");
+    LL_mDelay(999); /* 等待1000ms */
+    SERIAL_DebugPrint("Try to enter standby mode again");
+    LP_EnterStandby(); /* 再次尝试进入Standby模式 */
+    SERIAL_DebugPrint("Enter standby mode fail");
+    SERIAL_DebugPrint("Try to reset the system");
+    NVIC_SystemReset(); /* 两次未成功进入Standby模式，执行软复位 */
 }
 
 /* ==================== 主要功能 ==================== */
@@ -87,12 +181,12 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 
     battery_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL);
     battery_value = *(float *)&battery_val_stor;
-    if (battery_value < 0.1 || battery_value > 3.6) /* 超出此范围则判断为备份寄存器数据丢失，重新读取当前电池数据 */
+    if (battery_value < 0.1 || battery_value > 3.6) /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
     {
         battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     }
 
-    if (battery_value < Setting.voltage_min) /* 电池已经低于最低工作电压，不更新显示直接进入Standby */
+    if (battery_value < (DCDC_MIN_VOLTAGE + Setting.battery_drop)) /* 电池已经低于最低工作电压，不更新显示直接进入Standby */
     {
         SERIAL_DebugPrint("Battery low, Direct enter standby mode");
         LP_EnterStandby();
@@ -124,7 +218,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.voltage_min, battery_value);
+    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, DCDC_MIN_VOLTAGE + Setting.battery_drop, battery_value);
 
     snprintf(String, sizeof(String), "2%03d/%d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
@@ -183,98 +277,63 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     Power_DisableGDEH029A1();
 }
 
-/* ==================== 主函数 ==================== */
-
-void Init(void) /* 系统复位后首先进入此函数并执行一次 */
+static void FullInit(void) /* 重新初始化全部数据 */
 {
+    BUZZER_SetFrqe(4000);
+    BUZZER_SetVolume(DefaultSetting.buzzer_volume);
+
+    BUZZER_Beep(49);
+    LL_mDelay(49);
+    BUZZER_Beep(49);
+    LL_mDelay(49);
+    BUZZER_Beep(49);
+
+    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
+    SERIAL_DebugPrint("RTC reset...");
+    if (RTC_ResetAllRegToDefault() != 0)
+    {
+        SERIAL_DebugPrint("RTC reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("RTC reset done");
+    }
+    SERIAL_DebugPrint("SENSOR reset...");
+    if (TH_SoftReset() != 0)
+    {
+        SERIAL_DebugPrint("SENSOR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("SENSOR reset done");
+    }
+    SERIAL_DebugPrint("BKPR reset...");
+    if (BKPR_ResetAll() != 0)
+    {
+        SERIAL_DebugPrint("BKPR reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("BKPR reset done");
+    }
+    SERIAL_DebugPrint("EEPROM reset...");
+    if (EEPROM_EraseRange(0, 511) != 0)
+    {
+        SERIAL_DebugPrint("EEPROM reset fail");
+    }
+    else
+    {
+        SERIAL_DebugPrint("EEPROM reset done");
+    }
+    SERIAL_DebugPrint("Process done");
+
 #ifdef ENABLE_DEBUG_PRINT
-    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
-    LL_mDelay(19);
+    DumpEEPROM();
+    DumpRTCReg();
+    DumpBKPR();
 #endif
-    LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用电子纸唤醒中断 */
-    LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
-    ResetInfo = LP_GetResetInfo();
-    switch (ResetInfo)
-    {
-    case LP_RESET_POWERON:
-        SERIAL_DebugPrint("Power on reset");
-        break;
-    case LP_RESET_NORMALRESET:
-        SERIAL_DebugPrint("Normal reset");
-        break;
-    case LP_RESET_WKUPSTANDBY:
-        SERIAL_DebugPrint("Wakeup from standby");
-        break;
-    default:
-        SERIAL_DebugPrint("Unknow reset");
-        break;
-    }
 
-    Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
-    Power_EnableADC();        /* 默认打开ADC电源 */
-    Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
-
-    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
-    {
-        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
-        RTC_ClearA2F();
-        RTC_ClearA1F();
-        LP_EnterStandby();
-    }
-
-    if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == 0xAA))
-    {
-        FullInit();
-        FUNC_SaveSetting(&DefaultSetting);
-        memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
-        Menu_Guide();
-        Menu_SetTime();
-    }
-
-    FUNC_ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
-}
-
-void Loop(void) /* 在Init()执行完成后循环执行 */
-{
-    switch (ResetInfo)
-    {
-    case LP_RESET_POWERON:
-    case LP_RESET_NORMALRESET:
-        if (RTC_GetOSF() != 0)
-        {
-            Menu_Guide();
-            Menu_SetTime();
-        }
-        BKPR_ResetAll();
-        break;
-    case LP_RESET_WKUPSTANDBY:
-        if (RTC_GetA2F() != 0 || (BTN_ReadSET() == 0 && BTN_ReadDOWN() == 0 && BTN_ReadUP() == 1)) /* 同时按下“菜单”和“下”按钮立刻更新显示 */
-        {
-            RTC_ClearA2F();
-        }
-        else
-        {
-            Menu_MainMenu();
-        }
-        break;
-    }
-
-    UpdateHomeDisplay();
-
-    BTN_WaitSET(); /* 等待设置按钮释放 */
-
-    SERIAL_DebugPrint("Ready to enter standby mode");
-    LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
-
-    /* 正常情况下进入Standby模式后，程序会停止在此处，直到下次复位或唤醒再重头开始执行 */
-
-    SERIAL_DebugPrint("Enter standby mode fail");
-    LL_mDelay(999); /* 等待1000ms */
-    SERIAL_DebugPrint("Try to enter standby mode again");
-    LP_EnterStandby(); /* 再次尝试进去Standby模式 */
-    SERIAL_DebugPrint("Enter standby mode fail");
-    SERIAL_DebugPrint("Try to reset the system");
-    NVIC_SystemReset(); /* 两次未成功进入Standby模式，执行软复位 */
+    BUZZER_Beep(199);
 }
 
 /* ==================== 电源控制 ==================== */
@@ -351,148 +410,6 @@ static void Power_EnableBUZZER(void)
 static void Power_DisableBUZZER(void)
 {
     BUZZER_Disable();
-}
-
-/* ==================== 辅助功能 ==================== */
-
-static void DumpRTCReg(void)
-{
-    uint8_t i, j, reg_tmp;
-    char byte_str[9];
-    SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("DS3231 REG DUMP:");
-    for (i = 0; i < 19; i++)
-    {
-        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
-        for (j = 0; j < 8; j++)
-        {
-            if ((reg_tmp & (0x80 >> j)) != 0)
-            {
-                byte_str[j] = '1';
-            }
-            else
-            {
-                byte_str[j] = '0';
-            }
-        }
-        byte_str[8] = '\0';
-        SERIAL_SendString(byte_str);
-        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
-        SERIAL_SendStringRN(byte_str);
-    }
-    SERIAL_SendStringRN("DS3231 REG DUMP END");
-    SERIAL_SendStringRN("");
-}
-
-static void DumpEEPROM(void)
-{
-    uint16_t i;
-    char str_buffer[10];
-    SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("EEPROM DUMP:");
-    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
-    for (i = 0; i < 2048; i++)
-    {
-        if (i % 16 == 0)
-        {
-            SERIAL_SendStringRN("");
-        }
-        if (i % 16 == 0)
-        {
-            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
-            SERIAL_SendString(str_buffer);
-        }
-        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", EEPROM_ReadByte(i));
-        SERIAL_SendString(str_buffer);
-    }
-    SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("EEPROM DUMP END");
-    SERIAL_SendStringRN("");
-}
-
-static void DumpBKPR(void)
-{
-    uint16_t i;
-    char str_buffer[10];
-    SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("BKPR DUMP:");
-    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
-    for (i = 0; i < 20; i++)
-    {
-        if (i % 16 == 0)
-        {
-            SERIAL_SendStringRN("");
-        }
-        if (i % 16 == 0)
-        {
-            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
-            SERIAL_SendString(str_buffer);
-        }
-        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", BKPR_ReadByte(i));
-        SERIAL_SendString(str_buffer);
-    }
-    SERIAL_SendStringRN("");
-    SERIAL_SendStringRN("BKPR DUMP END");
-    SERIAL_SendStringRN("");
-}
-
-static void FullInit(void) /* 重新初始化全部数据 */
-{
-    BUZZER_SetFrqe(4000);
-    BUZZER_SetVolume(DefaultSetting.buzzer_volume);
-
-    BUZZER_Beep(49);
-    LL_mDelay(49);
-    BUZZER_Beep(49);
-    LL_mDelay(49);
-    BUZZER_Beep(49);
-
-    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
-    SERIAL_DebugPrint("RTC reset...");
-    if (RTC_ResetAllRegToDefault() != 0)
-    {
-        SERIAL_DebugPrint("RTC reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("RTC reset done");
-    }
-    SERIAL_DebugPrint("SENSOR reset...");
-    if (TH_SoftReset() != 0)
-    {
-        SERIAL_DebugPrint("SENSOR reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("SENSOR reset done");
-    }
-    SERIAL_DebugPrint("BKPR reset...");
-    if (BKPR_ResetAll() != 0)
-    {
-        SERIAL_DebugPrint("BKPR reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("BKPR reset done");
-    }
-    SERIAL_DebugPrint("EEPROM reset...");
-    if (EEPROM_EraseRange(0, 511) != 0)
-    {
-        SERIAL_DebugPrint("EEPROM reset fail");
-    }
-    else
-    {
-        SERIAL_DebugPrint("EEPROM reset done");
-    }
-    SERIAL_DebugPrint("Process done");
-
-#ifdef ENABLE_DEBUG_PRINT
-    DumpEEPROM();
-    DumpRTCReg();
-    DumpBKPR();
-#endif
-
-    BUZZER_Beep(199);
 }
 
 /* ==================== 按键读取 ==================== */
@@ -600,38 +517,41 @@ static void BTN_WaitAll(void)
     }
 }
 
-static void BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val, uint8_t *wait_btn_release, uint8_t *update_display)
+static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val)
 {
-    uint8_t digit[4];
-
-    digit[0] = *number / 1000;
-    digit[1] = (*number - (digit[0] * 1000)) / 100;
-    digit[2] = (*number - (digit[0] * 1000) - (digit[1] * 100)) / 10;
-    digit[3] = *number - (digit[0] * 1000) - (digit[1] * 100) - (digit[2] * 10);
-
-    modify_digit = (3 - modify_digit) % 4;
+    double pow_tmp;
+    uint8_t digit_value;
     if (BTN_ReadUP() == 0)
     {
-        if (digit[modify_digit] < max_val)
-            digit[modify_digit] += 1;
+        pow_tmp = pow(10, modify_digit);
+        digit_value = (uint32_t)(*number / pow_tmp) % 10;
+        if (digit_value < max_val)
+        {
+            *number += (uint32_t)pow_tmp;
+        }
         else
-            digit[modify_digit] = min_val;
-        *wait_btn_release = 1;
-        *update_display = 1;
-        BEEP_Button();
+        {
+            *number -= (uint32_t)pow_tmp * digit_value;
+            *number += (uint32_t)pow_tmp * min_val;
+        }
+        return 1;
     }
     else if (BTN_ReadDOWN() == 0)
     {
-        if (digit[modify_digit] > min_val)
-            digit[modify_digit] -= 1;
+        pow_tmp = pow(10, modify_digit);
+        digit_value = (uint32_t)(*number / pow_tmp) % 10;
+        if (digit_value > min_val)
+        {
+            *number -= (uint32_t)pow_tmp;
+        }
         else
-            digit[modify_digit] = max_val;
-        *wait_btn_release = 1;
-        *update_display = 1;
-        BEEP_Button();
+        {
+            *number -= (uint32_t)pow_tmp * digit_value;
+            *number += (uint32_t)pow_tmp * max_val;
+        }
+        return 1;
     }
-
-    *number = digit[0] * 1000 + digit[1] * 100 + digit[2] * 10 + digit[3];
+    return 0;
 }
 
 /* ==================== 图形绘制 ==================== */
@@ -668,9 +588,9 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float m
 
 /* ==================== 设置存储 ==================== */
 
-void FUNC_SaveSetting(const struct FUNC_Setting *setting)
+void SaveSetting(const struct FUNC_Setting *setting)
 {
-    uint8_t i;
+    uint16_t i;
     uint8_t *setting_ptr;
     setting_ptr = (uint8_t *)setting;
     for (i = 0; i < sizeof(struct FUNC_Setting); i++)
@@ -680,12 +600,11 @@ void FUNC_SaveSetting(const struct FUNC_Setting *setting)
             EEPROM_WriteByte(EEPROM_ADDR_BYTE_SETTING + i, setting_ptr[i]);
         }
     }
-    DumpEEPROM();
 }
 
-void FUNC_ReadSetting(struct FUNC_Setting *setting)
+void ReadSetting(struct FUNC_Setting *setting)
 {
-    uint8_t i;
+    uint16_t i;
     uint8_t *setting_ptr;
     setting_ptr = (uint8_t *)setting;
     for (i = 0; i < sizeof(struct FUNC_Setting); i++)
@@ -694,7 +613,7 @@ void FUNC_ReadSetting(struct FUNC_Setting *setting)
     }
     if (setting->available != 0xAA)
     {
-        SERIAL_DebugPrint("Read setting fail, use default setting");
+        SERIAL_DebugPrint("Read setting fail, load default setting");
         memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
     }
 }
@@ -782,87 +701,93 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             {
                 digit_select = 0;
             }
-            update_display = 1;
             wait_btn = 1;
-            BEEP_Button();
         }
-        switch (digit_select)
+        else
         {
-        case 0:
-            BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0, &wait_btn, &update_display);
-            break;
-        case 1:
-            BTN_ModifySingleDigit(&new_time.Year, 1, 9, 0, &wait_btn, &update_display);
-            break;
-        case 2:
-            BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 3:
-            BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0, &wait_btn, &update_display);
-            break;
-        case 4:
-            BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 5:
-            BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0, &wait_btn, &update_display);
-            break;
-        case 6:
-            BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 7:
-            BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1, &wait_btn, &update_display);
-            break;
-        case 8:
-            BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0, &wait_btn, &update_display);
-            break;
-        case 9:
-            if (new_time.Is_12hr == 0)
+            switch (digit_select)
             {
-                digit_select += 1;
+            case 0:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0);
+                break;
+            case 1:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Year, 1, 9, 0);
+                break;
+            case 2:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0);
+                break;
+            case 3:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0);
+                break;
+            case 4:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0);
+                break;
+            case 5:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0);
+
+                break;
+            case 6:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0);
+                break;
+            case 7:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1);
+                break;
+            case 8:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0);
+                break;
+            case 9:
+                if (new_time.Is_12hr == 0)
+                {
+                    digit_select += 1;
+                }
+                wait_btn = BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0);
+                break;
+            case 10:
+                if (new_time.Is_12hr == 0)
+                {
+                    wait_btn = BTN_ModifySingleDigit(&new_time.Hours, 1, 2, 0);
+                }
+                else
+                {
+                    wait_btn = BTN_ModifySingleDigit(&new_time.Hours, 1, 1, 0);
+                }
+                break;
+            case 11:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0);
+                break;
+            case 12:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0);
+                break;
+            case 13:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0);
+                break;
+            case 14:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0);
+                break;
+            case 15:
+                wait_btn = BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0);
+                break;
+            case 16:
+                if (BTN_ReadUP() == 0)
+                {
+                    save_time = 1;
+                    wait_btn = 0;
+                    update_display = 0;
+                }
+                break;
+            case 17:
+                if (BTN_ReadUP() == 0)
+                {
+                    save_time = 0;
+                    wait_btn = 0;
+                    update_display = 0;
+                }
+                break;
             }
-            BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0, &wait_btn, &update_display);
-            break;
-        case 10:
-            if (new_time.Is_12hr == 0)
-            {
-                BTN_ModifySingleDigit(&new_time.Hours, 1, 2, 0, &wait_btn, &update_display);
-            }
-            else
-            {
-                BTN_ModifySingleDigit(&new_time.Hours, 1, 1, 0, &wait_btn, &update_display);
-            }
-            break;
-        case 11:
-            BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 12:
-            BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0, &wait_btn, &update_display);
-            break;
-        case 13:
-            BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 14:
-            BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0, &wait_btn, &update_display);
-            break;
-        case 15:
-            BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0, &wait_btn, &update_display);
-            break;
-        case 16:
-            if (BTN_ReadUP() == 0)
-            {
-                save_time = 1;
-                wait_btn = 0;
-                update_display = 0;
-            }
-            break;
-        case 17:
-            if (BTN_ReadUP() == 0)
-            {
-                save_time = 0;
-                wait_btn = 0;
-                update_display = 0;
-            }
-            break;
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
         }
         if (update_display != 0)
         {
@@ -976,15 +901,16 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 EPD_Show(0);
             }
         }
-        if (wait_btn != 0)
-        {
-            BTN_WaitAll();
-            wait_btn = 0;
-        }
         if (save_time == 1)
         {
             RTC_SetTime(&new_time);
             RTC_ClearOSF();
+        }
+        if (wait_btn != 0)
+        {
+            BEEP_Button();
+            BTN_WaitAll();
+            wait_btn = 0;
         }
     }
     Power_DisableGDEH029A1();
@@ -1001,6 +927,89 @@ static void Menu_Guide(void) /* 首次使用时的引导 */
 static void Menu_MainMenu(void)
 {
     Menu_SetTime();
+}
+
+/* ==================== 辅助功能 ==================== */
+
+static void DumpRTCReg(void)
+{
+    uint8_t i, j, reg_tmp;
+    char byte_str[9];
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("DS3231 REG DUMP:");
+    for (i = 0; i < 19; i++)
+    {
+        reg_tmp = RTC_ReadREG(RTC_REG_SEC + i);
+        for (j = 0; j < 8; j++)
+        {
+            if ((reg_tmp & (0x80 >> j)) != 0)
+            {
+                byte_str[j] = '1';
+            }
+            else
+            {
+                byte_str[j] = '0';
+            }
+        }
+        byte_str[8] = '\0';
+        SERIAL_SendString(byte_str);
+        snprintf(byte_str, sizeof(byte_str), " 0x%02X", reg_tmp);
+        SERIAL_SendStringRN(byte_str);
+    }
+    SERIAL_SendStringRN("DS3231 REG DUMP END");
+    SERIAL_SendStringRN("");
+}
+
+static void DumpEEPROM(void)
+{
+    uint16_t i;
+    char str_buffer[10];
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("EEPROM DUMP:");
+    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
+    for (i = 0; i < 2048; i++)
+    {
+        if (i % 16 == 0)
+        {
+            SERIAL_SendStringRN("");
+        }
+        if (i % 16 == 0)
+        {
+            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
+            SERIAL_SendString(str_buffer);
+        }
+        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", EEPROM_ReadByte(i));
+        SERIAL_SendString(str_buffer);
+    }
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("EEPROM DUMP END");
+    SERIAL_SendStringRN("");
+}
+
+static void DumpBKPR(void)
+{
+    uint16_t i;
+    char str_buffer[10];
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("BKPR DUMP:");
+    SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
+    for (i = 0; i < 20; i++)
+    {
+        if (i % 16 == 0)
+        {
+            SERIAL_SendStringRN("");
+        }
+        if (i % 16 == 0)
+        {
+            snprintf(str_buffer, sizeof(str_buffer), "0x%04X    ", i);
+            SERIAL_SendString(str_buffer);
+        }
+        snprintf(str_buffer, sizeof(str_buffer), "0x%02X ", BKPR_ReadByte(i));
+        SERIAL_SendString(str_buffer);
+    }
+    SERIAL_SendStringRN("");
+    SERIAL_SendStringRN("BKPR DUMP END");
+    SERIAL_SendStringRN("");
 }
 
 /*
