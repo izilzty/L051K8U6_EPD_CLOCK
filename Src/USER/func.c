@@ -101,6 +101,8 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 
     LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date);
 
+    Lunar.Month = 11;
+
     if (Sensor.CEL < 0)
     {
         temp_value[0] = (int8_t)(Sensor.CEL - 0.05);
@@ -181,12 +183,8 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_Show(0);
     LP_EnterSleep();
 
-    SERIAL_DebugPrint("EXIT SLEEP");
-
     battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
-
-    SERIAL_DebugPrint("ADC OK");
 
     EPD_EnterDeepSleep();
     Power_DisableGDEH029A1();
@@ -272,9 +270,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
         break;
     }
 
-    SERIAL_DebugPrint("Begin homepage update");
     UpdateHomeDisplay();
-    SERIAL_DebugPrint("Homepage update done");
 
     BTN_WaitSET(); /* 等待设置按钮释放 */
 

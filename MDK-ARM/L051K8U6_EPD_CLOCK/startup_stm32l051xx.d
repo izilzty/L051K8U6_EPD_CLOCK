@@ -1,0 +1,1 @@
+l051k8u6_epd_clock\startup_stm32l051xx.o: startup_stm32l051xx.s

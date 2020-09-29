@@ -11,10 +11,10 @@ struct Lunar_Date
     uint16_t Year;
 };
 
-const static char Lunar_MonthString[13][10] = {
+const static char Lunar_MonthString[13][7] = {
     "未知",
     "正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月",
-    "十一月", "十二月"};
+    "冬月", "腊月"};
 
 const static char Lunar_MonthLeapString[2][4] = {
     "",

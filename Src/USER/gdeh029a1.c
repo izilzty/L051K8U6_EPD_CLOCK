@@ -408,7 +408,7 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
                 EPD_SetWindow(x + x_count, y_x8, utf8_font[1] / 2, utf8_font[2] / 8);
                 for (i = 0; i < font_size; i++)
                 {
-                    utf8_size = 0xFF; /* 借用 */
+                    utf8_size = 0xFF; /* 借用变量 */
                     EPD_SendRAM(&utf8_size, 1);
                 }
                 x_count += utf8_font[1] / 2 + gap;
