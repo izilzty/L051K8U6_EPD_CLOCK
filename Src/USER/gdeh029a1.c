@@ -168,6 +168,8 @@ static uint8_t epd_wait_busy(void)
  */
 void EPD_SetCursor(uint16_t x, uint8_t y_x8)
 {
+    x = 296 - 1 - x;
+    
     epd_send_cmd(0x4E); /* 设置X（短边）地址计数器 */
     epd_send_data(y_x8);
     epd_send_cmd(0x4F); /* 设置Y（长边）地址计数器 */
@@ -181,6 +183,7 @@ void EPD_SetCursor(uint16_t x, uint8_t y_x8)
  * @param  y_x8 显示窗口起始Y位置，设置1等于8像素。
  * @param  x_size 显示窗口X方向大小。
  * @param  y_size_x8 显示窗口Y方向大小，设置1等于8像素。
+ * @note   指针已被自动设置至窗口的左上角。
  */
 void EPD_SetWindow(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8)
 {
@@ -197,7 +200,11 @@ void EPD_SetWindow(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8)
     epd_send_data(x_size & 0xFF);
     epd_send_data((x_size >> 8) & 0x01);
 
-    EPD_SetCursor(x, y_x8);
+    epd_send_cmd(0x4E); /* 设置X（短边）地址计数器 */
+    epd_send_data(y_x8);
+    epd_send_cmd(0x4F); /* 设置Y（长边）地址计数器 */
+    epd_send_data(x & 0xFF);
+    epd_send_data((x >> 8) & 0x01);
 }
 
 /**
