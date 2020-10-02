@@ -9,6 +9,7 @@ l051k8u6_epd_clock/func.o: ..\Src\USER\func.c ..\Src\USER\func.h \
   ..\Drivers\CMSIS\Include\core_cmFunc.h \
   ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_lptim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h \
@@ -28,4 +29,5 @@ l051k8u6_epd_clock/func.o: ..\Src\USER\func.c ..\Src\USER\func.h \
   ..\Src\USER\gdeh029A1.h ..\Src\USER\buzzer.h ..\Src\USER\lunar.h \
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
+  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h

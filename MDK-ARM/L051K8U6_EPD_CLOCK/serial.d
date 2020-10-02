@@ -9,6 +9,7 @@ l051k8u6_epd_clock/serial.o: ..\Src\USER\serial.c ..\Src\USER\serial.h \
   ..\Drivers\CMSIS\Include\core_cmFunc.h \
   ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_lptim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h \

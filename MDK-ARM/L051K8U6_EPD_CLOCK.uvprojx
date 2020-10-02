@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,HSE_VALUE=8000000,HSE_STARTUP_TIMEOUT=100,LSE_STARTUP_TIMEOUT=5000,LSE_VALUE=32768,MSI_VALUE=2097000,HSI_VALUE=16000000,LSI_VALUE=37000,VDD_VALUE=3300,PREFETCH_ENABLE=0,INSTRUCTION_CACHE_ENABLE=1,DATA_CACHE_ENABLE=1,STM32L051xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;          ../Drivers/STM32L0xx_HAL_Driver/Inc;          ../Drivers/CMSIS/Device/ST/STM32L0xx/Include;          ../Drivers/CMSIS/Include;          ../Src/USER</IncludePath>
+              <IncludePath>../Inc;              ../Drivers/STM32L0xx_HAL_Driver/Inc;              ../Drivers/CMSIS/Device/ST/STM32L0xx/Include;              ../Drivers/CMSIS/Include;              ../Src/USER</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,6 +414,11 @@
               <FilePath>../Src/i2c.c</FilePath>
             </File>
             <File>
+              <FileName>lptim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/lptim.c</FilePath>
+            </File>
+            <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/spi.c</FilePath>
@@ -472,6 +477,11 @@
               <FileName>stm32l0xx_ll_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l0xx_ll_lptim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_lptim.c</FilePath>
             </File>
             <File>
               <FileName>stm32l0xx_ll_spi.c</FileName>

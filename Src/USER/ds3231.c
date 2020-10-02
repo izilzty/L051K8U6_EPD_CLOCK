@@ -858,7 +858,17 @@ float RTC_GetTemp(void)
     uint16_t temp_tmp;
     temp_tmp = ((uint16_t)RTC_ReadREG(RTC_REG_TPM)) << 2;
     temp_tmp |= RTC_ReadREG(RTC_REG_TPL) >> 6;
-    return temp_tmp * 0.25;
+    if ((temp_tmp & 0x0200) != 0)
+    {
+        temp_tmp &= 0x01FF;        /* 去除负号标志 */
+        temp_tmp ^= 0x01FF;        /* 转正数 */
+        temp_tmp += 1;             /* 转正数 */
+        return -(temp_tmp * 0.25); /* 计算温度并变为负数 */
+    }
+    else
+    {
+        return temp_tmp * 0.25; /* 计算温度 */
+    }
 }
 
 /**

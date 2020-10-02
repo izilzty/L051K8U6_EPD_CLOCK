@@ -10,6 +10,8 @@
 #define BUZZER_CLOCK 1000000
 /* 结束 */
 
+#define BUZZER_MAX_VOL 10
+
 void BUZZER_Enable(void);
 void BUZZER_Disable(void);
 void BUZZER_Start(void);

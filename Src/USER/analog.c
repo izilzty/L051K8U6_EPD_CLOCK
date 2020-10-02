@@ -1,7 +1,9 @@
 #include "analog.h"
 
+static int16_t VREFINT_offset = 0;
+
 #define WAIT_TIMEOUT(val)                                       \
-    timeout = ADC_TIMEOUT_MS;                                \
+    timeout = ADC_TIMEOUT_MS;                                   \
     systick_tmp = SysTick->CTRL;                                \
     ((void)systick_tmp);                                        \
     while (timeout != 0 && val)                                 \
@@ -36,7 +38,7 @@ void delay_100ns(volatile uint16_t nsX100)
  */
 static float conv_vrefint_to_vdda(uint16_t vrefint)
 {
-    return (VREFINT_CAL_VREF * (*VREFINT_CAL_ADDR) / (float)vrefint);
+    return (VREFINT_CAL_VREF * ((*VREFINT_CAL_ADDR) + VREFINT_offset) / (float)vrefint);
 }
 
 /**
@@ -127,7 +129,7 @@ uint8_t ADC_Enable(void)
         delay_100ns(LL_ADC_DELAY_TEMPSENSOR_STAB_US * 10); /* 等待温度传感器稳定 */
         /* 结束 */
         LL_ADC_Enable(ADC_NUM);
-        WAIT_TIMEOUT(LL_ADC_IsActiveFlag_ADRDY(ADC_NUM) == 0);
+        WAIT_TIMEOUT((LL_ADC_IsActiveFlag_ADRDY(ADC_NUM) == 0 || LL_SYSCFG_VREFINT_IsReady() == 0));
     }
     return 0;
 }
@@ -160,7 +162,7 @@ uint8_t ADC_Disable(void)
 /**
  * @brief  开始ADC自动校准。
  * @return 1：校准失败，0：校准成功。
- * @note   每次ADC电源关闭并重新开启后需要重新校准。
+ * @note   每次ADC关闭并重新开启后需要重新校准。
  */
 uint8_t ADC_StartCal(void)
 {
@@ -290,4 +292,59 @@ float ADC_GetChannel(uint32_t channel)
         temp_tmp[i] = conv_adc_to_voltage(conv_vrefint_to_vdda(adc_val[1]), adc_val[0]);
     }
     return conv_float_avg(temp_tmp, sizeof(temp_tmp) / sizeof(float));
+}
+
+/**
+ * @brief  开启内部参考电压输出。
+ */
+void ADC_EnableVrefintOutput(void)
+{
+
+    LL_SYSCFG_VREFINT_EnableADC();
+    LL_SYSCFG_VREFINT_SetConnection(ADC_VREFINT_OUT_PIN);
+}
+
+/**
+ * @brief  关闭内部参考电压输出。
+ */
+void ADC_DisableVrefintOutput(void)
+{
+    LL_SYSCFG_VREFINT_DisableADC();
+    LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE);
+}
+
+/**
+ * @brief  获取ADC内部参考电压的工厂校准值。
+ * @return ADC参考电压工厂校准值，单位为毫伏。
+ */
+float ADC_GetVrefintFactory(void)
+{
+    return (VREFINT_CAL_VREF / (float)0x0FFF) * (*VREFINT_CAL_ADDR);
+}
+
+/**
+ * @brief  获取ADC内部参考电压的步进值。
+ * @return ADC参考电压步进值，单位为毫伏。
+ */
+float ADC_GetVrefintStep(void)
+{
+    return (VREFINT_CAL_VREF / (float)0x0FFF);
+}
+
+/**
+ * @brief  设置ADC内部参考电压偏移。
+ * @param  offset 偏移值，单位为ADC原始读数。
+ */
+void ADC_SetVrefintOffset(int16_t offset)
+{
+    VREFINT_offset = offset;
+}
+
+/**
+ * @brief  获取ADC内部参考电压偏移。
+ * @return 偏移值，单位为ADC原始读数。
+ */
+int16_t ADC_GetVrefintOffset(void)
+{
+    return VREFINT_offset;
 }

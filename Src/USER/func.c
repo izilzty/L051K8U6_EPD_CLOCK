@@ -2,24 +2,25 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 
-const struct FUNC_Setting DefaultSetting = {0xAA, 1, 3, 0.35};      /* 设置有效标志，蜂鸣器打开，默认蜂鸣器音量3，电池压降0.35伏  */
-const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0}; /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
+const struct FUNC_Setting DefaultSetting = {SETTING_AVALIABLE_FLAG, 1, 3, 1.20, 0.90, 0.00, 0.00, 0, 0}; /* 设置有效，蜂鸣器打开，默认蜂鸣器音量3，警告电压1.20伏，关机电压0.90伏，温度传感器偏移0度，湿度传感器偏移百分之0，内置参考电压偏移0，实时时钟老化偏移0 */
+const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0};                                      /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
 
-uint8_t ResetInfo;
-struct RTC_Time Time;
-struct Lunar_Date Lunar;
-struct TH_Value Sensor;
-struct FUNC_Setting Setting;
-char String[256];
+static uint8_t ResetInfo;
+static struct RTC_Time Time;
+static struct Lunar_Date Lunar;
+static struct TH_Value Sensor;
+static struct FUNC_Setting Setting;
+static char String[256];
 
 static void Power_EnableGDEH029A1(void);
 static void Power_DisableGDEH029A1(void);
 static void Power_Enable_SHT30_I2C(void);
 static void Power_Disable_I2C_SHT30(void);
-static void Power_EnableADC(void);
-static void Power_DisableADC(void);
+static uint8_t Power_EnableADC(void);
+static uint8_t Power_DisableADC(void);
 static void Power_EnableBUZZER(void);
 static void Power_DisableBUZZER(void);
 
@@ -38,9 +39,10 @@ void BEEP_Button(void);
 void BEEP_OK(void);
 
 static void UpdateHomeDisplay(void);
-static void Menu_SetTime(void);
 static void Menu_MainMenu(void);
 static void Menu_Guide(void);
+static void Menu_SetTime(void);
+static void Menu_SetVrefint(void);
 
 void SaveSetting(const struct FUNC_Setting *setting);
 void ReadSetting(struct FUNC_Setting *setting);
@@ -67,12 +69,29 @@ static void Delay_100ns(volatile uint16_t nsX100)
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
+    LL_mDelay(199);
+
+    Power_EnableADC();
+
+    while (1)
+    {
+        uint16_t adc;
+        for (size_t i = 0; i < 10; i++)
+        {
+            ADC_StartConversionSequence(LL_ADC_CHANNEL_VREFINT, &adc, 1);
+            snprintf(String, sizeof(String), "0x%04X", adc);
+            SERIAL_SendStringRN(String);
+        }
+        SERIAL_SendStringRN("");
+        LP_DisableDebug();
+        LP_EnterSleepWithTimeout(3);
+    }
+    LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_29); /* 禁用定时器醒中断 */
+    LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_0);  /* 禁用电子纸唤醒中断 */
 #ifdef ENABLE_DEBUG_PRINT
     SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
     LL_mDelay(19);
 #endif
-    LL_EXTI_DisableIT_0_31(EPD_BUSY_EXTI0_EXTI_IRQn);                /* 禁用电子纸唤醒中断 */
-    LL_SYSCFG_VREFINT_SetConnection(LL_SYSCFG_VREFINT_CONNECT_NONE); /* 禁用VREFINT输出 */
     ResetInfo = LP_GetResetInfo();
     switch (ResetInfo)
     {
@@ -94,23 +113,31 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
 
-    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池电压过低，直接进入Standby模式，防止反复断电 */
+    if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG))
+    {
+        FullInit();
+        SaveSetting(&DefaultSetting);
+        BKPR_WriteByte(BKPR_ADDR_BYTE_REQINIT, REQUEST_RESET_ALL_FLAG);
+    }
+
+    /* 读取保存的设置，如果没有则使用默认设置代替 */
+    ReadSetting(&Setting);
+    /* 设置偏移量 */
+    TH_SetTemperatureOffset(Setting.sensor_temp_offset);
+    TH_SetHumidityOffset(Setting.sensor_rh_offset);
+    ADC_SetVrefintOffset(Setting.vrefint_offset);
+    if (RTC_GetAging() != Setting.rtc_aging_offset)
+    {
+        RTC_ModifyAging(Setting.rtc_aging_offset);
+    }
+
+    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池低于DC-DC临界电压，直接进入Standby模式 */
     {
         SERIAL_DebugPrint("Battery low, Direct enter standby mode");
         RTC_ClearA2F();
         RTC_ClearA1F();
         LP_EnterStandby();
     }
-
-    if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == 0xAA))
-    {
-        FullInit();
-        SaveSetting(&DefaultSetting);
-        Menu_Guide();
-        Menu_SetTime();
-    }
-
-    ReadSetting(&Setting); /* 读取保存的设置，如果没有则使用默认设置代替 */
 }
 
 void Loop(void) /* 在Init()执行完成后循环执行 */
@@ -119,26 +146,35 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     {
     case LP_RESET_POWERON:
     case LP_RESET_NORMALRESET:
-        if (RTC_GetOSF() != 0)
+        if (RTC_GetOSF() != 0 || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG)
         {
+            BKPR_ResetAll();
+            Power_EnableGDEH029A1();
             Menu_Guide();
             Menu_SetTime();
         }
-        BKPR_ResetAll();
+        else
+        {
+            BKPR_ResetAll();
+        }
         break;
     case LP_RESET_WKUPSTANDBY:
-        if (RTC_GetA2F() != 0 || (BTN_ReadSET() == 0 && BTN_ReadDOWN() == 0 && BTN_ReadUP() == 1)) /* 同时按下“菜单”和“下”按钮立刻更新显示 */
+        LP_DisableDebug();
+        if (RTC_GetA2F() != 0 || (BTN_ReadUP() != 0 && BTN_ReadDOWN() == 0)) /* 同时按下“菜单”和“上”按钮立刻更新显示 */
         {
             RTC_ClearA2F();
         }
         else
         {
+            Power_EnableGDEH029A1();
             Menu_MainMenu();
         }
         break;
     }
 
+    Power_EnableGDEH029A1();
     UpdateHomeDisplay();
+    Power_DisableGDEH029A1();
 
     BTN_WaitSET(); /* 等待设置按钮释放 */
 
@@ -179,18 +215,29 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 
     Power_Disable_I2C_SHT30();
 
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+
     battery_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL);
     battery_value = *(float *)&battery_val_stor;
     if (battery_value < 0.1 || battery_value > 3.6) /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
     {
         battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     }
-
-    if (battery_value < (DCDC_MIN_VOLTAGE + Setting.battery_drop)) /* 电池已经低于最低工作电压，不更新显示直接进入Standby */
+    if (battery_value < Setting.battery_stop) /* 电池已经低于最低工作电压，显示电量不足标志并停止更新 */
     {
-        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
-        LP_EnterStandby();
-        return;
+        EPD_DrawImage(0, 0, EPD_Image_Welcome_296x96);
+        EPD_Show(0);
+        LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+        Power_DisableGDEH029A1();
+        while (1)
+        {
+            SERIAL_DebugPrint("Battery low, lock display update");
+            LL_GPIO_ResetOutputPin(LED_GPIO_Port, LED_Pin);
+            LL_mDelay(134);
+            LL_GPIO_SetOutputPin(LED_GPIO_Port, LED_Pin);
+            LP_EnterStopWithTimeout(1);
+        }
     }
 
     LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date); /* RTC读出的年份省去了2000，计算农历前要手动加上 */
@@ -206,19 +253,15 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     }
     temp_value[1] = (int8_t)((Sensor.CEL - temp_value[0]) * 10);
 
-    /* 将浮点湿度分为两个整数温度 */
+    /* 将浮点湿度分为两个整数 */
     rh_value[0] = (int8_t)(Sensor.RH + 0.05);
     rh_value[1] = (int8_t)((Sensor.RH - rh_value[0]) * 10);
-
-    Power_EnableGDEH029A1();
-    EPD_Init(EPD_UPDATE_MODE_FAST);
-    EPD_ClearRAM();
 
     EPD_DrawHLine(0, 28, 296, 2);
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, DCDC_MIN_VOLTAGE + Setting.battery_drop, battery_value);
+    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
 
     snprintf(String, sizeof(String), "2%03d/%d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
@@ -268,13 +311,12 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16);
 
     EPD_Show(0);
-    LP_EnterSleep();
+    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
 
     battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
 
     EPD_EnterDeepSleep();
-    Power_DisableGDEH029A1();
 }
 
 static void FullInit(void) /* 重新初始化全部数据 */
@@ -390,16 +432,16 @@ static void Power_Disable_I2C_SHT30(void)
     LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
 }
 
-static void Power_EnableADC(void)
+static uint8_t Power_EnableADC(void)
 {
     ADC_Disable();
     ADC_StartCal();
-    ADC_Enable();
+    return ADC_Enable();
 }
 
-static void Power_DisableADC(void)
+static uint8_t Power_DisableADC(void)
 {
-    ADC_Disable();
+    return ADC_Disable();
 }
 
 static void Power_EnableBUZZER(void)
@@ -554,11 +596,11 @@ static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint
     return 0;
 }
 
-/* ==================== 图形绘制 ==================== */
+/* ==================== 电池绘制 ==================== */
 
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage)
 {
-    uint8_t dis_ram[98];
+    uint8_t dis_ram[99];
     uint8_t i, bar_size;
 
     if (voltage < min_voltage)
@@ -579,9 +621,9 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float m
     memcpy(dis_ram, EPD_Image_BattFrame, sizeof(dis_ram));
     for (i = 0; i < bar_size; i++)
     {
-        dis_ram[83 - (i * 3) + 0] &= 0xF8;
-        dis_ram[83 - (i * 3) + 1] &= 0x00;
-        dis_ram[83 - (i * 3) + 2] &= 0x1F;
+        dis_ram[84 - (i * 3) + 0] &= 0xF8;
+        dis_ram[84 - (i * 3) + 1] &= 0x00;
+        dis_ram[84 - (i * 3) + 2] &= 0x1F;
     }
     EPD_DrawImage(x, y_x8, dis_ram);
 }
@@ -611,7 +653,7 @@ void ReadSetting(struct FUNC_Setting *setting)
     {
         setting_ptr[i] = EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i);
     }
-    if (setting->available != 0xAA)
+    if (setting->available != SETTING_AVALIABLE_FLAG)
     {
         SERIAL_DebugPrint("Read setting fail, load default setting");
         memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
@@ -648,19 +690,14 @@ void BEEP_OK(void)
 static void Menu_SetTime(void) /* 时间设置页面 */
 {
     struct RTC_Time new_time;
-    uint8_t i, digit_select, save_time, update_display, wait_btn, arrow_y;
+    uint8_t i, select, save, update_display, wait_btn, arrow_y;
     uint16_t arrow_x;
-    float battery_value;
-
-    BEEP_OK();
-
-    Power_EnableGDEH029A1();
 
     EPD_Init(EPD_UPDATE_MODE_FAST);
     EPD_ClearRAM();
     for (i = 0; i < 2; i++)
     {
-        EPD_DrawUTF8(0, 0, 0, "时间设置：", NULL, EPD_FontUTF8_24x24);
+        EPD_DrawUTF8(0, 0, 0, "时间设置", NULL, EPD_FontUTF8_24x24);
         EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
         EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
         EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
@@ -671,10 +708,9 @@ static void Menu_SetTime(void) /* 时间设置页面 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStop();
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
-            EPD_EnterSleep();
         }
     }
     BTN_WaitAll();
@@ -685,27 +721,31 @@ static void Menu_SetTime(void) /* 时间设置页面 */
         memcpy(&new_time, &DefaultTime, sizeof(struct RTC_Time));
     }
 
-    digit_select = 0;
+    select = 0;
     update_display = 1;
     wait_btn = 0;
-    save_time = 2;
-    while (save_time == 2)
+    save = 0;
+    while (save == 0)
     {
         if (BTN_ReadSET() == 0)
         {
-            if (digit_select < 17)
+            if (select < 17)
             {
-                digit_select += 1;
+                select += 1;
             }
             else
             {
-                digit_select = 0;
+                select = 0;
+            }
+            if (select == 9 && new_time.Is_12hr == 0)
+            {
+                select += 1;
             }
             wait_btn = 1;
         }
         else
         {
-            switch (digit_select)
+            switch (select)
             {
             case 0:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Year, 2, 1, 0);
@@ -736,10 +776,6 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 wait_btn = BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0);
                 break;
             case 9:
-                if (new_time.Is_12hr == 0)
-                {
-                    digit_select += 1;
-                }
                 wait_btn = BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0);
                 break;
             case 10:
@@ -770,7 +806,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             case 16:
                 if (BTN_ReadUP() == 0)
                 {
-                    save_time = 1;
+                    save = 2;
                     wait_btn = 0;
                     update_display = 0;
                 }
@@ -778,7 +814,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             case 17:
                 if (BTN_ReadUP() == 0)
                 {
-                    save_time = 0;
+                    save = 1;
                     wait_btn = 0;
                     update_display = 0;
                 }
@@ -795,7 +831,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             {
                 update_display = 0;
 
-                if (digit_select == 16 || digit_select == 17)
+                if (select == 16 || select == 17)
                 {
                     EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
                     EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
@@ -843,54 +879,54 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
                 EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
 
-                if (digit_select >= 0 && digit_select <= 2)
+                if (select >= 0 && select <= 2)
                 {
-                    arrow_x = 24 + (digit_select * 17);
+                    arrow_x = 24 + (select * 17);
                     arrow_y = 7;
                 }
-                else if (digit_select >= 3 && digit_select <= 4)
+                else if (select >= 3 && select <= 4)
                 {
-                    arrow_x = 104 + ((digit_select - 3) * 17);
+                    arrow_x = 104 + ((select - 3) * 17);
                     arrow_y = 7;
                 }
-                else if (digit_select >= 5 && digit_select <= 6)
+                else if (select >= 5 && select <= 6)
                 {
-                    arrow_x = 167 + ((digit_select - 5) * 17);
+                    arrow_x = 167 + ((select - 5) * 17);
                     arrow_y = 7;
                 }
-                else if (digit_select >= 7 && digit_select <= 7)
+                else if (select >= 7 && select <= 7)
                 {
-                    arrow_x = 276 + ((digit_select - 7) * 17);
+                    arrow_x = 276 + ((select - 7) * 17);
                     arrow_y = 7;
                 }
-                else if (digit_select >= 8 && digit_select <= 8)
+                else if (select >= 8 && select <= 8)
                 {
                     arrow_x = 132;
                     arrow_y = 11;
                 }
-                else if (digit_select >= 9 && digit_select <= 9)
+                else if (select >= 9 && select <= 9)
                 {
                     arrow_x = 23;
                     arrow_y = 15;
                 }
-                else if (digit_select >= 10 && digit_select <= 11)
+                else if (select >= 10 && select <= 11)
                 {
-                    arrow_x = 58 + ((digit_select - 10) * 17);
+                    arrow_x = 58 + ((select - 10) * 17);
                     arrow_y = 15;
                 }
-                else if (digit_select >= 12 && digit_select <= 13)
+                else if (select >= 12 && select <= 13)
                 {
-                    arrow_x = 109 + ((digit_select - 12) * 17);
+                    arrow_x = 109 + ((select - 12) * 17);
                     arrow_y = 15;
                 }
-                else if (digit_select >= 14 && digit_select <= 15)
+                else if (select >= 14 && select <= 15)
                 {
-                    arrow_x = 160 + ((digit_select - 14) * 17);
+                    arrow_x = 160 + ((select - 14) * 17);
                     arrow_y = 15;
                 }
-                else if (digit_select >= 16 && digit_select <= 17)
+                else if (select >= 16 && select <= 17)
                 {
-                    arrow_x = 221 + ((digit_select - 16) * 47);
+                    arrow_x = 221 + ((select - 16) * 47);
                     arrow_y = 15;
                 }
                 EPD_ClearArea(5, 7, 283, 1, 0xFF);
@@ -901,7 +937,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 EPD_Show(0);
             }
         }
-        if (save_time == 1)
+        if (save == 2)
         {
             RTC_SetTime(&new_time);
             RTC_ClearOSF();
@@ -913,20 +949,1168 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             wait_btn = 0;
         }
     }
-    Power_DisableGDEH029A1();
     BEEP_OK();
-    BTN_WaitAll();
 }
 
 static void Menu_Guide(void) /* 首次使用时的引导 */
 {
+    uint8_t i;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+
+    EPD_DrawUTF8(0, 0, 0, "欢迎使用", NULL, EPD_FontUTF8_24x24);
+    EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+    EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+    EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+    EPD_DrawUTF8(149, 1, 0, "继续", NULL, EPD_FontUTF8_16x16);
+    EPD_DrawUTF8(205, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+    EPD_DrawHLine(0, 27, 296, 2);
+    EPD_DrawImage(0, 4, EPD_Image_Welcome_296x96);
+
+    EPD_Show(0);
+    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+
+    BTN_WaitAll();
+
+    while (BTN_ReadSET() != 0)
+    {
+    }
+
+    BEEP_OK();
+}
+
+static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
+{
+    uint8_t i, select, save, update_display, wait_btn, volume, enable;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 0, "铃声设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 0;
+    enable = Setting.buzzer_enable;
+    volume = Setting.buzzer_volume;
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 3)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+        }
+        else
+        {
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0 || BTN_ReadDOWN() == 0)
+                {
+                    if (Setting.buzzer_enable == 0)
+                    {
+                        Setting.buzzer_enable = 1;
+                    }
+                    else
+                    {
+                        Setting.buzzer_enable = 0;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    if (Setting.buzzer_volume < BUZZER_MAX_VOL)
+                    {
+                        Setting.buzzer_volume += 1;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if (Setting.buzzer_volume > 1)
+                    {
+                        Setting.buzzer_volume -= 1;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 2:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 3:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                if (select == 2 || select == 3)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+                EPD_ClearArea(240, 4, 24, 3, 0xFF);
+                EPD_ClearArea(204, 8, 24, 3, 0xFF);
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(240, 4, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(204, 8, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 2:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 3:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                EPD_DrawUTF8(0, 4, 0, "蜂鸣器开启状态：", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                if (Setting.buzzer_enable != 0)
+                {
+                    EPD_DrawUTF8(192, 4, 0, "开启", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                }
+                else
+                {
+                    EPD_DrawUTF8(192, 4, 0, "关闭", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                }
+
+                snprintf(String, sizeof(String), "蜂鸣器音量：%02d/%02d", Setting.buzzer_volume, BUZZER_MAX_VOL);
+                EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            SaveSetting(&Setting);
+        }
+        else if (save == 1)
+        {
+            Setting.buzzer_enable = enable;
+            Setting.buzzer_volume = volume;
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            BTN_WaitAll();
+        }
+    }
+    BEEP_OK();
+}
+
+static void Menu_SetBattery(void) /* 设置电池信息 */
+{
+    uint8_t i, select, save, update_display, wait_btn;
+    float bat_warn, bat_stop, tmp;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 0, "电池设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 0;
+    bat_warn = Setting.battery_warn;
+    bat_stop = Setting.battery_stop;
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 2)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+        }
+        else
+        {
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0)
+                {
+                    if ((bat_warn + 0.01) < BATT_MAX_VOLTAGE)
+                    {
+                        bat_warn += 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if ((bat_warn - 0.01) > DCDC_MIN_VOLTAGE)
+                    {
+                        bat_warn -= 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    if ((bat_stop + 0.01) < BATT_MAX_VOLTAGE)
+                    {
+                        bat_stop += 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if ((bat_stop - 0.01) > DCDC_MIN_VOLTAGE + 0.01)
+                    {
+                        bat_stop -= 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 2:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 3:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                if (select == 2 || select == 3)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+                EPD_ClearArea(180, 4, 24, 3, 0xFF);
+                EPD_ClearArea(180, 8, 24, 3, 0xFF);
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(180, 4, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(180, 8, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 2:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 3:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                tmp = bat_warn + 0.005;
+                snprintf(String, sizeof(String), "警告电压：%d.%02dV", (uint8_t)tmp, (uint8_t)((tmp - (uint8_t)tmp) * 100));
+                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                tmp = bat_stop + 0.005;
+                snprintf(String, sizeof(String), "截止电压：%d.%02dV", (uint8_t)(tmp), (uint8_t)(((tmp) - (uint8_t)(tmp)) * 100));
+                EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            Setting.battery_warn = bat_warn;
+            Setting.battery_stop = bat_stop;
+            SaveSetting(&Setting);
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            BTN_WaitAll();
+        }
+    }
+    BEEP_OK();
+}
+
+static void Menu_SetSensor(void) /* 设置传感器信息 */
+{
+    uint8_t i, select, save, update_display, wait_btn, long_press;
+    float temp_offset, rh_offset, tmp;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 0, "传感器设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 0;
+    long_press = 0;
+    temp_offset = Setting.sensor_temp_offset;
+    rh_offset = Setting.sensor_rh_offset;
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 3)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+            long_press = 255;
+        }
+        else
+        {
+            if (BTN_ReadSET() != 0 && BTN_ReadUP() != 0 && BTN_ReadDOWN() != 0)
+            {
+                long_press = 6;
+            }
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0)
+                {
+                    if (temp_offset < 10.00)
+                    {
+                        temp_offset += 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if (temp_offset > -9.99)
+                    {
+                        temp_offset -= 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    if (rh_offset < 10.00)
+                    {
+                        rh_offset += 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if (rh_offset > -9.99)
+                    {
+                        rh_offset -= 0.01;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 2:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 3:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                if (select == 2 || select == 3)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+                EPD_ClearArea(216, 4, 24, 3, 0xFF);
+                EPD_ClearArea(216, 8, 24, 3, 0xFF);
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(216, 4, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(216, 8, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 2:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 3:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                if (temp_offset > 0)
+                {
+                    tmp = temp_offset + 0.005;
+                }
+                else
+                {
+                    tmp = temp_offset - 0.005;
+                }
+                if (tmp > -1.0 && tmp <= -0.01)
+                {
+                    snprintf(String, sizeof(String), "温度偏移：-%02d.%02d℃", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
+                }
+                else
+                {
+                    snprintf(String, sizeof(String), "温度偏移：%+03d.%02d℃", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
+                }
+                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                if (rh_offset > 0)
+                {
+                    tmp = rh_offset + 0.005;
+                }
+                else
+                {
+                    tmp = rh_offset - 0.005;
+                }
+                if (tmp >= -1.0 && tmp <= -0.01)
+                {
+                    snprintf(String, sizeof(String), "湿度偏移：-%02d.%02d％", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
+                }
+                else
+                {
+                    snprintf(String, sizeof(String), "湿度偏移：%+03d.%02d％", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
+                }
+                EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            Setting.sensor_temp_offset = temp_offset;
+            Setting.sensor_rh_offset = rh_offset;
+            TH_SetTemperatureOffset(temp_offset);
+            TH_SetHumidityOffset(rh_offset);
+            SaveSetting(&Setting);
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            while (long_press != 0 && (BTN_ReadDOWN() == 0 || BTN_ReadUP() == 0 || BTN_ReadSET() == 0))
+            {
+                LL_mDelay(0);
+                if (long_press != 255)
+                {
+                    long_press -= 1;
+                }
+            }
+        }
+    }
+    BEEP_OK();
+}
+
+static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
+{
+    uint8_t i, select, save, update_display, wait_btn;
+    int16_t offset;
+    float vrefint_factory;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 1, "VREFINT设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 0;
+    offset = Setting.vrefint_offset;
+    ADC_EnableVrefintOutput();
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 2)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+        }
+        else
+        {
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0)
+                {
+                    if (offset < 127)
+                    {
+                        offset += 1;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if (offset > -127)
+                    {
+                        offset -= 1;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 2:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                if (select == 1 || select == 2)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+                EPD_ClearArea(166, 4, 24, 3, 0xFF);
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(166, 4, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 1:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 2:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
+                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                vrefint_factory = ADC_GetVrefintFactory() + (ADC_GetVrefintStep() * offset) + 0.0005;
+                snprintf(String, sizeof(String), "[实际电压：%04d.%03dmV]", (int16_t)vrefint_factory, (int16_t)((vrefint_factory - (int16_t)vrefint_factory) * 1000));
+                EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            Setting.vrefint_offset = offset;
+            ADC_SetVrefintOffset(offset);
+            SaveSetting(&Setting);
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            BTN_WaitAll();
+        }
+    }
+    ADC_DisableVrefintOutput();
+    BEEP_OK();
+}
+
+static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
+{
+    uint8_t i, select, save, update_display, wait_btn;
+    int8_t offset;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 1, "RTC老化设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 0;
+    offset = Setting.rtc_aging_offset;
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 2)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+        }
+        else
+        {
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0)
+                {
+                    if (offset < 127)
+                    {
+                        offset += 1;
+                    }
+                    wait_btn = 1;
+                }
+                else if (BTN_ReadDOWN() == 0)
+                {
+                    if (offset > -127)
+                    {
+                        offset -= 1;
+                    }
+                    wait_btn = 1;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 2:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                if (select == 1 || select == 2)
+                {
+                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+                }
+                else
+                {
+                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16);
+                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16);
+                }
+                EPD_ClearArea(166, 4, 24, 3, 0xFF);
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(166, 4, 0, "◀", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    break;
+                case 1:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 2:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
+                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(0, 8, 1, "[每个偏移约为0.1ppm]", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            Setting.rtc_aging_offset = offset;
+            RTC_ModifyAging(offset);
+            SaveSetting(&Setting);
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            BTN_WaitAll();
+        }
+    }
+    BEEP_OK();
+}
+
+static void Menu_SetResetAll(void) /* 恢复初始设置 */
+{
+    uint8_t i, select, save, update_display, wait_btn;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 1, "初始化", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16);
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+    BTN_WaitAll();
+
+    update_display = 1;
+    wait_btn = 0;
+    save = 0;
+    select = 1;
+    while (save == 0)
+    {
+        if (BTN_ReadSET() == 0)
+        {
+            if (select < 1)
+            {
+                select += 1;
+            }
+            else
+            {
+                select = 0;
+            }
+            wait_btn = 1;
+        }
+        else
+        {
+            switch (select)
+            {
+            case 0:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 2;
+                }
+                break;
+            case 1:
+                if (BTN_ReadUP() == 0)
+                {
+                    wait_btn = 0;
+                    update_display = 0;
+                    save = 1;
+                }
+                break;
+            }
+        }
+        if (wait_btn != 0)
+        {
+            update_display = 1;
+        }
+        if (update_display != 0)
+        {
+            if (EPD_CheckBusy() == 0)
+            {
+                update_display = 0;
+                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    break;
+                case 1:
+                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    break;
+                }
+                EPD_DrawUTF8(0, 5, 0, "清除数据并恢复到初始设置", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(0, 9, 0, "继续吗？", EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                EPD_DrawUTF8(211, 13, 0, "继续", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16);
+                EPD_Show(0);
+            }
+        }
+        if (save == 2)
+        {
+            BKPR_WriteByte(BKPR_ADDR_BYTE_REQINIT, REQUEST_RESET_ALL_FLAG);
+            NVIC_SystemReset();
+        }
+        if (wait_btn != 0)
+        {
+            wait_btn = 0;
+            BEEP_Button();
+            BTN_WaitAll();
+        }
+    }
+    BEEP_OK();
 }
 
 /* ==================== 主菜单 ==================== */
 
 static void Menu_MainMenu(void)
 {
-    Menu_SetTime();
+    uint8_t i, select, exit, full_update, wait_btn, update_display;
+
+    BEEP_OK();
+
+    exit = 0;
+    full_update = 1;
+    select = 0;
+    wait_btn = 0;
+    while (exit == 0)
+    {
+        if (full_update == 0)
+        {
+            if (BTN_ReadDOWN() == 0)
+            {
+                if (select < 10)
+                {
+                    select += 1;
+                }
+                wait_btn = 1;
+            }
+            else if (BTN_ReadUP() == 0)
+            {
+                if (select > 0)
+                {
+                    select -= 1;
+                }
+                wait_btn = 1;
+            }
+            else if (BTN_ReadSET() == 0)
+            {
+                BEEP_OK();
+                switch (select)
+                {
+                case 0:
+                    exit = 1;
+                    update_display = 0;
+                    wait_btn = 0;
+                    break;
+                case 1:
+                    Menu_SetTime();
+                    break;
+                case 2:
+                    Menu_SetBuzzer();
+                    break;
+                case 3:
+                    Menu_SetBattery();
+                    break;
+                case 4:
+                    Menu_SetSensor();
+                    break;
+                case 5:
+                    Menu_SetVrefint();
+                    break;
+                case 6:
+                    Menu_SetRTCAging();
+                    break;
+                case 7:
+                    /* code */
+                    break;
+                case 8:
+                    Menu_SetResetAll();
+                    break;
+                case 9:
+                    EPD_Init(EPD_UPDATE_MODE_FULL);
+                    EPD_ClearRAM();
+                    EPD_Show(0);
+                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LL_mDelay(999);
+                    EPD_ClearArea(0, 0, 296, 16, 0x00);
+                    EPD_Show(0);
+                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LL_mDelay(999);
+                    EPD_ClearRAM();
+                    EPD_Show(0);
+                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LL_mDelay(999);
+                    break;
+                case 10:
+                    exit = 1;
+                    update_display = 0;
+                    wait_btn = 0;
+                    break;
+                }
+                full_update = 1;
+            }
+            if (wait_btn != 0)
+            {
+                update_display = 1;
+            }
+            if (update_display != 0)
+            {
+                if (EPD_CheckBusy() == 0)
+                {
+                    update_display = 0;
+                    EPD_ClearArea(0, 4, 24, 12, 0xFF);
+                    snprintf(String, sizeof(String), "▶");
+                    EPD_DrawUTF8(0, 4 + ((select % 4) * 3), 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    snprintf(String, sizeof(String), "%d/%d", (select / 4) + 1, (8 / 4) + 1);
+                    EPD_DrawUTF8(260, 13, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    if (select >= 0 && select <= 3)
+                    {
+                        snprintf(String, sizeof(String), "1.返回        ");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "2.时间设置    ");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "3.铃声设置    ");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "4.电池设置    ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    }
+                    else if (select >= 4 && select <= 7)
+                    {
+                        snprintf(String, sizeof(String), "5.传感器设置  ");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "6.参考电压设置");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "7.时钟老化设置");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "8.系统信息    ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    }
+                    else if (select >= 8 && select <= 11)
+                    {
+                        snprintf(String, sizeof(String), "9.恢复默认设置");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "10.清除屏幕    ");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "11.返回       ");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                        snprintf(String, sizeof(String), "              ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24, EPD_FontUTF8_24x24);
+                    }
+                    EPD_Show(0);
+                }
+            }
+            if (wait_btn != 0)
+            {
+                BEEP_Button();
+                BTN_WaitAll();
+                wait_btn = 0;
+            }
+        }
+        else
+        {
+            full_update = 0;
+            update_display = 1;
+            EPD_Init(EPD_UPDATE_MODE_FAST);
+            EPD_ClearRAM();
+            for (i = 0; i < 2; i++)
+            {
+                EPD_DrawUTF8(0, 0, 0, "主菜单", NULL, EPD_FontUTF8_24x24);
+                EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16);
+                EPD_DrawHLine(0, 27, 296, 2);
+                if (i == 0)
+                {
+                    EPD_Show(0);
+                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    EPD_Init(EPD_UPDATE_MODE_PART);
+                    EPD_ClearRAM();
+                }
+            }
+            BTN_WaitAll();
+        }
+    }
 }
 
 /* ==================== 辅助功能 ==================== */

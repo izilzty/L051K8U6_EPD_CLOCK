@@ -9,6 +9,7 @@ l051k8u6_epd_clock/stm32l0xx_it.o: ..\Src\stm32l0xx_it.c ..\Inc\main.h \
   ..\Drivers\CMSIS\Include\core_cmFunc.h \
   ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_i2c.h \
+  ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_lptim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_crs.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_rcc.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_bus.h \
@@ -22,4 +23,4 @@ l051k8u6_epd_clock/stm32l0xx_it.o: ..\Src\stm32l0xx_it.c ..\Inc\main.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h \
-  ..\Inc\stm32l0xx_it.h ..\Src\USER\serial.h
+  ..\Inc\stm32l0xx_it.h ..\Src\USER\serial.h ..\Src\USER\lowpower.h

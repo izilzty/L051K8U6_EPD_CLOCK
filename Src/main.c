@@ -21,6 +21,7 @@
 #include "main.h"
 #include "adc.h"
 #include "i2c.h"
+#include "lptim.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -104,6 +105,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
+  MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
   Init();
   /* USER CODE END 2 */
@@ -142,6 +144,13 @@ void SystemClock_Config(void)
 
   }
   LL_RCC_HSI_SetCalibTrimming(16);
+  LL_RCC_LSI_Enable();
+
+   /* Wait till LSI is ready */
+  while(LL_RCC_LSI_IsReady() != 1)
+  {
+
+  }
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_2);
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
@@ -158,6 +167,7 @@ void SystemClock_Config(void)
   LL_SetSystemCoreClock(8000000);
   LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2);
   LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1);
+  LL_RCC_SetLPTIMClockSource(LL_RCC_LPTIM1_CLKSOURCE_LSI);
 }
 
 /* USER CODE BEGIN 4 */

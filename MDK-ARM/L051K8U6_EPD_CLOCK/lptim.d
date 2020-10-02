@@ -1,5 +1,4 @@
-l051k8u6_epd_clock/gdeh029a1.o: ..\Src\USER\gdeh029a1.c \
-  ..\Src\USER\gdeh029a1.h ..\Inc\main.h \
+l051k8u6_epd_clock/lptim.o: ..\Src\lptim.c ..\Inc\lptim.h ..\Inc\main.h \
   ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h \
   ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h \

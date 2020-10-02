@@ -169,7 +169,7 @@ static uint8_t epd_wait_busy(void)
 void EPD_SetCursor(uint16_t x, uint8_t y_x8)
 {
     x = 296 - 1 - x;
-    
+
     epd_send_cmd(0x4E); /* 设置X（短边）地址计数器 */
     epd_send_data(y_x8);
     epd_send_cmd(0x4F); /* 设置Y（长边）地址计数器 */
@@ -349,16 +349,8 @@ void EPD_Init(uint8_t update_mode)
     epd_send_cmd(0x3B);
     epd_send_data(0x08);
 
-    if (update_mode != EPD_UPDATE_MODE_PART)
-    {
-        epd_send_cmd(0x3C);
-        epd_send_data(0x33);
-    }
-    else
-    {
-        epd_send_cmd(0x3C);
-        epd_send_data(0x01);
-    }
+    epd_send_cmd(0x3C);
+    epd_send_data(0x33);
 
     switch (update_mode)
     {
@@ -500,9 +492,9 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
 void EPD_DrawImage(uint16_t x, uint8_t y_x8, const uint8_t *image)
 {
     uint8_t y_size;
-    y_size = image[1] / 8;
-    EPD_SetWindow(x, y_x8, image[0], y_size);
-    EPD_SendRAM(image + 2, image[0] * y_size);
+    y_size = image[2] / 8;
+    EPD_SetWindow(x, y_x8, image[0] + image[1], y_size);
+    EPD_SendRAM(image + 3, (image[0] + image[1]) * y_size);
 }
 
 /**

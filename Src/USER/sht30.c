@@ -42,10 +42,10 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
 {
     float conv_tmp;
 
-    conv_tmp = (-45 + 175 * (((raw_data[0] << 8) | raw_data[1]) / 65535.0)) + TemperatureOffset;
-    value->CEL = conv_tmp;
-    conv_tmp = (100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0)) + HumidityOffset;
-    value->RH = conv_tmp;
+    conv_tmp = -45 + 175 * (((raw_data[0] << 8) | raw_data[1]) / 65535.0);
+    value->CEL = conv_tmp + TemperatureOffset;
+    conv_tmp = 100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0);
+    value->RH = conv_tmp + HumidityOffset;
 }
 
 /**
@@ -547,37 +547,3 @@ float TH_GetHumidityOffset(void)
 {
     return HumidityOffset;
 }
-
-/*
-static void acc_div(uint32_t num1, uint32_t num2, uint16_t *result)
-{
-    uint8_t i;
-    uint16_t num_tmp[2];
-    uint16_t div =10000;
-    
-    num_tmp[0]=0;
-    num_tmp[1]=0;
-    
-    num_tmp[0] = num1 / num2;
-    num1 -= num2 * num_tmp[0];
-    for (i = 1; i < 5; )
-    {
-        num1 *= 10;
-        printf("%d\r\n",num1);
-        div/=10;
-        if ((num1 / num2) > 0)
-        {
-            i++;
-            num_tmp[1] += (num1 / num2)*div;
-            printf("--%d\r\n",num1 / num2);
-            num1 -= num1/num2*num2;
-            printf("%d\r\n",num1);
-        }
-        if(num1==0)
-        {
-            break;
-        }
-    }
-    printf("\r\n%d.%04d\r\n",num_tmp[0],num_tmp[1]);
-}
-*/
