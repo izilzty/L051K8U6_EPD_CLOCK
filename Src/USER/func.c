@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-const struct FUNC_Setting DefaultSetting = {0x00, 1, 3, 1.40, 1.20, 0.00, 0.00, 0, 0}; /* 设置未完成，蜂鸣器开关，蜂鸣器音量，警告电压伏，关机电压伏，温度传感器偏移，湿度传感器偏移，内置参考电压偏移，实时时钟老化偏移 */
+const struct FUNC_Setting DefaultSetting = {0x00, 1, 3, 1.40, 1.20, 0.00, 0.00, 0, 0}; /* 设置未完成，蜂鸣器开关，蜂鸣器音量，警告电压，关机电压，温度传感器偏移，湿度传感器偏移，内置参考电压偏移，实时时钟老化偏移 */
 const struct RTC_Time DefaultTime = {00, 0, 0, 4, 1, 10, 20, 0, 0};                    /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
 
 static uint8_t ResetInfo;
