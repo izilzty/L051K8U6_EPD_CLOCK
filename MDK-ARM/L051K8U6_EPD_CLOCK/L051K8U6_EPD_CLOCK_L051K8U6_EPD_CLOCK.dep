@@ -35,7 +35,7 @@ I (..\Inc\tim.h)(0x5F75649F)
 I (..\Inc\usart.h)(0x5F75649F)
 I (..\Inc\gpio.h)(0x5F75649C)
 I (..\Src\USER\func.h)(0x5F754FD1)
-I (..\Src\USER\lowpower.h)(0x5F769F7F)
+I (..\Src\USER\lowpower.h)(0x5F77EF49)
 I (..\Src\USER\analog.h)(0x5F7421D9)
 I (..\Src\USER\bkpr.h)(0x5F6EB999)
 I (..\Src\USER\eeprom.h)(0x5F6F4C57)
@@ -235,7 +235,7 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (../Src/stm32l0xx_it.c)(0x5F75D149)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_it.o -MD)
+F (../Src/stm32l0xx_it.c)(0x5F77F147)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_it.o -MD)
 I (..\Inc\main.h)(0x5F75649F)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
 I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
@@ -263,7 +263,6 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Inc\stm32l0xx_it.h)(0x5F75649F)
 I (..\Src\USER\serial.h)(0x5F6EB9C3)
-I (..\Src\USER\lowpower.h)(0x5F769F7F)
 F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_ll_gpio.c)(0x5F61E26B)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/stm32l0xx_ll_gpio.o -MD)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)
@@ -435,7 +434,7 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
-F (..\Src\USER\func.c)(0x5F76CF27)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/func.o -MD)
+F (..\Src\USER\func.c)(0x5F77F309)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/func.o -MD)
 I (..\Src\USER\func.h)(0x5F754FD1)
 I (..\Inc\main.h)(0x5F75649F)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
@@ -462,7 +461,7 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_spi.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
-I (..\Src\USER\lowpower.h)(0x5F769F7F)
+I (..\Src\USER\lowpower.h)(0x5F77EF49)
 I (..\Src\USER\analog.h)(0x5F7421D9)
 I (..\Src\USER\bkpr.h)(0x5F6EB999)
 I (..\Src\USER\eeprom.h)(0x5F6F4C57)
@@ -561,8 +560,8 @@ I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_tim.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_usart.h)(0x5F61E26B)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_gpio.h)(0x5F61E26B)
 I (..\Inc\i2c.h)(0x5F75649E)
-F (..\Src\USER\lowpower.c)(0x5F769F62)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/lowpower.o -MD)
-I (..\Src\USER\lowpower.h)(0x5F769F7F)
+F (..\Src\USER\lowpower.c)(0x5F77F136)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -flto -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-3 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I ../Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include -I ../Src/USER -D__UVISION_VERSION="531" -D_RTE_ -DSTM32L051xx -D_RTE_ -DUSE_FULL_LL_DRIVER -DHSE_VALUE="8000000" -DHSE_STARTUP_TIMEOUT="100" -DLSE_STARTUP_TIMEOUT="5000" -DLSE_VALUE="32768" -DMSI_VALUE="2097000" -DHSI_VALUE="16000000" -DLSI_VALUE="37000" -DVDD_VALUE="3300" -DPREFETCH_ENABLE="0" -DINSTRUCTION_CACHE_ENABLE="1" -DDATA_CACHE_ENABLE="1" -DSTM32L051xx-o l051k8u6_epd_clock/lowpower.o -MD)
+I (..\Src\USER\lowpower.h)(0x5F77EF49)
 I (..\Inc\main.h)(0x5F75649F)
 I (..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_ll_adc.h)(0x5F61E26B)
 I (..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h)(0x5F61E260)

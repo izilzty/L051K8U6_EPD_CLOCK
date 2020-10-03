@@ -69,28 +69,12 @@ static void Delay_100ns(volatile uint16_t nsX100)
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
-    LL_mDelay(199);
-
-    Power_EnableADC();
-
-    while (1)
-    {
-        uint16_t adc;
-        for (size_t i = 0; i < 10; i++)
-        {
-            ADC_StartConversionSequence(LL_ADC_CHANNEL_VREFINT, &adc, 1);
-            snprintf(String, sizeof(String), "0x%04X", adc);
-            SERIAL_SendStringRN(String);
-        }
-        SERIAL_SendStringRN("");
-        LP_DisableDebug();
-        LP_EnterSleepWithTimeout(3);
-    }
-    LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_29); /* 禁用定时器醒中断 */
-    LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_0);  /* 禁用电子纸唤醒中断 */
+    LL_EXTI_DisableIT_0_31(LP_LPTIM_EXTI); /* 禁用定时器醒中断 */
+    LL_EXTI_DisableIT_0_31(LP_WKUP_EXTI);  /* 禁用外部唤醒中断 */
 #ifdef ENABLE_DEBUG_PRINT
     SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
-    LL_mDelay(19);
+    LL_mDelay(199);
+    LP_DisableDebug();
 #endif
     ResetInfo = LP_GetResetInfo();
     switch (ResetInfo)
@@ -112,6 +96,7 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
+    Power_DisableGDEH029A1(); /* 默认关闭电子纸电源 */
 
     if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG))
     {
@@ -122,21 +107,13 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 
     /* 读取保存的设置，如果没有则使用默认设置代替 */
     ReadSetting(&Setting);
-    /* 设置偏移量 */
+    /* 设置电池和传感器偏移量 */
     TH_SetTemperatureOffset(Setting.sensor_temp_offset);
     TH_SetHumidityOffset(Setting.sensor_rh_offset);
     ADC_SetVrefintOffset(Setting.vrefint_offset);
     if (RTC_GetAging() != Setting.rtc_aging_offset)
     {
         RTC_ModifyAging(Setting.rtc_aging_offset);
-    }
-
-    if (ADC_GetChannel(ADC_CHANNEL_BATTERY) < DCDC_MIN_VOLTAGE) /* 电池低于DC-DC临界电压，直接进入Standby模式 */
-    {
-        SERIAL_DebugPrint("Battery low, Direct enter standby mode");
-        RTC_ClearA2F();
-        RTC_ClearA1F();
-        LP_EnterStandby();
     }
 }
 
@@ -174,7 +151,11 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
     Power_EnableGDEH029A1();
     UpdateHomeDisplay();
+
     Power_DisableGDEH029A1();
+    Power_Disable_I2C_SHT30();
+    Power_DisableADC();
+    Power_DisableBUZZER();
 
     BTN_WaitSET(); /* 等待设置按钮释放 */
 
@@ -213,8 +194,6 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 
     TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
 
-    Power_Disable_I2C_SHT30();
-
     EPD_Init(EPD_UPDATE_MODE_FAST);
     EPD_ClearRAM();
 
@@ -228,7 +207,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     {
         EPD_DrawImage(0, 0, EPD_Image_Welcome_296x96);
         EPD_Show(0);
-        LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+        LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
         Power_DisableGDEH029A1();
         while (1)
         {
@@ -236,7 +215,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
             LL_GPIO_ResetOutputPin(LED_GPIO_Port, LED_Pin);
             LL_mDelay(134);
             LL_GPIO_SetOutputPin(LED_GPIO_Port, LED_Pin);
-            LP_EnterStopWithTimeout(1);
+            LP_EnterStop(3);
         }
     }
 
@@ -311,7 +290,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16);
 
     EPD_Show(0);
-    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
 
     battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
@@ -596,7 +575,7 @@ static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint
     return 0;
 }
 
-/* ==================== 电池绘制 ==================== */
+/* ==================== 电池图标绘制 ==================== */
 
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage)
 {
@@ -708,7 +687,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -970,7 +949,7 @@ static void Menu_Guide(void) /* 首次使用时的引导 */
     EPD_DrawImage(0, 4, EPD_Image_Welcome_296x96);
 
     EPD_Show(0);
-    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
 
     BTN_WaitAll();
 
@@ -1000,7 +979,7 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -1175,7 +1154,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -1345,7 +1324,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -1559,7 +1538,7 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -1707,7 +1686,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -1850,7 +1829,7 @@ static void Menu_SetResetAll(void) /* 恢复初始设置 */
         if (i == 0)
         {
             EPD_Show(0);
-            LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
@@ -2008,15 +1987,15 @@ static void Menu_MainMenu(void)
                     EPD_Init(EPD_UPDATE_MODE_FULL);
                     EPD_ClearRAM();
                     EPD_Show(0);
-                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
                     LL_mDelay(999);
                     EPD_ClearArea(0, 0, 296, 16, 0x00);
                     EPD_Show(0);
-                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
                     LL_mDelay(999);
                     EPD_ClearRAM();
                     EPD_Show(0);
-                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
                     LL_mDelay(999);
                     break;
                 case 10:
@@ -2103,7 +2082,7 @@ static void Menu_MainMenu(void)
                 if (i == 0)
                 {
                     EPD_Show(0);
-                    LP_EnterStopWithTimeout(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
+                    LP_EnterStop(EPD_TIMEOUT_MS / LP_LPTIM_AUTORELOAD_MS);
                     EPD_Init(EPD_UPDATE_MODE_PART);
                     EPD_ClearRAM();
                 }
