@@ -4,6 +4,8 @@
 #include "main.h"
 
 #define ENABLE_DEBUG_PRINT
+// #define WRITE_HWVER
+// #define HW_VERSION 0x00322E31 /* 0x00 0x32 0x2E 0x31 = "\02.1"= "1.2\0" */
 
 #include "lowpower.h"
 #include "analog.h"
@@ -18,15 +20,17 @@
 #include "lunar.h"
 
 /* 可修改 */
-#define SOFT_VERSION "L051_0.10_B"
+#define SOFT_VERSION "L051_0.01_B"
 #define BTN_DEBOUNCE_MS 19
-#define DCDC_MIN_VOLTAGE 0.85
+#define DCDC_MIN_VOLTAGE 0.80
 #define BATT_MAX_VOLTAGE 3.00
 /* 结束 */
 
 #define BKPR_ADDR_DWORD_ADCVAL 0x00
 #define BKPR_ADDR_BYTE_REQINIT 0x04
+
 #define EEPROM_ADDR_BYTE_SETTING 0x00
+#define EEPROM_ADDR_DWORD_HWVERSION 0x01FF
 
 #define REQUEST_RESET_ALL_FLAG 0x55
 #define SETTING_AVALIABLE_FLAG 0xAA

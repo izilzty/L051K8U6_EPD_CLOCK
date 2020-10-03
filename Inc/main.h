@@ -94,7 +94,6 @@ void Error_Handler(void);
 #define EPD_MOSI_GPIO_Port GPIOA
 #define EPD_BUSY_EXTI0_Pin LL_GPIO_PIN_0
 #define EPD_BUSY_EXTI0_GPIO_Port GPIOB
-#define EPD_BUSY_EXTI0_EXTI_IRQn EXTI0_1_IRQn
 #define EPD_POWER_Pin LL_GPIO_PIN_2
 #define EPD_POWER_GPIO_Port GPIOB
 #define LED_Pin LL_GPIO_PIN_8

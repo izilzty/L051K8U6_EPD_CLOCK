@@ -46,6 +46,10 @@ static void readout_data_conv(const uint8_t *raw_data, struct TH_Value *value)
     value->CEL = conv_tmp + TemperatureOffset;
     conv_tmp = 100 * (((raw_data[3] << 8) | raw_data[4]) / 65535.0);
     value->RH = conv_tmp + HumidityOffset;
+    if (value->RH > 100)
+    {
+        value->RH = 100;
+    }
 }
 
 /**

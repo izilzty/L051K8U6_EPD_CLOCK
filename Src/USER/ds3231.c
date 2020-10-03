@@ -215,7 +215,7 @@ uint8_t RTC_GetTime(struct RTC_Time *time)
 }
 
 /**
- * @brief  设置实时时钟时间。
+ * @brief  设置实时时钟时间，同时会清除OSF标志。
  * @param  time 时间存储结构体。
  * @return 1：设置失败，0：设置成功。
  */

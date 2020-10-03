@@ -11,8 +11,7 @@
 #define LP_LPTIM_NUM LPTIM1
 #define LP_LPTIM_EXTI LL_EXTI_LINE_29
 #define LP_LPTIM_WKUP_IRQ LPTIM1_IRQn
-#define LP_LPTIM_FINAL_CLK 1156.25
-#define LP_LPTIM_AUTORELOAD_MS 865
+#define LP_LPTIM_FINAL_CLK 2312.5 /* 此频率下最大延时12秒 */
 /* 结束 */
 
 #define LP_RESET_NONE 0
@@ -23,8 +22,9 @@
 void LP_DisableDebug(void);
 uint8_t LP_GetResetInfo(void);
 
-void LP_EnterSleep(uint16_t timeout);
-void LP_EnterStop(uint16_t timeout);
+void LP_EnterSleep(uint16_t ms);
+void LP_EnterStop(uint16_t ms);
 void LP_EnterStandby(void);
+void LP_DelayStop(uint16_t ms);
 
 #endif

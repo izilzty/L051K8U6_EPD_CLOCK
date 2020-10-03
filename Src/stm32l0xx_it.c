@@ -23,7 +23,6 @@
 #include "stm32l0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "serial.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,7 +88,6 @@ void HardFault_Handler(void)
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-    SERIAL_SendStringRN("***** IN HARD FAULT! *****");
     NVIC_SystemReset();
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
@@ -141,40 +139,6 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32l0xx.s).                    */
 /******************************************************************************/
-
-/**
-  * @brief This function handles EXTI line 0 and line 1 interrupts.
-  */
-void EXTI0_1_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI0_1_IRQn 0 */
-
-  /* USER CODE END EXTI0_1_IRQn 0 */
-  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_0) != RESET)
-  {
-    SERIAL_SendStringRN("\r\n\r\n***** EXTI0 *****\r\n");
-    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_0);
-    /* USER CODE BEGIN LL_EXTI_LINE_0 */
-
-    /* USER CODE END LL_EXTI_LINE_0 */
-  }
-  /* USER CODE BEGIN EXTI0_1_IRQn 1 */
-
-  /* USER CODE END EXTI0_1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles LPTIM1 global interrupt / LPTIM1 wake-up interrupt through EXTI line 29.
-  */
-void LPTIM1_IRQHandler(void)
-{
-  /* USER CODE BEGIN LPTIM1_IRQn 0 */
-  SERIAL_SendStringRN("\r\n\r\n***** LPTIM1 *****\r\n");
-  /* USER CODE END LPTIM1_IRQn 0 */
-  /* USER CODE BEGIN LPTIM1_IRQn 1 */
-
-  /* USER CODE END LPTIM1_IRQn 1 */
-}
 
 /* USER CODE BEGIN 1 */
 
