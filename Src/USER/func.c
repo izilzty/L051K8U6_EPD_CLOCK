@@ -33,7 +33,7 @@ static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
 static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
 
-static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage);
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
 
 void BEEP_Button(void);
 void BEEP_OK(void);
@@ -577,23 +577,30 @@ static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint
 
 /* ==================== 电池图标绘制 ==================== */
 
-static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float bat_voltage, float min_voltage, float voltage)
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage)
 {
-    uint8_t dis_ram[99];
+    uint8_t dis_ram[sizeof(EPD_Image_BattFrame)];
     uint8_t i, bar_size;
 
-    if (voltage < min_voltage)
+    if ((voltage < min_voltage) || ((max_voltage - min_voltage) < 0.001))
     {
         EPD_DrawImage(x, y_x8, EPD_Image_BattWarn);
         return;
     }
-    voltage -= min_voltage;
-    bar_size = (voltage / ((bat_voltage - min_voltage) / 20)) + 0.5;
-    if (bar_size == 0)
+    if (voltage < max_voltage)
     {
-        bar_size = 1;
+        voltage -= min_voltage;
+        bar_size = (voltage / ((max_voltage - min_voltage) / 20)) + 0.5;
+        if (bar_size == 0)
+        {
+            bar_size = 1;
+        }
+        else if (bar_size > 20)
+        {
+            bar_size = 20;
+        }
     }
-    else if (bar_size > 20)
+    else
     {
         bar_size = 20;
     }
