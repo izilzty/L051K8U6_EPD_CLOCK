@@ -483,42 +483,43 @@ static void Menu_MainMenu(void)
                 if (EPD_CheckBusy() == 0)
                 {
                     update_display = 0;
-                    EPD_ClearArea(0, 4, 296, 12, 0xFF);
-                    // EPD_ClearArea(0, 4, 24, 12, 0xFF);
+                    EPD_ClearArea(0, 4, 24, 12, 0xFF);
                     snprintf(String, sizeof(String), "▶");
                     EPD_DrawUTF8(0, 4 + ((select % 4) * 3), 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    snprintf(String, sizeof(String), "%d/%d", (select / 4) + 1, (8 / 4) + 1);
-                    EPD_DrawUTF8(260, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    snprintf(String, sizeof(String), "%d/%d页", (select / 4) + 1, (8 / 4) + 1);
+                    EPD_DrawUTF8(236, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     if (select >= 0 && select <= 3)
                     {
-                        snprintf(String, sizeof(String), "1.返回");
+                        snprintf(String, sizeof(String), "1.返回        ");
                         EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "2.时间设置");
+                        snprintf(String, sizeof(String), "2.时间设置    ");
                         EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "3.铃声设置");
+                        snprintf(String, sizeof(String), "3.铃声设置    ");
                         EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "4.电池设置");
+                        snprintf(String, sizeof(String), "4.电池设置    ");
                         EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     }
                     else if (select >= 4 && select <= 7)
                     {
-                        snprintf(String, sizeof(String), "5.传感器设置");
+                        snprintf(String, sizeof(String), "5.传感器设置  ");
                         EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                         snprintf(String, sizeof(String), "6.参考电压设置");
                         EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                         snprintf(String, sizeof(String), "7.时钟老化设置");
                         EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "8.系统信息");
+                        snprintf(String, sizeof(String), "8.系统信息    ");
                         EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     }
                     else if (select >= 8 && select <= 11)
                     {
                         snprintf(String, sizeof(String), "9.恢复默认设置");
                         EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "10.清除屏幕");
+                        snprintf(String, sizeof(String), "10.清除屏幕   ");
                         EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "11.返回");
+                        snprintf(String, sizeof(String), "11.返回       ");
                         EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "              ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     }
                     EPD_Show(0);
                 }
