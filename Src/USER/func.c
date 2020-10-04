@@ -1782,6 +1782,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 
             LP_EnterStop(EPD_TIMEOUT_MS);
             LP_DelayStop(3000);
+            return;
         }
         if (wait_btn != 0)
         {
