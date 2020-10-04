@@ -10,8 +10,8 @@
       <TargetName>L051K8U6_EPD_CLOCK</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L051K8Ux</Device>
@@ -313,8 +313,8 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
-            <oTime>1</oTime>
+            <Optim>6</Optim>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
             <Strict>0</Strict>
@@ -322,9 +322,9 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>3</wLevel>
             <uThumb>0</uThumb>
-            <uSurpInc>1</uSurpInc>
+            <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,HSE_VALUE=8000000,HSE_STARTUP_TIMEOUT=100,LSE_STARTUP_TIMEOUT=5000,LSE_VALUE=32768,MSI_VALUE=2097000,HSI_VALUE=16000000,LSI_VALUE=37000,VDD_VALUE=3300,PREFETCH_ENABLE=0,INSTRUCTION_CACHE_ENABLE=1,DATA_CACHE_ENABLE=1,STM32L051xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;               ../Drivers/STM32L0xx_HAL_Driver/Inc;               ../Drivers/CMSIS/Device/ST/STM32L0xx/Include;               ../Drivers/CMSIS/Include;               ../Src/USER</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32L0xx_HAL_Driver/Inc;../Drivers/CMSIS/Device/ST/STM32L0xx/Include;../Drivers/CMSIS/Include;../Src/USER</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -519,6 +519,26 @@
           <GroupName>USER</GroupName>
           <Files>
             <File>
+              <FileName>analog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\analog.c</FilePath>
+            </File>
+            <File>
+              <FileName>bkpr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\bkpr.c</FilePath>
+            </File>
+            <File>
+              <FileName>buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>ds3231.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\USER\ds3231.c</FilePath>
+            </File>
+            <File>
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\USER\eeprom.c</FilePath>
@@ -529,14 +549,9 @@
               <FilePath>..\Src\USER\func.c</FilePath>
             </File>
             <File>
-              <FileName>serial.c</FileName>
+              <FileName>gdeh029a1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\USER\serial.c</FilePath>
-            </File>
-            <File>
-              <FileName>bkpr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\USER\bkpr.c</FilePath>
+              <FilePath>..\Src\USER\gdeh029a1.c</FilePath>
             </File>
             <File>
               <FileName>iic.c</FileName>
@@ -549,34 +564,19 @@
               <FilePath>..\Src\USER\lowpower.c</FilePath>
             </File>
             <File>
-              <FileName>ds3231.c</FileName>
+              <FileName>lunar.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\USER\ds3231.c</FilePath>
+              <FilePath>..\Src\USER\lunar.c</FilePath>
             </File>
             <File>
-              <FileName>gdeh029a1.c</FileName>
+              <FileName>serial.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\USER\gdeh029a1.c</FilePath>
+              <FilePath>..\Src\USER\serial.c</FilePath>
             </File>
             <File>
               <FileName>sht30.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\USER\sht30.c</FilePath>
-            </File>
-            <File>
-              <FileName>analog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\USER\analog.c</FilePath>
-            </File>
-            <File>
-              <FileName>buzzer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\USER\buzzer.c</FilePath>
-            </File>
-            <File>
-              <FileName>lunar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\USER\lunar.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -3,9 +3,7 @@
 
 #include "main.h"
 
-#define ENABLE_DEBUG_PRINT
-// #define WRITE_HWVER
-// #define HW_VERSION 0x00322E31 /* 0x00 0x32 0x2E 0x31 = "\02.1"= "1.2\0" */
+// #define ENABLE_DEBUG_PRINT
 
 #include "lowpower.h"
 #include "analog.h"
