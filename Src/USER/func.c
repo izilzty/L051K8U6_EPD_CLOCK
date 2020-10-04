@@ -46,6 +46,7 @@ static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
 static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
 
+static void BEEP_Fast(void);
 static void BEEP_Button(void);
 static void BEEP_OK(void);
 
@@ -1197,7 +1198,14 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
         if (wait_btn != 0)
         {
             wait_btn = 0;
-            BEEP_Button();
+            if (long_press != 0)
+            {
+                BEEP_Button();
+            }
+            else
+            {
+                BEEP_Fast();
+            }
             while (long_press != 0 && (BTN_ReadDOWN() == 0 || BTN_ReadUP() == 0 || BTN_ReadSET() == 0))
             {
                 LL_mDelay(0);
@@ -1385,7 +1393,14 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
         if (wait_btn != 0)
         {
             wait_btn = 0;
-            BEEP_Button();
+            if (long_press != 0)
+            {
+                BEEP_Button();
+            }
+            else
+            {
+                BEEP_Fast();
+            }
             while (long_press != 0 && (BTN_ReadDOWN() == 0 || BTN_ReadUP() == 0 || BTN_ReadSET() == 0))
             {
                 LL_mDelay(0);
@@ -2132,6 +2147,16 @@ static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint
 }
 
 /* ==================== 蜂鸣器 ==================== */
+
+static void BEEP_Fast(void)
+{
+    if (Setting.buzzer_enable != 0)
+    {
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(Setting.buzzer_volume);
+        BUZZER_Beep(4);
+    }
+}
 
 static void BEEP_Button(void)
 {
