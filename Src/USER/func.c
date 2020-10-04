@@ -465,6 +465,7 @@ static void Menu_MainMenu(void)
                     EPD_Show(0);
                     LP_EnterStop(EPD_TIMEOUT_MS);
                     LP_DelayStop(1000);
+                    BEEP_OK();
                     break;
                 case 10:
                     exit = 1;
