@@ -18,10 +18,10 @@
 #include "lunar.h"
 
 /* 可修改 */
-#define SOFT_VERSION "L051_0.01_B"
+#define SOFT_VERSION "L051_0.02_MELANTHA"
 #define BTN_DEBOUNCE_MS 19
-#define DCDC_MIN_VOLTAGE 0.80
-#define BATT_MAX_VOLTAGE 3.00
+#define BAT_MIN_VOLTAGE 0.80
+#define BAT_MAX_VOLTAGE 3.00
 /* 结束 */
 
 #define BKPR_ADDR_DWORD_ADCVAL 0x00

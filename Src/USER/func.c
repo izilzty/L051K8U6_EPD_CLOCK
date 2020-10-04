@@ -268,7 +268,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
+    EPD_DrawBattery(263, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
 
     snprintf(String, sizeof(String), "2%03d/%02d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1091,7 +1091,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
             case 0:
                 if (BTN_ReadUP() == 0)
                 {
-                    if ((bat_warn + 0.005) < BATT_MAX_VOLTAGE)
+                    if ((bat_warn + 0.005) < BAT_MAX_VOLTAGE)
                     {
                         bat_warn += 0.01;
                     }
@@ -1099,7 +1099,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 }
                 else if (BTN_ReadDOWN() == 0)
                 {
-                    if ((bat_warn - 0.005) > DCDC_MIN_VOLTAGE)
+                    if ((bat_warn - 0.005) > BAT_MIN_VOLTAGE)
                     {
                         bat_warn -= 0.01;
                     }
@@ -1109,7 +1109,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
             case 1:
                 if (BTN_ReadUP() == 0)
                 {
-                    if ((bat_stop + 0.005) < BATT_MAX_VOLTAGE)
+                    if ((bat_stop + 0.005) < BAT_MAX_VOLTAGE)
                     {
                         bat_stop += 0.01;
                     }
@@ -1117,7 +1117,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 }
                 else if (BTN_ReadDOWN() == 0)
                 {
-                    if ((bat_stop - 0.005) > DCDC_MIN_VOLTAGE)
+                    if ((bat_stop - 0.005) > BAT_MIN_VOLTAGE)
                     {
                         bat_stop -= 0.01;
                     }
