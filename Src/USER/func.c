@@ -266,7 +266,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawVLine(202, 39, 56, 2);
     EPD_DrawBattery(263, 0, BATT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
 
-    snprintf(String, sizeof(String), "2%03d/%d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
+    snprintf(String, sizeof(String), "2%03d/%02d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
     if (Time.Is_12hr != 0)
     {
