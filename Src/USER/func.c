@@ -1,4 +1,4 @@
-#include "func.h"
+﻿#include "func.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -38,9 +38,7 @@ static void SaveSetting(const struct FUNC_Setting *setting);
 static void ReadSetting(struct FUNC_Setting *setting);
 
 static uint8_t BTN_ReadUP(void);
-static void BTN_WaitUP(void);
 static uint8_t BTN_ReadDOWN(void);
-static void BTN_WaitDOWN(void);
 static uint8_t BTN_ReadSET(void);
 static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
@@ -500,7 +498,7 @@ static void Menu_MainMenu(void)
                     EPD_DrawUTF8(0, 4 + ((select % 4) * 3), 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     snprintf(String, sizeof(String), "%d/%d页", (select / 4) + 1, (8 / 4) + 1);
                     EPD_DrawUTF8(236, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    if (select >= 0 && select <= 3)
+                    if (select <= 3)
                     {
                         snprintf(String, sizeof(String), "1.返回        ");
                         EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -812,7 +810,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 snprintf(String, sizeof(String), "%02d:%02d:%02d", new_time.Hours, new_time.Minutes, new_time.Seconds);
                 EPD_DrawUTF8(58, 12, 5, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
 
-                if (select >= 0 && select <= 2)
+                if (select <= 2)
                 {
                     arrow_x = 24 + (select * 17);
                     arrow_y = 7;
@@ -1221,7 +1219,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
 
 static void Menu_SetSensor(void) /* 设置传感器信息 */
 {
-    uint8_t i, select, save, update_display, wait_btn, long_press;
+    uint8_t select, save, update_display, wait_btn, long_press;
     float temp_offset, rh_offset, tmp;
 
     Menu_DrawSubmenuFrame("传感器设置", 0);
@@ -1416,7 +1414,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
 
 static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
 {
-    uint8_t i, select, save, update_display, wait_btn;
+    uint8_t select, save, update_display, wait_btn;
     int16_t offset;
     float vrefint_factory;
 
@@ -1571,7 +1569,7 @@ static void Menu_Info(void) /* 系统信息 */
 
 static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
 {
-    uint8_t i, select, save, update_display, wait_btn;
+    uint8_t select, save, update_display, wait_btn;
     int8_t offset;
 
     Menu_DrawSubmenuFrame("RTC老化设置", 0);
@@ -1689,7 +1687,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
 
 static void Menu_ResetAll(void) /* 恢复初始设置 */
 {
-    uint8_t i, select, save, update_display, wait_btn;
+    uint8_t select, save, update_display, wait_btn;
 
     Menu_DrawSubmenuFrame("恢复设置", 1);
     BTN_WaitAll();
@@ -1793,7 +1791,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 
 static void Menu_SetHWVer(void) /* 设置硬件版本 */
 {
-    uint8_t i, select, save, update_display, wait_btn, hwver_1, hwver_2;
+    uint8_t select, save, update_display, wait_btn, hwver_1, hwver_2;
     uint32_t hwver_stor;
 
     Menu_DrawSubmenuFrame("硬件版本设置", 0);
@@ -2019,21 +2017,6 @@ static uint8_t BTN_ReadUP()
     return 1;
 }
 
-static void BTN_WaitUP(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
-}
-
 static uint8_t BTN_ReadDOWN(void)
 {
     if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
@@ -2045,21 +2028,6 @@ static uint8_t BTN_ReadDOWN(void)
         }
     }
     return 1;
-}
-
-static void BTN_WaitDOWN(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
 }
 
 static uint8_t BTN_ReadSET(void)

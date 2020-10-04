@@ -1,4 +1,4 @@
---cpu Cortex-M0+ --lto
+--cpu Cortex-M0+
 "l051k8u6_epd_clock\startup_stm32l051xx.o"
 "l051k8u6_epd_clock\main.o"
 "l051k8u6_epd_clock\gpio.o"
