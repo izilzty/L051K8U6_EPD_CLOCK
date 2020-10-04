@@ -490,7 +490,7 @@ static void Menu_MainMenu(void)
             }
             if (update_display != 0)
             {
-                if (EPD_CheckBusy() == 0)
+                if (EPD_GetBusy() == 0)
                 {
                     update_display = 0;
                     EPD_ClearArea(0, 4, 24, 12, 0xFF);
@@ -773,7 +773,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -989,7 +989,7 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -1148,7 +1148,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -1315,7 +1315,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -1487,7 +1487,7 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -1640,7 +1640,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 
@@ -1738,7 +1738,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
                 EPD_ClearArea(211, 15, 79, 1, 0xFF);
@@ -1760,9 +1760,13 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
         }
         if (save == 2)
         {
+            BEEP_OK();
+
             memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
             Setting.available = SETTING_AVALIABLE_FLAG;
             SaveSetting(&Setting);
+
+            EPD_WaitBusy();
 
             EPD_ClearArea(0, 5, 296, 11, 0xFF);
             EPD_DrawUTF8(0, 5, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1881,7 +1885,7 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
         }
         if (update_display != 0)
         {
-            if (EPD_CheckBusy() == 0)
+            if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
 

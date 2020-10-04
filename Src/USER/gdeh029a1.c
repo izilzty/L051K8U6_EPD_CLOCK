@@ -138,7 +138,7 @@ static void epd_send_data_multi(const uint8_t *data, uint16_t data_size)
  * @brief  等待EPD控制器空闲。
  * @return 1：等待超时，0：EPD控制器空闲。
  */
-static uint8_t epd_wait_busy(void)
+uint8_t EPD_WaitBusy(void)
 {
     uint16_t timeout;
     volatile uint32_t systick_tmp;
@@ -265,7 +265,7 @@ uint8_t EPD_Show(uint8_t wait_busy)
     epd_send_cmd(0x20);
     if (wait_busy != 0)
     {
-        return epd_wait_busy();
+        return EPD_WaitBusy();
     }
     return 0;
 }
@@ -274,7 +274,7 @@ uint8_t EPD_Show(uint8_t wait_busy)
  * @brief  检查EPD是否更新完成。
  * @return 1：更新未完成，0：更新完成。
  */
-uint8_t EPD_CheckBusy(void)
+uint8_t EPD_GetBusy(void)
 {
     if (LL_GPIO_IsInputPinSet(EPD_BUSY_PORT, EPD_BUSY_PIN) != 0)
     {
@@ -293,7 +293,7 @@ void EPD_EnterSleep(void)
     epd_send_cmd(0x22);
     epd_send_data(0x02);
     epd_send_cmd(0x20);
-    epd_wait_busy();
+    EPD_WaitBusy();
 }
 
 /**
@@ -305,7 +305,7 @@ void EPD_EnterDeepSleep(void)
     epd_send_cmd(0x22);
     epd_send_data(0x03);
     epd_send_cmd(0x20);
-    epd_wait_busy();
+    EPD_WaitBusy();
     epd_send_cmd(0x10);
     epd_send_data(0x01);
 }
@@ -324,7 +324,7 @@ void EPD_Init(uint8_t update_mode)
     if (update_mode != EPD_UPDATE_MODE_PART) /* 局部刷新需要上次的旧RAM数据（自动保存在控制器里），不能执行软复位和进入DeepSleep模式 */
     {
         epd_send_cmd(0x12);
-        epd_wait_busy();
+        EPD_WaitBusy();
     }
 
     epd_send_cmd(0x01);

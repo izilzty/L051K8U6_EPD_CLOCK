@@ -33,7 +33,8 @@ void EPD_SetWindow(uint16_t x, uint8_t y_x8, uint16_t x_size, uint8_t y_size_x8)
 void EPD_SetCursor(uint16_t x, uint8_t y_x8);
 void EPD_SendRAM(const uint8_t *data, uint16_t data_size);
 uint8_t EPD_Show(uint8_t wait_busy);
-uint8_t EPD_CheckBusy(void);
+uint8_t EPD_WaitBusy(void);
+uint8_t EPD_GetBusy(void);
 
 void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const uint8_t *ascii_font, const uint8_t *utf8_font);
 void EPD_DrawImage(uint16_t x, uint8_t y_x8, const uint8_t *image);
