@@ -1814,7 +1814,7 @@ static void Menu_SetResetAll(void) /* 恢复初始设置 */
 {
     uint8_t i, select, save, update_display, wait_btn;
 
-    draw_submenu_frame("恢复默认设置", 1);
+    draw_submenu_frame("恢复设置", 1);
     BTN_WaitAll();
 
     update_display = 1;
