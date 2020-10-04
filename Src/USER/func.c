@@ -608,7 +608,7 @@ static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style)
 static void Menu_SetTime(void) /* 时间设置页面 */
 {
     struct RTC_Time new_time;
-    uint8_t select, save, update_display, wait_btn, arrow_y;
+    uint8_t select, save, update_display, wait_btn, time_check, arrow_y;
     uint16_t arrow_x;
 
     Menu_DrawSubmenuFrame("时间设置", 0);
@@ -622,6 +622,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
     select = 0;
     update_display = 1;
+    time_check = 0;
     wait_btn = 0;
     save = 0;
     while (save == 0)
@@ -640,6 +641,11 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             {
                 select += 1;
             }
+            if (time_check != 0)
+            {
+                RTC_CheckTimeRange(&new_time);
+                time_check = 0;
+            }
             wait_btn = 1;
         }
         else
@@ -654,18 +660,21 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 break;
             case 2:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Year, 0, 9, 0);
+                time_check = 1;
                 break;
             case 3:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Month, 1, 1, 0);
                 break;
             case 4:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Month, 0, 9, 0);
+                time_check = 1;
                 break;
             case 5:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Date, 1, 3, 0);
                 break;
             case 6:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Date, 0, 9, 0);
+                time_check = 1;
                 break;
             case 7:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Day, 0, 7, 1);
@@ -688,18 +697,21 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 break;
             case 11:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Hours, 0, 9, 0);
+                time_check = 1;
                 break;
             case 12:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Minutes, 1, 5, 0);
                 break;
             case 13:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Minutes, 0, 9, 0);
+                time_check = 1;
                 break;
             case 14:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Seconds, 1, 5, 0);
                 break;
             case 15:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Seconds, 0, 9, 0);
+                time_check = 1;
                 break;
             case 16:
                 if (BTN_ReadUP() == 0)
