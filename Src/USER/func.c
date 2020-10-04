@@ -378,7 +378,7 @@ static void FullInit(void) /* 重新初始化全部数据 */
     DumpBKPR();
 #endif
 
-    BUZZER_Beep(199);
+    BUZZER_Beep(499);
 }
 
 /* ==================== 电源控制 ==================== */
