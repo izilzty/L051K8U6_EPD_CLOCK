@@ -93,18 +93,18 @@
       <flags>0</flags>
       <showCmd>1</showCmd>
       <MinPosition>
-        <xPos>-1</xPos>
-        <yPos>-1</yPos>
+        <xPos>-32000</xPos>
+        <yPos>-32000</yPos>
       </MinPosition>
       <MaxPosition>
         <xPos>-1</xPos>
         <yPos>-1</yPos>
       </MaxPosition>
       <NormalPosition>
-        <Top>67</Top>
-        <Left>467</Left>
-        <Right>2041</Right>
-        <Bottom>913</Bottom>
+        <Top>28</Top>
+        <Left>731</Left>
+        <Right>2305</Right>
+        <Bottom>874</Bottom>
       </NormalPosition>
     </WindowPosition>
     <MDIClientArea>

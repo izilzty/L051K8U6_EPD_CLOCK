@@ -1814,7 +1814,7 @@ static void Menu_SetResetAll(void) /* 恢复初始设置 */
 {
     uint8_t i, select, save, update_display, wait_btn;
 
-    draw_submenu_frame("初始化", 1);
+    draw_submenu_frame("恢复默认设置", 1);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1885,8 +1885,24 @@ static void Menu_SetResetAll(void) /* 恢复初始设置 */
         }
         if (save == 2)
         {
-            BKPR_WriteByte(BKPR_ADDR_BYTE_REQINIT, REQUEST_RESET_ALL_FLAG);
-            NVIC_SystemReset();
+            memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+            Setting.available = SETTING_AVALIABLE_FLAG;
+            SaveSetting(&Setting);
+
+            EPD_ClearArea(0, 5, 296, 11, 0xFF);
+            EPD_DrawUTF8(0, 5, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+            EPD_DrawUTF8(0, 9, 0, "三秒后返回主菜单", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+            EPD_Show(0);
+
+            if (Setting.buzzer_enable != 0)
+            {
+                BUZZER_SetFrqe(4000);
+                BUZZER_SetVolume(Setting.buzzer_volume);
+                BUZZER_Beep(499);
+            }
+
+            LP_EnterStop(EPD_TIMEOUT_MS);
+            LP_DelayStop(3000);
         }
         if (wait_btn != 0)
         {
