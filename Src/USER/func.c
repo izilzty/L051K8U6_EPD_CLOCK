@@ -20,7 +20,7 @@ static void Delay_100ns(volatile uint16_t nsX100);
 static void UpdateHomeDisplay(void);
 static void FullInit(void);
 static void Menu_MainMenu(void);
-static void draw_submenu_frame(char *title, uint8_t button_style);
+static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style);
 static void Menu_Guide(void);
 static void Menu_SetTime(void);
 static void Menu_SetBuzzer(void);
@@ -564,7 +564,7 @@ static void Menu_MainMenu(void)
 
 /* ==================== 子菜单 ==================== */
 
-static void draw_submenu_frame(char *title, uint8_t button_style)
+static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style)
 {
     uint8_t i;
 
@@ -611,7 +611,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
     uint8_t select, save, update_display, wait_btn, arrow_y;
     uint16_t arrow_x;
 
-    draw_submenu_frame("时间设置", 0);
+    Menu_DrawSubmenuFrame("时间设置", 0);
     BTN_WaitAll();
 
     RTC_GetTime(&new_time);
@@ -851,7 +851,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
 static void Menu_Guide(void) /* 首次使用时的引导 */
 {
-    draw_submenu_frame("欢迎使用", 2);
+    Menu_DrawSubmenuFrame("欢迎使用", 2);
     BTN_WaitAll();
 
     EPD_DrawImage(0, 4, EPD_Image_Welcome_296x96);
@@ -869,7 +869,7 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
 {
     uint8_t select, save, update_display, wait_btn, volume, enable;
 
-    draw_submenu_frame("铃声设置", 0);
+    Menu_DrawSubmenuFrame("铃声设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1025,7 +1025,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
     uint8_t select, save, update_display, wait_btn, long_press;
     float bat_warn, bat_stop, tmp;
 
-    draw_submenu_frame("电池设置", 0);
+    Menu_DrawSubmenuFrame("电池设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1192,7 +1192,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
     uint8_t i, select, save, update_display, wait_btn, long_press;
     float temp_offset, rh_offset, tmp;
 
-    draw_submenu_frame("传感器设置", 0);
+    Menu_DrawSubmenuFrame("传感器设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1387,7 +1387,7 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
     int16_t offset;
     float vrefint_factory;
 
-    draw_submenu_frame("VREFINT设置", 0);
+    Menu_DrawSubmenuFrame("VREFINT设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1515,7 +1515,7 @@ static void Menu_Info(void) /* 系统信息 */
 {
     uint32_t eeprom_tmp;
 
-    draw_submenu_frame("系统信息", 2);
+    Menu_DrawSubmenuFrame("系统信息", 2);
     BTN_WaitAll();
 
     eeprom_tmp = EEPROM_ReadDWORD(EEPROM_ADDR_DWORD_HWVERSION) & 0x00FFFFFF;
@@ -1548,7 +1548,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
     uint8_t i, select, save, update_display, wait_btn;
     int8_t offset;
 
-    draw_submenu_frame("RTC老化设置", 0);
+    Menu_DrawSubmenuFrame("RTC老化设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1672,7 +1672,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 {
     uint8_t i, select, save, update_display, wait_btn;
 
-    draw_submenu_frame("恢复设置", 1);
+    Menu_DrawSubmenuFrame("恢复设置", 1);
     BTN_WaitAll();
 
     update_display = 1;
