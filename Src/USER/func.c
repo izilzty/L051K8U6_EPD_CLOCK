@@ -1298,6 +1298,9 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 tmp = bat_stop + 0.005;
                 snprintf(String, sizeof(String), "截止电压：%d.%02dV", (int8_t)(tmp), (uint16_t)(((tmp) - (int8_t)(tmp)) * 100));
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                tmp = ADC_GetChannel(ADC_CHANNEL_BATTERY) + 0.005;
+                snprintf(String, sizeof(String), "[实时电压：%d.%02dV]", (int8_t)(tmp), (uint16_t)(((tmp) - (int8_t)(tmp)) * 100));
+                EPD_DrawUTF8(0, 12, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
                 EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
                 EPD_Show(0);
