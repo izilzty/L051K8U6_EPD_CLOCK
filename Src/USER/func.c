@@ -15,6 +15,8 @@ static struct TH_Value Sensor;
 static struct FUNC_Setting Setting;
 static char String[256];
 
+static void Delay_100ns(volatile uint16_t nsX100);
+
 static void Power_EnableGDEH029A1(void);
 static void Power_DisableGDEH029A1(void);
 static void Power_Enable_SHT30_I2C(void);
@@ -34,26 +36,30 @@ static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
 static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
 
-static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
+static void SaveSetting(const struct FUNC_Setting *setting);
+static void ReadSetting(struct FUNC_Setting *setting);
 
-void BEEP_Button(void);
-void BEEP_OK(void);
+static void BEEP_Button(void);
+static void BEEP_OK(void);
 
 static void UpdateHomeDisplay(void);
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
+static void FullInit(void);
 static void Menu_MainMenu(void);
+static void draw_submenu_frame(char *title, uint8_t button_style);
 static void Menu_Guide(void);
 static void Menu_SetTime(void);
+static void Menu_SetBuzzer(void);
+static void Menu_SetBattery(void);
+static void Menu_SetSensor(void);
 static void Menu_SetVrefint(void);
+static void Menu_SetRTCAging(void);
 static void Menu_Info(void);
-
-void SaveSetting(const struct FUNC_Setting *setting);
-void ReadSetting(struct FUNC_Setting *setting);
+static void Menu_ResetAll(void);
 
 static void DumpRTCReg(void);
 static void DumpEEPROM(void);
 static void DumpBKPR(void);
-
-static void FullInit(void);
 
 /**
  * @brief  延时100ns的倍数（不准确，只是大概）。
@@ -649,7 +655,7 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float m
 
 /* ==================== 设置存储 ==================== */
 
-void SaveSetting(const struct FUNC_Setting *setting)
+static void SaveSetting(const struct FUNC_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
@@ -663,7 +669,7 @@ void SaveSetting(const struct FUNC_Setting *setting)
     }
 }
 
-void ReadSetting(struct FUNC_Setting *setting)
+static void ReadSetting(struct FUNC_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
@@ -681,7 +687,7 @@ void ReadSetting(struct FUNC_Setting *setting)
 
 /* ==================== 蜂鸣器 ==================== */
 
-void BEEP_Button(void)
+static void BEEP_Button(void)
 {
     if (Setting.buzzer_enable != 0)
     {
@@ -691,7 +697,7 @@ void BEEP_Button(void)
     }
 }
 
-void BEEP_OK(void)
+static void BEEP_OK(void)
 {
     if (Setting.buzzer_enable != 0)
     {
@@ -701,6 +707,181 @@ void BEEP_OK(void)
         BUZZER_Beep(39);
         BUZZER_SetFrqe(4000);
         BUZZER_Beep(39);
+    }
+}
+
+/* ==================== 主菜单 ==================== */
+
+static void Menu_MainMenu(void)
+{
+    uint8_t i, select, exit, full_update, wait_btn, update_display;
+
+    BEEP_OK();
+
+    exit = 0;
+    full_update = 1;
+    select = 0;
+    wait_btn = 0;
+    while (exit == 0)
+    {
+        if (full_update == 0)
+        {
+            if (BTN_ReadDOWN() == 0)
+            {
+                if (select < 10)
+                {
+                    select += 1;
+                }
+                wait_btn = 1;
+            }
+            else if (BTN_ReadUP() == 0)
+            {
+                if (select > 0)
+                {
+                    select -= 1;
+                }
+                wait_btn = 1;
+            }
+            else if (BTN_ReadSET() == 0)
+            {
+                BEEP_OK();
+                switch (select)
+                {
+                case 0:
+                    exit = 1;
+                    update_display = 0;
+                    wait_btn = 0;
+                    break;
+                case 1:
+                    Menu_SetTime();
+                    break;
+                case 2:
+                    Menu_SetBuzzer();
+                    break;
+                case 3:
+                    Menu_SetBattery();
+                    break;
+                case 4:
+                    Menu_SetSensor();
+                    break;
+                case 5:
+                    Menu_SetVrefint();
+                    break;
+                case 6:
+                    Menu_SetRTCAging();
+                    break;
+                case 7:
+                    Menu_Info();
+                    break;
+                case 8:
+                    Menu_ResetAll();
+                    break;
+                case 9:
+                    EPD_Init(EPD_UPDATE_MODE_FULL);
+                    EPD_ClearRAM();
+                    EPD_Show(0);
+                    LP_EnterStop(EPD_TIMEOUT_MS);
+                    LP_DelayStop(1000);
+                    EPD_ClearArea(0, 0, 296, 16, 0x00);
+                    EPD_Show(0);
+                    LP_EnterStop(EPD_TIMEOUT_MS);
+                    LP_DelayStop(1000);
+                    EPD_ClearRAM();
+                    EPD_Show(0);
+                    LP_EnterStop(EPD_TIMEOUT_MS);
+                    LP_DelayStop(1000);
+                    break;
+                case 10:
+                    exit = 1;
+                    update_display = 0;
+                    wait_btn = 0;
+                    break;
+                }
+                full_update = 1;
+            }
+            if (wait_btn != 0)
+            {
+                update_display = 1;
+            }
+            if (update_display != 0)
+            {
+                if (EPD_CheckBusy() == 0)
+                {
+                    update_display = 0;
+                    EPD_ClearArea(0, 4, 24, 12, 0xFF);
+                    snprintf(String, sizeof(String), "▶");
+                    EPD_DrawUTF8(0, 4 + ((select % 4) * 3), 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    snprintf(String, sizeof(String), "%d/%d", (select / 4) + 1, (8 / 4) + 1);
+                    EPD_DrawUTF8(260, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    if (select >= 0 && select <= 3)
+                    {
+                        snprintf(String, sizeof(String), "1.返回        ");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "2.时间设置    ");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "3.铃声设置    ");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "4.电池设置    ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    }
+                    else if (select >= 4 && select <= 7)
+                    {
+                        snprintf(String, sizeof(String), "5.传感器设置  ");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "6.参考电压设置");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "7.时钟老化设置");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "8.系统信息    ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    }
+                    else if (select >= 8 && select <= 11)
+                    {
+                        snprintf(String, sizeof(String), "9.恢复默认设置");
+                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "10.清除屏幕    ");
+                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "11.返回       ");
+                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                        snprintf(String, sizeof(String), "              ");
+                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    }
+                    EPD_Show(0);
+                }
+            }
+            if (wait_btn != 0)
+            {
+                BEEP_Button();
+                BTN_WaitAll();
+                wait_btn = 0;
+            }
+        }
+        else
+        {
+            full_update = 0;
+            update_display = 1;
+            EPD_Init(EPD_UPDATE_MODE_FAST);
+            EPD_ClearRAM();
+            for (i = 0; i < 2; i++)
+            {
+                EPD_DrawUTF8(0, 0, 0, "主菜单", NULL, EPD_FontUTF8_24x24_B);
+                EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+                EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
+                EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
+                EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
+                EPD_DrawHLine(0, 27, 296, 2);
+                if (i == 0)
+                {
+                    EPD_Show(0);
+                    LP_EnterStop(EPD_TIMEOUT_MS);
+                    EPD_Init(EPD_UPDATE_MODE_PART);
+                    EPD_ClearRAM();
+                }
+            }
+            BTN_WaitAll();
+        }
     }
 }
 
@@ -1810,7 +1991,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
     BEEP_OK();
 }
 
-static void Menu_SetResetAll(void) /* 恢复初始设置 */
+static void Menu_ResetAll(void) /* 恢复初始设置 */
 {
     uint8_t i, select, save, update_display, wait_btn;
 
@@ -1912,181 +2093,6 @@ static void Menu_SetResetAll(void) /* 恢复初始设置 */
         }
     }
     BEEP_OK();
-}
-
-/* ==================== 主菜单 ==================== */
-
-static void Menu_MainMenu(void)
-{
-    uint8_t i, select, exit, full_update, wait_btn, update_display;
-
-    BEEP_OK();
-
-    exit = 0;
-    full_update = 1;
-    select = 0;
-    wait_btn = 0;
-    while (exit == 0)
-    {
-        if (full_update == 0)
-        {
-            if (BTN_ReadDOWN() == 0)
-            {
-                if (select < 10)
-                {
-                    select += 1;
-                }
-                wait_btn = 1;
-            }
-            else if (BTN_ReadUP() == 0)
-            {
-                if (select > 0)
-                {
-                    select -= 1;
-                }
-                wait_btn = 1;
-            }
-            else if (BTN_ReadSET() == 0)
-            {
-                BEEP_OK();
-                switch (select)
-                {
-                case 0:
-                    exit = 1;
-                    update_display = 0;
-                    wait_btn = 0;
-                    break;
-                case 1:
-                    Menu_SetTime();
-                    break;
-                case 2:
-                    Menu_SetBuzzer();
-                    break;
-                case 3:
-                    Menu_SetBattery();
-                    break;
-                case 4:
-                    Menu_SetSensor();
-                    break;
-                case 5:
-                    Menu_SetVrefint();
-                    break;
-                case 6:
-                    Menu_SetRTCAging();
-                    break;
-                case 7:
-                    Menu_Info();
-                    break;
-                case 8:
-                    Menu_SetResetAll();
-                    break;
-                case 9:
-                    EPD_Init(EPD_UPDATE_MODE_FULL);
-                    EPD_ClearRAM();
-                    EPD_Show(0);
-                    LP_EnterStop(EPD_TIMEOUT_MS);
-                    LP_DelayStop(1000);
-                    EPD_ClearArea(0, 0, 296, 16, 0x00);
-                    EPD_Show(0);
-                    LP_EnterStop(EPD_TIMEOUT_MS);
-                    LP_DelayStop(1000);
-                    EPD_ClearRAM();
-                    EPD_Show(0);
-                    LP_EnterStop(EPD_TIMEOUT_MS);
-                    LP_DelayStop(1000);
-                    break;
-                case 10:
-                    exit = 1;
-                    update_display = 0;
-                    wait_btn = 0;
-                    break;
-                }
-                full_update = 1;
-            }
-            if (wait_btn != 0)
-            {
-                update_display = 1;
-            }
-            if (update_display != 0)
-            {
-                if (EPD_CheckBusy() == 0)
-                {
-                    update_display = 0;
-                    EPD_ClearArea(0, 4, 24, 12, 0xFF);
-                    snprintf(String, sizeof(String), "▶");
-                    EPD_DrawUTF8(0, 4 + ((select % 4) * 3), 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    snprintf(String, sizeof(String), "%d/%d", (select / 4) + 1, (8 / 4) + 1);
-                    EPD_DrawUTF8(260, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    if (select >= 0 && select <= 3)
-                    {
-                        snprintf(String, sizeof(String), "1.返回        ");
-                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "2.时间设置    ");
-                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "3.铃声设置    ");
-                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "4.电池设置    ");
-                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    }
-                    else if (select >= 4 && select <= 7)
-                    {
-                        snprintf(String, sizeof(String), "5.传感器设置  ");
-                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "6.参考电压设置");
-                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "7.时钟老化设置");
-                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "8.系统信息    ");
-                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    }
-                    else if (select >= 8 && select <= 11)
-                    {
-                        snprintf(String, sizeof(String), "9.恢复默认设置");
-                        EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "10.清除屏幕    ");
-                        EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "11.返回       ");
-                        EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "              ");
-                        EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    }
-                    EPD_Show(0);
-                }
-            }
-            if (wait_btn != 0)
-            {
-                BEEP_Button();
-                BTN_WaitAll();
-                wait_btn = 0;
-            }
-        }
-        else
-        {
-            full_update = 0;
-            update_display = 1;
-            EPD_Init(EPD_UPDATE_MODE_FAST);
-            EPD_ClearRAM();
-            for (i = 0; i < 2; i++)
-            {
-                EPD_DrawUTF8(0, 0, 0, "主菜单", NULL, EPD_FontUTF8_24x24_B);
-                EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawHLine(0, 27, 296, 2);
-                if (i == 0)
-                {
-                    EPD_Show(0);
-                    LP_EnterStop(EPD_TIMEOUT_MS);
-                    EPD_Init(EPD_UPDATE_MODE_PART);
-                    EPD_ClearRAM();
-                }
-            }
-            BTN_WaitAll();
-        }
-    }
 }
 
 /* ==================== 辅助功能 ==================== */
