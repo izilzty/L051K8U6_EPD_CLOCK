@@ -17,33 +17,7 @@ static char String[256];
 
 static void Delay_100ns(volatile uint16_t nsX100);
 
-static void Power_EnableGDEH029A1(void);
-static void Power_DisableGDEH029A1(void);
-static void Power_Enable_SHT30_I2C(void);
-static void Power_Disable_I2C_SHT30(void);
-static uint8_t Power_EnableADC(void);
-static uint8_t Power_DisableADC(void);
-static void Power_EnableBUZZER(void);
-static void Power_DisableBUZZER(void);
-static void Power_DisableUSART(void);
-
-static uint8_t BTN_ReadUP(void);
-static void BTN_WaitUP(void);
-static uint8_t BTN_ReadDOWN(void);
-static void BTN_WaitDOWN(void);
-static uint8_t BTN_ReadSET(void);
-static void BTN_WaitSET(void);
-static void BTN_WaitAll(void);
-static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
-
-static void SaveSetting(const struct FUNC_Setting *setting);
-static void ReadSetting(struct FUNC_Setting *setting);
-
-static void BEEP_Button(void);
-static void BEEP_OK(void);
-
 static void UpdateHomeDisplay(void);
-static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
 static void FullInit(void);
 static void Menu_MainMenu(void);
 static void draw_submenu_frame(char *title, uint8_t button_style);
@@ -56,6 +30,32 @@ static void Menu_SetVrefint(void);
 static void Menu_SetRTCAging(void);
 static void Menu_Info(void);
 static void Menu_ResetAll(void);
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
+
+static void SaveSetting(const struct FUNC_Setting *setting);
+static void ReadSetting(struct FUNC_Setting *setting);
+
+static uint8_t BTN_ReadUP(void);
+static void BTN_WaitUP(void);
+static uint8_t BTN_ReadDOWN(void);
+static void BTN_WaitDOWN(void);
+static uint8_t BTN_ReadSET(void);
+static void BTN_WaitSET(void);
+static void BTN_WaitAll(void);
+static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
+
+static void BEEP_Button(void);
+static void BEEP_OK(void);
+
+static void Power_EnableGDEH029A1(void);
+static void Power_DisableGDEH029A1(void);
+static void Power_Enable_SHT30_I2C(void);
+static void Power_Disable_I2C_SHT30(void);
+static uint8_t Power_EnableADC(void);
+static uint8_t Power_DisableADC(void);
+static void Power_EnableBUZZER(void);
+static void Power_DisableBUZZER(void);
+static void Power_DisableUSART(void);
 
 static void DumpRTCReg(void);
 static void DumpEEPROM(void);
@@ -385,329 +385,6 @@ static void FullInit(void) /* 重新初始化全部数据 */
 #endif
 
     BUZZER_Beep(499);
-}
-
-/* ==================== 电源控制 ==================== */
-
-static void Power_EnableGDEH029A1(void)
-{
-    LL_GPIO_ResetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
-    LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-    LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-    LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    Delay_100ns(100); /* 10us，未要求，短暂延时 */
-    if (LL_SPI_IsEnabled(SPI1) == 0)
-    {
-        LL_SPI_Enable(SPI1);
-    }
-}
-
-static void Power_DisableGDEH029A1(void)
-{
-    if (LL_SPI_IsEnabled(SPI1) != 0)
-    {
-        LL_SPI_Disable(SPI1);
-    }
-    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
-}
-
-static void Power_Enable_SHT30_I2C(void)
-{
-    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
-    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
-    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
-    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
-    LL_mDelay(1);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
-    if (LL_I2C_IsEnabled(I2C1) == 0)                                /* 打开I2C */
-    {
-        LL_I2C_Enable(I2C1);
-    }
-}
-
-static void Power_Disable_I2C_SHT30(void)
-{
-    if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
-    {
-        LL_I2C_Disable(I2C1);
-    }
-    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin); /* 关闭I2C上拉电阻 */
-    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* 拉低SHT30复位引脚 */
-    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
-}
-
-static uint8_t Power_EnableADC(void)
-{
-    ADC_Disable();
-    ADC_StartCal();
-    return ADC_Enable();
-}
-
-static uint8_t Power_DisableADC(void)
-{
-    return ADC_Disable();
-}
-
-static void Power_EnableBUZZER(void)
-{
-    BUZZER_Enable();
-}
-
-static void Power_DisableBUZZER(void)
-{
-    BUZZER_Disable();
-}
-
-static void Power_DisableUSART(void)
-{
-    LL_USART_Disable(SERIAL_NUM);
-    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_9, LL_GPIO_MODE_ANALOG);
-    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_10, LL_GPIO_MODE_ANALOG);
-    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_9, LL_GPIO_PULL_NO);
-    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_10, LL_GPIO_PULL_NO);
-}
-
-/* ==================== 按键读取 ==================== */
-
-static uint8_t BTN_ReadUP()
-{
-    if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
-    {
-        LL_mDelay(BTN_DEBOUNCE_MS);
-        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static void BTN_WaitUP(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
-}
-
-static uint8_t BTN_ReadDOWN(void)
-{
-    if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
-    {
-        LL_mDelay(BTN_DEBOUNCE_MS);
-        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static void BTN_WaitDOWN(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
-}
-
-static uint8_t BTN_ReadSET(void)
-{
-    if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
-    {
-        LL_mDelay(BTN_DEBOUNCE_MS);
-        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static void BTN_WaitSET(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
-}
-
-static void BTN_WaitAll(void)
-{
-    while (1)
-    {
-        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
-            LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
-            LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-        {
-            LL_mDelay(BTN_DEBOUNCE_MS);
-            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
-                LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
-                LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
-            {
-                return;
-            }
-        }
-    }
-}
-
-static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val)
-{
-    double pow_tmp;
-    uint8_t digit_value;
-    if (BTN_ReadUP() == 0)
-    {
-        pow_tmp = pow(10, modify_digit);
-        digit_value = (uint32_t)(*number / pow_tmp) % 10;
-        if (digit_value < max_val)
-        {
-            *number += (uint32_t)pow_tmp;
-        }
-        else
-        {
-            *number -= (uint32_t)pow_tmp * digit_value;
-            *number += (uint32_t)pow_tmp * min_val;
-        }
-        return 1;
-    }
-    else if (BTN_ReadDOWN() == 0)
-    {
-        pow_tmp = pow(10, modify_digit);
-        digit_value = (uint32_t)(*number / pow_tmp) % 10;
-        if (digit_value > min_val)
-        {
-            *number -= (uint32_t)pow_tmp;
-        }
-        else
-        {
-            *number -= (uint32_t)pow_tmp * digit_value;
-            *number += (uint32_t)pow_tmp * max_val;
-        }
-        return 1;
-    }
-    return 0;
-}
-
-/* ==================== 电池图标绘制 ==================== */
-
-static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage)
-{
-    uint8_t dis_ram[sizeof(EPD_Image_BattFrame)];
-    uint8_t i, bar_size;
-
-    if ((voltage < min_voltage) || ((max_voltage - min_voltage) < 0.001))
-    {
-        EPD_DrawImage(x, y_x8, EPD_Image_BattWarn);
-        return;
-    }
-    if (voltage < max_voltage)
-    {
-        voltage -= min_voltage;
-        bar_size = (voltage / ((max_voltage - min_voltage) / 20)) + 0.5;
-        if (bar_size == 0)
-        {
-            bar_size = 1;
-        }
-        else if (bar_size > 20)
-        {
-            bar_size = 20;
-        }
-    }
-    else
-    {
-        bar_size = 20;
-    }
-    memcpy(dis_ram, EPD_Image_BattFrame, sizeof(dis_ram));
-    for (i = 0; i < bar_size; i++)
-    {
-        dis_ram[84 - (i * 3) + 0] &= 0xF8;
-        dis_ram[84 - (i * 3) + 1] &= 0x00;
-        dis_ram[84 - (i * 3) + 2] &= 0x1F;
-    }
-    EPD_DrawImage(x, y_x8, dis_ram);
-}
-
-/* ==================== 设置存储 ==================== */
-
-static void SaveSetting(const struct FUNC_Setting *setting)
-{
-    uint16_t i;
-    uint8_t *setting_ptr;
-    setting_ptr = (uint8_t *)setting;
-    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
-    {
-        if (EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i) != setting_ptr[i])
-        {
-            EEPROM_WriteByte(EEPROM_ADDR_BYTE_SETTING + i, setting_ptr[i]);
-        }
-    }
-}
-
-static void ReadSetting(struct FUNC_Setting *setting)
-{
-    uint16_t i;
-    uint8_t *setting_ptr;
-    setting_ptr = (uint8_t *)setting;
-    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
-    {
-        setting_ptr[i] = EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i);
-    }
-    if (setting->available != SETTING_AVALIABLE_FLAG)
-    {
-        SERIAL_DebugPrint("Read setting fail, load default setting");
-        memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
-    }
-}
-
-/* ==================== 蜂鸣器 ==================== */
-
-static void BEEP_Button(void)
-{
-    if (Setting.buzzer_enable != 0)
-    {
-        BUZZER_SetFrqe(4000);
-        BUZZER_SetVolume(Setting.buzzer_volume);
-        BUZZER_Beep(19);
-    }
-}
-
-static void BEEP_OK(void)
-{
-    if (Setting.buzzer_enable != 0)
-    {
-        BUZZER_SetFrqe(4000);
-        BUZZER_SetVolume(Setting.buzzer_volume);
-        BUZZER_SetFrqe(1000);
-        BUZZER_Beep(39);
-        BUZZER_SetFrqe(4000);
-        BUZZER_Beep(39);
-    }
 }
 
 /* ==================== 主菜单 ==================== */
@@ -2093,6 +1770,329 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
         }
     }
     BEEP_OK();
+}
+
+/* ==================== 电池图标绘制 ==================== */
+
+static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage)
+{
+    uint8_t dis_ram[sizeof(EPD_Image_BattFrame)];
+    uint8_t i, bar_size;
+
+    if ((voltage < min_voltage) || ((max_voltage - min_voltage) < 0.001))
+    {
+        EPD_DrawImage(x, y_x8, EPD_Image_BattWarn);
+        return;
+    }
+    if (voltage < max_voltage)
+    {
+        voltage -= min_voltage;
+        bar_size = (voltage / ((max_voltage - min_voltage) / 20)) + 0.5;
+        if (bar_size == 0)
+        {
+            bar_size = 1;
+        }
+        else if (bar_size > 20)
+        {
+            bar_size = 20;
+        }
+    }
+    else
+    {
+        bar_size = 20;
+    }
+    memcpy(dis_ram, EPD_Image_BattFrame, sizeof(dis_ram));
+    for (i = 0; i < bar_size; i++)
+    {
+        dis_ram[84 - (i * 3) + 0] &= 0xF8;
+        dis_ram[84 - (i * 3) + 1] &= 0x00;
+        dis_ram[84 - (i * 3) + 2] &= 0x1F;
+    }
+    EPD_DrawImage(x, y_x8, dis_ram);
+}
+
+/* ==================== 设置存储 ==================== */
+
+static void SaveSetting(const struct FUNC_Setting *setting)
+{
+    uint16_t i;
+    uint8_t *setting_ptr;
+    setting_ptr = (uint8_t *)setting;
+    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    {
+        if (EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i) != setting_ptr[i])
+        {
+            EEPROM_WriteByte(EEPROM_ADDR_BYTE_SETTING + i, setting_ptr[i]);
+        }
+    }
+}
+
+static void ReadSetting(struct FUNC_Setting *setting)
+{
+    uint16_t i;
+    uint8_t *setting_ptr;
+    setting_ptr = (uint8_t *)setting;
+    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    {
+        setting_ptr[i] = EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i);
+    }
+    if (setting->available != SETTING_AVALIABLE_FLAG)
+    {
+        SERIAL_DebugPrint("Read setting fail, load default setting");
+        memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+    }
+}
+
+/* ==================== 按键读取 ==================== */
+
+static uint8_t BTN_ReadUP()
+{
+    if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitUP(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static uint8_t BTN_ReadDOWN(void)
+{
+    if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitDOWN(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static uint8_t BTN_ReadSET(void)
+{
+    if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
+    {
+        LL_mDelay(BTN_DEBOUNCE_MS);
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+static void BTN_WaitSET(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static void BTN_WaitAll(void)
+{
+    while (1)
+    {
+        if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
+            LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
+            LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+        {
+            LL_mDelay(BTN_DEBOUNCE_MS);
+            if (LL_GPIO_IsInputPinSet(BTN_SET_GPIO_Port, BTN_SET_Pin) != 0 &&
+                LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) != 0 &&
+                LL_GPIO_IsInputPinSet(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) != 0)
+            {
+                return;
+            }
+        }
+    }
+}
+
+static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val)
+{
+    double pow_tmp;
+    uint8_t digit_value;
+    if (BTN_ReadUP() == 0)
+    {
+        pow_tmp = pow(10, modify_digit);
+        digit_value = (uint32_t)(*number / pow_tmp) % 10;
+        if (digit_value < max_val)
+        {
+            *number += (uint32_t)pow_tmp;
+        }
+        else
+        {
+            *number -= (uint32_t)pow_tmp * digit_value;
+            *number += (uint32_t)pow_tmp * min_val;
+        }
+        return 1;
+    }
+    else if (BTN_ReadDOWN() == 0)
+    {
+        pow_tmp = pow(10, modify_digit);
+        digit_value = (uint32_t)(*number / pow_tmp) % 10;
+        if (digit_value > min_val)
+        {
+            *number -= (uint32_t)pow_tmp;
+        }
+        else
+        {
+            *number -= (uint32_t)pow_tmp * digit_value;
+            *number += (uint32_t)pow_tmp * max_val;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+/* ==================== 蜂鸣器 ==================== */
+
+static void BEEP_Button(void)
+{
+    if (Setting.buzzer_enable != 0)
+    {
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(Setting.buzzer_volume);
+        BUZZER_Beep(19);
+    }
+}
+
+static void BEEP_OK(void)
+{
+    if (Setting.buzzer_enable != 0)
+    {
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(Setting.buzzer_volume);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(39);
+        BUZZER_SetFrqe(4000);
+        BUZZER_Beep(39);
+    }
+}
+
+/* ==================== 电源控制 ==================== */
+
+static void Power_EnableGDEH029A1(void)
+{
+    LL_GPIO_ResetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+    LL_GPIO_SetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_SetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    Delay_100ns(100); /* 10us，未要求，短暂延时 */
+    if (LL_SPI_IsEnabled(SPI1) == 0)
+    {
+        LL_SPI_Enable(SPI1);
+    }
+}
+
+static void Power_DisableGDEH029A1(void)
+{
+    if (LL_SPI_IsEnabled(SPI1) != 0)
+    {
+        LL_SPI_Disable(SPI1);
+    }
+    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+}
+
+static void Power_Enable_SHT30_I2C(void)
+{
+    LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
+    LL_GPIO_SetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin);   /* 打开I2C上拉电阻 */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* 释放SHT30复位引脚 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* SHT30硬复位 */
+    Delay_100ns(20);                                                /* 最少1us宽度，设置为2us */
+    LL_GPIO_SetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);       /* SHT30硬复位 */
+    LL_mDelay(1);                                                   /* SHT30复位后需要最少1ms启动时间，设置为2ms */
+    if (LL_I2C_IsEnabled(I2C1) == 0)                                /* 打开I2C */
+    {
+        LL_I2C_Enable(I2C1);
+    }
+}
+
+static void Power_Disable_I2C_SHT30(void)
+{
+    if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
+    {
+        LL_I2C_Disable(I2C1);
+    }
+    LL_GPIO_ResetOutputPin(I2C1_PULLUP_GPIO_Port, I2C1_PULLUP_Pin); /* 关闭I2C上拉电阻 */
+    LL_GPIO_ResetOutputPin(SHT30_RST_GPIO_Port, SHT30_RST_Pin);     /* 拉低SHT30复位引脚 */
+    LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
+}
+
+static uint8_t Power_EnableADC(void)
+{
+    ADC_Disable();
+    ADC_StartCal();
+    return ADC_Enable();
+}
+
+static uint8_t Power_DisableADC(void)
+{
+    return ADC_Disable();
+}
+
+static void Power_EnableBUZZER(void)
+{
+    BUZZER_Enable();
+}
+
+static void Power_DisableBUZZER(void)
+{
+    BUZZER_Disable();
+}
+
+static void Power_DisableUSART(void)
+{
+    LL_USART_Disable(SERIAL_NUM);
+    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_9, LL_GPIO_MODE_ANALOG);
+    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_10, LL_GPIO_MODE_ANALOG);
+    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_9, LL_GPIO_PULL_NO);
+    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_10, LL_GPIO_PULL_NO);
 }
 
 /* ==================== 辅助功能 ==================== */
