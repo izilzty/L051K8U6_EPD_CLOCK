@@ -698,9 +698,9 @@ void BEEP_OK(void)
         BUZZER_SetFrqe(4000);
         BUZZER_SetVolume(Setting.buzzer_volume);
         BUZZER_SetFrqe(1000);
-        BUZZER_Beep(29);
+        BUZZER_Beep(39);
         BUZZER_SetFrqe(4000);
-        BUZZER_Beep(29);
+        BUZZER_Beep(39);
     }
 }
 
