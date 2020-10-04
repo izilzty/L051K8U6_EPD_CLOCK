@@ -65,6 +65,7 @@ uint8_t RTC_TestREG(uint8_t reg, uint8_t mask);
 
 uint8_t RTC_GetTime(struct RTC_Time *time);
 uint8_t RTC_SetTime(const struct RTC_Time *time);
+void RTC_CheckTimeRange(struct RTC_Time *time);
 
 uint8_t RTC_GetAlarm1(struct RTC_Alarm *alarm);
 uint8_t RTC_SetAlarm1(const struct RTC_Alarm *alarm);

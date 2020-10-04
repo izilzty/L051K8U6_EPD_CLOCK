@@ -29,6 +29,24 @@ static uint8_t bcd_to_bin(uint8_t bcd)
 }
 
 /**
+ * @brief  检查并修改数字范围。
+ * @param  number 检查的数值。
+ * @param  max 最大值。
+ * @param  min 最小值。
+ */
+static void check_range(uint8_t *number, uint8_t max, uint8_t min)
+{
+    if (*number > max)
+    {
+        *number = max;
+    }
+    else if (*number < min)
+    {
+        *number = min;
+    }
+}
+
+/**
  * @brief  读取寄存器。
  * @param  reg 要读取的寄存器。
  * @return 读取到的数值。
@@ -257,6 +275,29 @@ uint8_t RTC_SetTime(const struct RTC_Time *time)
         return 1;
     }
     return 0;
+}
+
+/**
+ * @brief  检查并限制时间范围。
+ * @param  time 时间存储结构体。
+ */
+void RTC_CheckTimeRange(struct RTC_Time *time)
+{
+    check_range(&time->Seconds, 59, 0);
+    check_range(&time->Minutes, 59, 0);
+    if (time->Is_12hr != 0)
+    {
+        check_range(&time->Hours, 12, 1);
+    }
+    else
+    {
+        check_range(&time->Hours, 23, 0);
+        time->PM = 0;
+    }
+    check_range(&time->Day, 7, 1);
+    check_range(&time->Date, 31, 1);
+    check_range(&time->Month, 12, 1);
+    check_range(&time->Year, 199, 0);
 }
 
 /**
