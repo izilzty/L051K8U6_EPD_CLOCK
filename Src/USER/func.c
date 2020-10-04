@@ -21,6 +21,7 @@ static void UpdateHomeDisplay(void);
 static void FullInit(void);
 static void Menu_MainMenu(void);
 static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style);
+static void Menu_DrawSubmenuSaveSelect(uint8_t select);
 static void Menu_Guide(void);
 static void Menu_SetTime(void);
 static void Menu_SetBuzzer(void);
@@ -403,9 +404,13 @@ static void Menu_MainMenu(void)
         {
             if (BTN_ReadDOWN() == 0)
             {
-                if (select < 10)
+                if (select < 9)
                 {
                     select += 1;
+                }
+                else
+                {
+                    select = 0;
                 }
                 wait_btn = 1;
             }
@@ -414,6 +419,10 @@ static void Menu_MainMenu(void)
                 if (select > 0)
                 {
                     select -= 1;
+                }
+                else
+                {
+                    select = 9;
                 }
                 wait_btn = 1;
             }
@@ -468,9 +477,10 @@ static void Menu_MainMenu(void)
                     BEEP_OK();
                     break;
                 case 10:
-                    exit = 1;
-                    update_display = 0;
-                    wait_btn = 0;
+                    /* code */
+                    break;
+                case 11:
+                    /* code */
                     break;
                 }
                 full_update = 1;
@@ -517,7 +527,7 @@ static void Menu_MainMenu(void)
                         EPD_DrawUTF8(25, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                         snprintf(String, sizeof(String), "10.清除屏幕   ");
                         EPD_DrawUTF8(25, 7, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                        snprintf(String, sizeof(String), "11.返回       ");
+                        snprintf(String, sizeof(String), "              ");
                         EPD_DrawUTF8(25, 10, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                         snprintf(String, sizeof(String), "              ");
                         EPD_DrawUTF8(25, 13, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -581,6 +591,8 @@ static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style)
             EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
             EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
             EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
             break;
         case 1:
             EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
@@ -601,6 +613,31 @@ static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style)
             EPD_Init(EPD_UPDATE_MODE_PART);
             EPD_ClearRAM();
         }
+    }
+}
+
+static void Menu_DrawSubmenuSaveSelect(uint8_t select)
+{
+    EPD_ClearArea(211, 15, 79, 1, 0xFF);
+    switch (select)
+    {
+    case 1:
+        EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+        break;
+    case 2:
+        EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+        break;
+    }
+    if (select != 0)
+    {
+        EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+    }
+    else
+    {
+        EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
     }
 }
 
@@ -741,18 +778,6 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             {
                 update_display = 0;
 
-                if (select == 16 || select == 17)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-
                 snprintf(String, sizeof(String), "2%03d年%02d月%02d日 周%d", new_time.Year, new_time.Month, new_time.Date, new_time.Day);
                 EPD_DrawUTF8(7, 4, 5, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
 
@@ -785,9 +810,6 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
                 snprintf(String, sizeof(String), "%02d:%02d:%02d", new_time.Hours, new_time.Minutes, new_time.Seconds);
                 EPD_DrawUTF8(58, 12, 5, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
 
                 if (select >= 0 && select <= 2)
                 {
@@ -834,15 +856,19 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                     arrow_x = 160 + ((select - 14) * 17);
                     arrow_y = 15;
                 }
-                else if (select >= 16 && select <= 17)
-                {
-                    arrow_x = 221 + ((select - 16) * 47);
-                    arrow_y = 15;
-                }
                 EPD_ClearArea(5, 7, 283, 1, 0xFF);
                 EPD_ClearArea(5, 11, 283, 1, 0xFF);
                 EPD_ClearArea(5, 15, 283, 1, 0xFF);
-                EPD_DrawImage(arrow_x, arrow_y, EPD_Image_Arrow_12x8);
+
+                if (select == 16 || select == 17)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 16 + 1);
+                }
+                else
+                {
+                    EPD_DrawImage(arrow_x, arrow_y, EPD_Image_Arrow_12x8);
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
 
                 EPD_Show(0);
             }
@@ -967,35 +993,7 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 2 || select == 3)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-                EPD_ClearArea(240, 4, 24, 3, 0xFF);
-                EPD_ClearArea(204, 8, 24, 3, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
-                switch (select)
-                {
-                case 0:
-                    EPD_DrawUTF8(240, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 1:
-                    EPD_DrawUTF8(204, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 2:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 3:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
-                }
+
                 EPD_DrawUTF8(0, 4, 0, "蜂鸣器开启状态：", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 if (Setting.buzzer_enable != 0)
                 {
@@ -1008,8 +1006,29 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
 
                 snprintf(String, sizeof(String), "蜂鸣器音量：%02d/%02d", Setting.buzzer_volume, BUZZER_MAX_VOL);
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                EPD_ClearArea(240, 4, 24, 3, 0xFF);
+                EPD_ClearArea(204, 8, 24, 3, 0xFF);
+
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(240, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(204, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                }
+
+                if (select == 2 || select == 3)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 2 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
@@ -1133,35 +1152,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 2 || select == 3)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-                EPD_ClearArea(180, 4, 24, 3, 0xFF);
-                EPD_ClearArea(180, 8, 24, 3, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
-                switch (select)
-                {
-                case 0:
-                    EPD_DrawUTF8(180, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 1:
-                    EPD_DrawUTF8(180, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 2:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 3:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
-                }
+
                 tmp = bat_warn + 0.005;
                 snprintf(String, sizeof(String), "警告电压：%d.%02dV", (int8_t)tmp, (uint16_t)((tmp - (int8_t)tmp) * 100));
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1171,8 +1162,29 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 tmp = ADC_GetChannel(ADC_CHANNEL_BATTERY) + 0.005;
                 snprintf(String, sizeof(String), "[实时电压：%d.%02dV]", (int8_t)(tmp), (uint16_t)(((tmp) - (int8_t)(tmp)) * 100));
                 EPD_DrawUTF8(0, 12, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                EPD_ClearArea(180, 4, 24, 3, 0xFF);
+                EPD_ClearArea(180, 8, 24, 3, 0xFF);
+
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(180, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(180, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                }
+
+                if (select == 2 || select == 3)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 2 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
@@ -1300,35 +1312,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 2 || select == 3)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-                EPD_ClearArea(216, 4, 24, 3, 0xFF);
-                EPD_ClearArea(216, 8, 24, 3, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
-                switch (select)
-                {
-                case 0:
-                    EPD_DrawUTF8(216, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 1:
-                    EPD_DrawUTF8(216, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 2:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 3:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
-                }
+
                 if (temp_offset > 0)
                 {
                     tmp = temp_offset + 0.005;
@@ -1346,6 +1330,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
                     snprintf(String, sizeof(String), "温度偏移：%+03d.%02d℃", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
                 }
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+
                 if (rh_offset > 0)
                 {
                     tmp = rh_offset + 0.005;
@@ -1363,8 +1348,29 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
                     snprintf(String, sizeof(String), "湿度偏移：%+03d.%02d％", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
                 }
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                EPD_ClearArea(216, 4, 24, 3, 0xFF);
+                EPD_ClearArea(216, 8, 24, 3, 0xFF);
+
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(216, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                case 1:
+                    EPD_DrawUTF8(216, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                }
+
+                if (select == 2 || select == 3)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 2 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
@@ -1399,7 +1405,7 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
     int16_t offset;
     float vrefint_factory;
 
-    Menu_DrawSubmenuFrame("VREFINT设置", 0);
+    Menu_DrawSubmenuFrame("参考电压设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1471,38 +1477,31 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 1 || select == 2)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-                EPD_ClearArea(166, 4, 24, 3, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
-                switch (select)
-                {
-                case 0:
-                    EPD_DrawUTF8(166, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 1:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 2:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
-                }
+
                 snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 vrefint_factory = ADC_GetVrefintFactory() + (ADC_GetVrefintStep() * offset) + 0.0005;
                 snprintf(String, sizeof(String), "[实际电压：%04d.%03dmV]", (int16_t)vrefint_factory, (int16_t)((vrefint_factory - (int16_t)vrefint_factory) * 1000));
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                EPD_ClearArea(168, 4, 24, 3, 0xFF);
+
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(168, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                }
+
+                if (select == 1 || select == 2)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 1 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
@@ -1631,36 +1630,29 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 1 || select == 2)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
-                EPD_ClearArea(166, 4, 24, 3, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
-                switch (select)
-                {
-                case 0:
-                    EPD_DrawUTF8(166, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                    break;
-                case 1:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 2:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
-                }
+
                 snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 EPD_DrawUTF8(0, 8, 1, "[每个偏移约为0.1ppm]", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                EPD_ClearArea(168, 4, 24, 3, 0xFF);
+
+                switch (select)
+                {
+                case 0:
+                    EPD_DrawUTF8(168, 4, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                    break;
+                }
+
+                if (select == 1 || select == 2)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 1 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
@@ -1879,19 +1871,14 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
             if (EPD_CheckBusy() == 0)
             {
                 update_display = 0;
-                if (select == 2 || select == 3)
-                {
-                    EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-                }
-                else
-                {
-                    EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-                    EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-                }
+
+                snprintf(String, sizeof(String), "硬件版本：V%d.%d", hwver_1, hwver_2);
+                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                EPD_DrawUTF8(0, 8, 0, "[注意：设置保存后不会再", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                EPD_DrawUTF8(0, 12, 0, "显示此菜单]", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+
                 EPD_ClearArea(132, 7, 36, 1, 0xFF);
-                EPD_ClearArea(211, 15, 79, 1, 0xFF);
+
                 switch (select)
                 {
                 case 0:
@@ -1900,19 +1887,17 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
                 case 1:
                     EPD_DrawImage(156, 7, EPD_Image_Arrow_12x8);
                     break;
-                case 2:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-                    break;
-                case 3:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-                    break;
                 }
-                snprintf(String, sizeof(String), "硬件版本：V%d.%d", hwver_1, hwver_2);
-                EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(0, 8, 0, "[注意：设置保存后不会再", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(0, 12, 0, "显示此菜单]", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+
+                if (select == 2 || select == 3)
+                {
+                    Menu_DrawSubmenuSaveSelect(select - 2 + 1);
+                }
+                else
+                {
+                    Menu_DrawSubmenuSaveSelect(0);
+                }
+
                 EPD_Show(0);
             }
         }
