@@ -678,6 +678,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 break;
             case 8:
                 wait_btn = BTN_ModifySingleDigit(&new_time.Is_12hr, 0, 1, 0);
+                time_check = 1;
                 break;
             case 9:
                 wait_btn = BTN_ModifySingleDigit(&new_time.PM, 0, 1, 0);
