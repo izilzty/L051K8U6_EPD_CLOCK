@@ -77,7 +77,7 @@ void LP_DisableDebug(void)
 uint8_t LP_GetResetInfo(void)
 {
     uint8_t ret;
-    
+
     if (LL_RCC_IsActiveFlag_PORRST() != 0) /* 上电复位 */
     {
         ret = LP_RESET_POWERON;

@@ -129,7 +129,7 @@ uint8_t ADC_Enable(void)
         delay_100ns(LL_ADC_DELAY_TEMPSENSOR_STAB_US * 10); /* 等待温度传感器稳定 */
         /* 结束 */
         LL_ADC_Enable(ADC_NUM);
-        WAIT_TIMEOUT((LL_ADC_IsActiveFlag_ADRDY(ADC_NUM) == 0 || LL_SYSCFG_VREFINT_IsReady() == 0));
+        WAIT_TIMEOUT((LL_ADC_IsActiveFlag_ADRDY(ADC_NUM) == 0 || LL_PWR_IsActiveFlag_VREFINTRDY() == 0));
     }
     return 0;
 }
@@ -200,7 +200,7 @@ uint8_t ADC_GetCalFactor(void)
  */
 uint8_t ADC_StartConversionSequence(uint32_t channels, uint16_t *data, uint8_t conv_count)
 {
-    uint8_t i;
+    uint16_t i;
     uint32_t timeout;
     volatile uint32_t systick_tmp;
 
@@ -214,6 +214,13 @@ uint8_t ADC_StartConversionSequence(uint32_t channels, uint16_t *data, uint8_t c
     }
     LL_ADC_ClearFlag_EOS(ADC_NUM);
     LL_ADC_ClearFlag_EOC(ADC_NUM);
+    for (i = 0; i < 500; i++)
+    {
+        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
+        {
+            break;
+        }
+    }
     for (i = 0; i < conv_count; i++)
     {
         if (LL_ADC_REG_IsConversionOngoing(ADC_NUM) == 0)
