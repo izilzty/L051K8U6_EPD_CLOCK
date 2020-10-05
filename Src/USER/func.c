@@ -186,8 +186,8 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
 static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 {
-    uint32_t battery_val_stor;
-    float battery_value, sensor_tmp;
+    uint32_t battery_stor;
+    float battery_voltage, sensor_tmp;
     int8_t temp_value[2], rh_value[2];
 
     RTC_GetTime(&Time); /* 获取当前时间 */
@@ -204,13 +204,13 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_Init(EPD_UPDATE_MODE_FAST);
     EPD_ClearRAM();
 
-    battery_val_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL); /* 读取上次屏幕刷新完成后的电量 */
-    battery_value = *(float *)&battery_val_stor;
-    if (battery_value < 0.1 || battery_value > 3.6) /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
+    battery_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL); /* 读取上次屏幕刷新完成后的电量 */
+    battery_voltage = *(float *)&battery_stor;
+    if (battery_voltage < 0.1 || battery_voltage > 3.6) /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
     {
-        battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
+        battery_voltage = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     }
-    if (battery_value < Setting.battery_stop) /* 电池已经低于最低工作电压，显示电量不足标志并停止更新 */
+    if (battery_voltage < Setting.battery_stop) /* 电池已经低于最低工作电压，显示电量不足标志并停止更新 */
     {
         if (RTC_ReadREG(RTC_REG_AL1_DDT) != 0xAA) /* 借用RTC未使用的寄存器，存储低电量画面已显示标志 */
         {
@@ -268,7 +268,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(254, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
+    EPD_DrawBattery(258, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_voltage);
 
     snprintf(String, sizeof(String), "2%03d/%02d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -320,8 +320,8 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
 
-    battery_value = ADC_GetChannel(ADC_CHANNEL_BATTERY);
-    BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_value);
+    battery_voltage = ADC_GetChannel(ADC_CHANNEL_BATTERY);
+    BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_voltage);
 
     EPD_EnterDeepSleep();
 }
