@@ -42,6 +42,17 @@ static float conv_vrefint_to_vdda(uint16_t vrefint)
 }
 
 /**
+ * @brief  将ADC读数转换为电压。
+ * @param  vdda VDDA电压，单位为毫伏。
+ * @param  adc 要转换通道的ADC读数。
+ * @return 通道电压，单位为伏。
+ */
+static float conv_adc_to_voltage(float vdda, uint16_t adc)
+{
+    return (vdda / 4095 * adc) / 1000;
+}
+
+/**
  * @brief  将内置温度传感器读出的数据转换为温度。
  * @param  vdda VDDA电压，单位为毫伏。
  * @param  adc 温度传感器的ADC读数。
@@ -50,23 +61,12 @@ static float conv_vrefint_to_vdda(uint16_t vrefint)
 static float conv_adc_to_temp(float vdda, uint16_t adc)
 {
     float temp;
-    
-    temp = (adc * vdda / (TEMPSENSOR_CAL_VREFANALOG)) - *TEMPSENSOR_CAL1_ADDR;
-    temp = temp * TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP;
-    temp = temp / (*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
-    temp = temp + 30;
-    return temp;
-}
 
-/**
- * @brief  将ADC读数转换为电压。
- * @param  vdda VDDA电压，单位为毫伏。
- * @param  adc 要转换通道的ADC读数。
- * @return 通道电压，单位为伏。
- */
-static float conv_adc_to_voltage(float vdda, uint16_t adc)
-{
-    return vdda / 0x0FFF * adc / 1000;
+    temp = (adc * vdda / TEMPSENSOR_CAL_VREFANALOG) - *TEMPSENSOR_CAL1_ADDR;
+    temp = temp * (TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP);
+    temp = temp / (*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
+    temp = temp + TEMPSENSOR_CAL1_TEMP;
+    return temp;
 }
 
 /**
@@ -256,21 +256,10 @@ uint8_t ADC_StartConversionSequence(uint32_t channels, uint16_t *data, uint8_t c
  */
 float ADC_GetTemp(void)
 {
-    uint16_t i;
+    uint8_t i;
     uint16_t adc_val[2];
     float temp_tmp[5];
 
-    for (i = 0; i < 65535; i++)
-    {
-        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
-        {
-            break;
-        }
-    }
-    if (i == 65534)
-    {
-        return 0;
-    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(LL_ADC_CHANNEL_TEMPSENSOR | LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)
@@ -288,21 +277,10 @@ float ADC_GetTemp(void)
  */
 float ADC_GetVDDA(void)
 {
-    uint16_t i;
+    uint8_t i;
     uint16_t adc_val[1];
     float temp_tmp[5];
 
-    for (i = 0; i < 65535; i++)
-    {
-        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
-        {
-            break;
-        }
-    }
-    if (i == 65534)
-    {
-        return 0;
-    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)
@@ -321,21 +299,10 @@ float ADC_GetVDDA(void)
  */
 float ADC_GetChannel(uint32_t channel)
 {
-    uint16_t i;
+    uint8_t i;
     uint16_t adc_val[2];
     float temp_tmp[5];
 
-    for (i = 0; i < 65535; i++)
-    {
-        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
-        {
-            break;
-        }
-    }
-    if (i == 65534)
-    {
-        return 0;
-    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(channel | LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)

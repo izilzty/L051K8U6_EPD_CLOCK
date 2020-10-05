@@ -1526,6 +1526,8 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
 static void Menu_Info(void) /* 系统信息 */
 {
     uint32_t eeprom_tmp;
+    float temp;
+    struct TH_Value th_value;
 
     Menu_DrawMenuFrame("系统信息", 2);
     BTN_WaitAll();
@@ -1538,12 +1540,46 @@ static void Menu_Info(void) /* 系统信息 */
     EPD_DrawUTF8(0, 6, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
     snprintf(String, sizeof(String), "硬件版本  : %s", (char *)&eeprom_tmp);
     EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
-    snprintf(String, sizeof(String), "MCU信息   : 0x%03X, 0x%04X", LL_DBGMCU_GetDeviceID(), LL_DBGMCU_GetRevisionID());
+
+    temp = ADC_GetTemp();
+    if (temp > 0)
+    {
+        temp += 0.005;
+    }
+    else
+    {
+        temp -= 0.005;
+    }
+    snprintf(String, sizeof(String), "MCU信息   : 0x%03X 0x%04X %02d.%02d℃",
+             LL_DBGMCU_GetDeviceID(), LL_DBGMCU_GetRevisionID(), (int8_t)temp, abs((int16_t)((temp - (int8_t)temp) * 100)));
     EPD_DrawUTF8(0, 10, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
-    snprintf(String, sizeof(String), "SHT30状态 : 0x%02X", TH_GetStatus());
+
+    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &th_value);
+    if (th_value.CEL > 0)
+    {
+        th_value.CEL += 0.005;
+    }
+    else
+    {
+        th_value.CEL -= 0.005;
+    }
+    snprintf(String, sizeof(String), "SHT30状态 : 0x%02X %02d.%02d℃ %02d.%02d％",
+             TH_GetStatus(), (int8_t)th_value.CEL, abs((int16_t)((th_value.CEL - (int8_t)th_value.CEL) * 100)), (int8_t)th_value.RH, (int16_t)((th_value.RH - (int8_t)th_value.RH) * 100));
     EPD_DrawUTF8(0, 12, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
-    snprintf(String, sizeof(String), "DS3231状态: 0x%02X, 0x%02X, 0x%02X", RTC_ReadREG(RTC_REG_CTL), RTC_ReadREG(RTC_REG_STA), RTC_ReadREG(RTC_REG_AGI));
+
+    temp = RTC_GetTemp();
+    if (temp > 0)
+    {
+        temp += 0.005;
+    }
+    else
+    {
+        temp -= 0.005;
+    }
+    snprintf(String, sizeof(String), "DS3231状态: 0x%02X 0x%02X 0x%02X %02d.%02d℃",
+             RTC_ReadREG(RTC_REG_CTL), RTC_ReadREG(RTC_REG_STA), RTC_ReadREG(RTC_REG_AGI), (int8_t)temp, abs((int16_t)((temp - (int8_t)temp) * 100)));
     EPD_DrawUTF8(0, 14, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
+
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
 
