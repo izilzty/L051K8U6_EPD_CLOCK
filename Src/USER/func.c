@@ -268,7 +268,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(263, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
+    EPD_DrawBattery(254, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_value);
 
     snprintf(String, sizeof(String), "2%03d/%02d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1964,37 +1964,45 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
 
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage)
 {
-    uint8_t dis_ram[sizeof(EPD_Image_BattFrame)];
-    uint8_t i, bar_size;
+    uint8_t dis_ram[sizeof(EPD_Image_BattWarn)];
+    uint8_t i, bar_size, bar_size_max, bar_end_pos;
 
     if ((voltage < min_voltage) || ((max_voltage - min_voltage) < 0.001))
     {
         EPD_DrawImage(x, y_x8, EPD_Image_BattWarn);
         return;
     }
+    memcpy(dis_ram, EPD_Image_BattWarn, sizeof(dis_ram));
+    bar_end_pos = (dis_ram[2] / 8) * (dis_ram[0] - 5) + 3;
+    bar_size_max = dis_ram[0] - 12;
     if (voltage < max_voltage)
     {
         voltage -= min_voltage;
-        bar_size = (voltage / ((max_voltage - min_voltage) / 20)) + 0.5;
-        if (bar_size == 0)
-        {
-            bar_size = 1;
-        }
-        else if (bar_size > 20)
-        {
-            bar_size = 20;
-        }
+        bar_size = (voltage / ((max_voltage - min_voltage) / bar_size_max)) + 0.5;
     }
     else
     {
-        bar_size = 20;
+        bar_size = bar_size_max;
     }
-    memcpy(dis_ram, EPD_Image_BattFrame, sizeof(dis_ram));
-    for (i = 0; i < bar_size; i++)
+    if (bar_size == 0)
     {
-        dis_ram[84 - (i * 3) + 0] &= 0xF8;
-        dis_ram[84 - (i * 3) + 1] &= 0x00;
-        dis_ram[84 - (i * 3) + 2] &= 0x1F;
+        bar_size = 1;
+    }
+    else if (bar_size > bar_size_max)
+    {
+        bar_size = bar_size_max;
+    }
+    for (i = 0; i < bar_size_max; i++) /* 清空电池图标内部 */
+    {
+        dis_ram[bar_end_pos - (i * 3) + 0] |= 0x07;
+        dis_ram[bar_end_pos - (i * 3) + 1] |= 0xFF;
+        dis_ram[bar_end_pos - (i * 3) + 2] |= 0xE0;
+    }
+    for (i = 0; i < bar_size; i++) /* 绘制填充 */
+    {
+        dis_ram[bar_end_pos - (i * 3) + 0] &= 0xF8;
+        dis_ram[bar_end_pos - (i * 3) + 1] &= 0x00;
+        dis_ram[bar_end_pos - (i * 3) + 2] &= 0x1F;
     }
     EPD_DrawImage(x, y_x8, dis_ram);
 }
