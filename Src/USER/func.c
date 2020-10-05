@@ -1776,8 +1776,10 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
                     EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
                     break;
                 }
-                EPD_DrawUTF8(0, 5, 0, "清除数据并恢复到初始设置", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-                EPD_DrawUTF8(0, 9, 0, "继续吗？", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                EPD_DrawUTF8(0, 4, 0, "清除数据并恢复到初始设置", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+                EPD_DrawUTF8(0, 10, 0, "*同时按住\"上\"和\"下\"键", EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
+                EPD_DrawUTF8(0, 12, 0, " 并按\"复位\"键", EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
+                EPD_DrawUTF8(0, 14, 0, " 可以强制擦除全部数据", EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
                 EPD_DrawUTF8(211, 13, 0, "继续", NULL, EPD_FontUTF8_16x16_B);
                 EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
                 EPD_Show(0);
@@ -1793,9 +1795,9 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 
             EPD_WaitBusy();
 
-            EPD_ClearArea(0, 5, 296, 11, 0xFF);
-            EPD_DrawUTF8(0, 5, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-            EPD_DrawUTF8(0, 9, 0, "三秒后返回主菜单", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+            EPD_ClearArea(0, 4, 296, 12, 0xFF);
+            EPD_DrawUTF8(0, 4, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+            EPD_DrawUTF8(0, 8, 0, "三秒后返回主菜单", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
             EPD_Show(0);
 
             if (Setting.buzzer_enable != 0)
