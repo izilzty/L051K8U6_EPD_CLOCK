@@ -396,32 +396,33 @@ static void Menu_DrawMenuFrame(char *title, uint8_t button_style)
     for (i = 0; i < 2; i++)
     {
         EPD_DrawUTF8(0, 0, 0, title, NULL, EPD_FontUTF8_24x24_B);
-        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(164, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(212, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(260, 0, EPD_Image_Arrow_8x8);
         switch (button_style)
         {
         case 0:
-            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(152, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(208, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(256, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+
             EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
             EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
             break;
         case 1:
-            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(152, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(200, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(256, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
             break;
         case 2:
-            EPD_DrawUTF8(149, 1, 0, "继续", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(205, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(152, 1, 0, "继续", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(208, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(256, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
             break;
         case 3:
-            EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(152, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(208, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(256, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
             break;
         }
         EPD_DrawHLine(0, 27, 296, 2);
@@ -449,14 +450,14 @@ static void Menu_DrawSubmenuSaveSelect(uint8_t select)
     }
     if (select != 0)
     {
-        EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(200, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(256, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
     }
     else
     {
-        EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+        EPD_ClearArea(200, 1, 33, 2, 0xFF);
+        EPD_DrawUTF8(208, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(256, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
     }
 }
 
@@ -1559,7 +1560,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
     uint8_t select, save, update_display, wait_btn;
     int8_t offset;
 
-    Menu_DrawMenuFrame("RTC老化设置", 0);
+    Menu_DrawMenuFrame("时钟老化设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
