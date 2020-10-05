@@ -214,12 +214,20 @@ uint8_t ADC_StartConversionSequence(uint32_t channels, uint16_t *data, uint8_t c
     }
     LL_ADC_ClearFlag_EOS(ADC_NUM);
     LL_ADC_ClearFlag_EOC(ADC_NUM);
-    for (i = 0; i < 500; i++)
+    for (i = 0; i < 65535; i++)
     {
         if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
         {
             break;
         }
+    }
+    if (i == 65534)
+    {
+        for (i = 0; i < conv_count; i++)
+        {
+            data[i] = 0x00;
+        }
+        return 1;
     }
     for (i = 0; i < conv_count; i++)
     {
@@ -246,9 +254,21 @@ uint8_t ADC_StartConversionSequence(uint32_t channels, uint16_t *data, uint8_t c
  */
 float ADC_GetTemp(void)
 {
-    uint8_t i;
+    uint16_t i;
     uint16_t adc_val[2];
     float temp_tmp[5];
+
+    for (i = 0; i < 65535; i++)
+    {
+        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
+        {
+            break;
+        }
+    }
+    if (i == 65534)
+    {
+        return 0;
+    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(LL_ADC_CHANNEL_TEMPSENSOR | LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)
@@ -266,9 +286,21 @@ float ADC_GetTemp(void)
  */
 float ADC_GetVDDA(void)
 {
-    uint8_t i;
+    uint16_t i;
     uint16_t adc_val[1];
     float temp_tmp[5];
+
+    for (i = 0; i < 65535; i++)
+    {
+        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
+        {
+            break;
+        }
+    }
+    if (i == 65534)
+    {
+        return 0;
+    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)
@@ -287,9 +319,21 @@ float ADC_GetVDDA(void)
  */
 float ADC_GetChannel(uint32_t channel)
 {
-    uint8_t i;
+    uint16_t i;
     uint16_t adc_val[2];
     float temp_tmp[5];
+
+    for (i = 0; i < 65535; i++)
+    {
+        if (LL_PWR_IsActiveFlag_VREFINTRDY() != 0) /* 等待VREFINT准备完成 */
+        {
+            break;
+        }
+    }
+    if (i == 65534)
+    {
+        return 0;
+    }
     for (i = 0; i < sizeof(temp_tmp) / sizeof(float); i++)
     {
         if (ADC_StartConversionSequence(channel | LL_ADC_CHANNEL_VREFINT, adc_val, sizeof(adc_val) / sizeof(uint16_t)) != 0)

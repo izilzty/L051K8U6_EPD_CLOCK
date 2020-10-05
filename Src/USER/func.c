@@ -317,10 +317,6 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     snprintf(String, sizeof(String), "农历：%s%s%s", Lunar_MonthLeapString[Lunar.IsLeap], Lunar_MonthString[Lunar.Month], Lunar_DateString[Lunar.Date]);
     EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16_B);
 
-    battery_value += 0.00005;
-    snprintf(String, sizeof(String), "%d.%04d", (int8_t)battery_value, (uint16_t)((battery_value - (int8_t)battery_value) * 10000));
-    EPD_DrawUTF8(104, 14, 2, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
-
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
 
