@@ -50,6 +50,7 @@ static float conv_vrefint_to_vdda(uint16_t vrefint)
 static float conv_adc_to_temp(float vdda, uint16_t adc)
 {
     float temp;
+    
     temp = (adc * vdda / (TEMPSENSOR_CAL_VREFANALOG)) - *TEMPSENSOR_CAL1_ADDR;
     temp = temp * TEMPSENSOR_CAL2_TEMP - TEMPSENSOR_CAL1_TEMP;
     temp = temp / (*TEMPSENSOR_CAL2_ADDR - *TEMPSENSOR_CAL1_ADDR);
@@ -78,6 +79,7 @@ static float conv_float_avg(float *data, uint8_t data_size)
 {
     uint8_t i, min_index, max_index;
     float avg;
+
     if (data_size < 3)
     {
         return 0;
