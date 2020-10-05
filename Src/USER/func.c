@@ -38,6 +38,7 @@ static void SaveSetting(const struct FUNC_Setting *setting);
 static void ReadSetting(struct FUNC_Setting *setting);
 
 static uint8_t BTN_ReadUP(void);
+static uint8_t BTN_ReadUPFast(void);
 static uint8_t BTN_ReadDOWN(void);
 static uint8_t BTN_ReadSET(void);
 static void BTN_WaitSET(void);
@@ -738,7 +739,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 time_check = 1;
                 break;
             case 16:
-                if (BTN_ReadUP() == 0)
+                if (BTN_ReadUPFast() == 0)
                 {
                     save = 2;
                     wait_btn = 0;
@@ -2041,7 +2042,7 @@ static void ReadSetting(struct FUNC_Setting *setting)
 
 /* ==================== 按键读取 ==================== */
 
-static uint8_t BTN_ReadUP()
+static uint8_t BTN_ReadUP(void)
 {
     if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
     {
@@ -2050,6 +2051,15 @@ static uint8_t BTN_ReadUP()
         {
             return 0;
         }
+    }
+    return 1;
+}
+
+static uint8_t BTN_ReadUPFast(void)
+{
+    if (LL_GPIO_IsInputPinSet(BTN_UP_GPIO_Port, BTN_UP_Pin) == 0)
+    {
+        return 0;
     }
     return 1;
 }

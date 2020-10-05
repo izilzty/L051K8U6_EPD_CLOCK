@@ -18,7 +18,7 @@
 #include "lunar.h"
 
 /* 可修改 */
-#define SOFT_VERSION "L051_0.02_MELANTHA"
+#define SOFT_VERSION "L051_0.03_MELANTHA"
 #define BTN_DEBOUNCE_MS 19
 #define BAT_MIN_VOLTAGE 0.80
 #define BAT_MAX_VOLTAGE 3.00
