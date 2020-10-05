@@ -19,9 +19,9 @@ static void Delay_100ns(volatile uint16_t nsX100);
 
 static void UpdateHomeDisplay(void);
 static void FullInit(void);
-static void Menu_MainMenu(void);
-static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style);
+static void Menu_DrawMenuFrame(char *title, uint8_t button_style);
 static void Menu_DrawSubmenuSaveSelect(uint8_t select);
+static void Menu_MainMenu(void);
 static void Menu_Guide(void);
 static void Menu_SetTime(void);
 static void Menu_SetBuzzer(void);
@@ -387,9 +387,82 @@ static void FullInit(void) /* 重新初始化全部数据 */
 
 /* ==================== 主菜单 ==================== */
 
+static void Menu_DrawMenuFrame(char *title, uint8_t button_style)
+{
+    uint8_t i;
+
+    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_ClearRAM();
+    for (i = 0; i < 2; i++)
+    {
+        EPD_DrawUTF8(0, 0, 0, title, NULL, EPD_FontUTF8_24x24_B);
+        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
+        switch (button_style)
+        {
+        case 0:
+            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
+            break;
+        case 1:
+            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            break;
+        case 2:
+            EPD_DrawUTF8(149, 1, 0, "继续", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(205, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+            break;
+        case 3:
+            EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
+            EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
+            break;
+        }
+        EPD_DrawHLine(0, 27, 296, 2);
+        if (i == 0)
+        {
+            EPD_Show(0);
+            LP_EnterStop(EPD_TIMEOUT_MS);
+            EPD_Init(EPD_UPDATE_MODE_PART);
+            EPD_ClearRAM();
+        }
+    }
+}
+
+static void Menu_DrawSubmenuSaveSelect(uint8_t select)
+{
+    EPD_ClearArea(211, 15, 79, 1, 0xFF);
+    switch (select)
+    {
+    case 1:
+        EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+        break;
+    case 2:
+        EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+        break;
+    }
+    if (select != 0)
+    {
+        EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
+    }
+    else
+    {
+        EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
+        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
+    }
+}
+
 static void Menu_MainMenu(void)
 {
-    uint8_t i, select, exit, full_update, wait_btn, update_display;
+    uint8_t select, exit, full_update, wait_btn, update_display;
 
     BEEP_OK();
 
@@ -397,6 +470,7 @@ static void Menu_MainMenu(void)
     full_update = 1;
     select = 0;
     wait_btn = 0;
+    update_display = 0;
     while (exit == 0)
     {
         if (full_update == 0)
@@ -545,26 +619,7 @@ static void Menu_MainMenu(void)
         {
             full_update = 0;
             update_display = 1;
-            EPD_Init(EPD_UPDATE_MODE_FAST);
-            EPD_ClearRAM();
-            for (i = 0; i < 2; i++)
-            {
-                EPD_DrawUTF8(0, 0, 0, "主菜单", NULL, EPD_FontUTF8_24x24_B);
-                EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
-                EPD_DrawUTF8(149, 1, 0, "进入", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(205, 1, 0, "上", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawUTF8(253, 1, 0, "下", NULL, EPD_FontUTF8_16x16_B);
-                EPD_DrawHLine(0, 27, 296, 2);
-                if (i == 0)
-                {
-                    EPD_Show(0);
-                    LP_EnterStop(EPD_TIMEOUT_MS);
-                    EPD_Init(EPD_UPDATE_MODE_PART);
-                    EPD_ClearRAM();
-                }
-            }
+            Menu_DrawMenuFrame("主菜单", 3);
             BTN_WaitAll();
         }
     }
@@ -572,81 +627,13 @@ static void Menu_MainMenu(void)
 
 /* ==================== 子菜单 ==================== */
 
-static void Menu_DrawSubmenuFrame(char *title, uint8_t button_style)
-{
-    uint8_t i;
-
-    EPD_Init(EPD_UPDATE_MODE_FAST);
-    EPD_ClearRAM();
-    for (i = 0; i < 2; i++)
-    {
-        EPD_DrawUTF8(0, 0, 0, title, NULL, EPD_FontUTF8_24x24_B);
-        EPD_DrawImage(161, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(209, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(257, 0, EPD_Image_Arrow_8x8);
-        switch (button_style)
-        {
-        case 0:
-            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(205, 1, 0, "加", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(211, 13, 0, "保存", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(258, 13, 0, "取消", NULL, EPD_FontUTF8_16x16_B);
-            break;
-        case 1:
-            EPD_DrawUTF8(149, 1, 0, "移动", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-            break;
-        case 2:
-            EPD_DrawUTF8(149, 1, 0, "继续", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(205, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-            EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-            break;
-        }
-        EPD_DrawHLine(0, 27, 296, 2);
-        if (i == 0)
-        {
-            EPD_Show(0);
-            LP_EnterStop(EPD_TIMEOUT_MS);
-            EPD_Init(EPD_UPDATE_MODE_PART);
-            EPD_ClearRAM();
-        }
-    }
-}
-
-static void Menu_DrawSubmenuSaveSelect(uint8_t select)
-{
-    EPD_ClearArea(211, 15, 79, 1, 0xFF);
-    switch (select)
-    {
-    case 1:
-        EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
-        break;
-    case 2:
-        EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
-        break;
-    }
-    if (select != 0)
-    {
-        EPD_DrawUTF8(197, 1, 0, "选择", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(253, 1, 0, "空", NULL, EPD_FontUTF8_16x16_B);
-    }
-    else
-    {
-        EPD_DrawUTF8(197, 1, 0, "    ", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(205, 1, 0, "加  ", NULL, EPD_FontUTF8_16x16_B);
-        EPD_DrawUTF8(253, 1, 0, "减", NULL, EPD_FontUTF8_16x16_B);
-    }
-}
-
 static void Menu_SetTime(void) /* 时间设置页面 */
 {
     struct RTC_Time new_time;
     uint8_t select, save, update_display, wait_btn, time_check, arrow_y;
     uint16_t arrow_x;
 
-    Menu_DrawSubmenuFrame("时间设置", 0);
+    Menu_DrawMenuFrame("时间设置", 0);
     BTN_WaitAll();
 
     RTC_GetTime(&new_time);
@@ -888,7 +875,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
 static void Menu_Guide(void) /* 首次使用时的引导 */
 {
-    Menu_DrawSubmenuFrame("欢迎使用", 2);
+    Menu_DrawMenuFrame("欢迎使用", 2);
     BTN_WaitAll();
 
     EPD_DrawImage(0, 4, EPD_Image_Welcome_296x96);
@@ -906,7 +893,7 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
 {
     uint8_t select, save, update_display, wait_btn, volume, enable;
 
-    Menu_DrawSubmenuFrame("铃声设置", 0);
+    Menu_DrawMenuFrame("铃声设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1055,7 +1042,7 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
     uint8_t select, save, update_display, wait_btn, long_press;
     float bat_warn, bat_stop, tmp;
 
-    Menu_DrawSubmenuFrame("电池设置", 0);
+    Menu_DrawMenuFrame("电池设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1222,7 +1209,7 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
     uint8_t select, save, update_display, wait_btn, long_press;
     float temp_offset, rh_offset, tmp;
 
-    Menu_DrawSubmenuFrame("传感器设置", 0);
+    Menu_DrawMenuFrame("传感器设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1418,7 +1405,7 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
     int16_t offset;
     float vrefint_factory;
 
-    Menu_DrawSubmenuFrame("参考电压设置", 0);
+    Menu_DrawMenuFrame("参考电压设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1539,7 +1526,7 @@ static void Menu_Info(void) /* 系统信息 */
 {
     uint32_t eeprom_tmp;
 
-    Menu_DrawSubmenuFrame("系统信息", 2);
+    Menu_DrawMenuFrame("系统信息", 2);
     BTN_WaitAll();
 
     eeprom_tmp = EEPROM_ReadDWORD(EEPROM_ADDR_DWORD_HWVERSION) & 0x00FFFFFF;
@@ -1572,7 +1559,7 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
     uint8_t select, save, update_display, wait_btn;
     int8_t offset;
 
-    Menu_DrawSubmenuFrame("RTC老化设置", 0);
+    Menu_DrawMenuFrame("RTC老化设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1689,7 +1676,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 {
     uint8_t select, save, update_display, wait_btn;
 
-    Menu_DrawSubmenuFrame("恢复设置", 1);
+    Menu_DrawMenuFrame("恢复设置", 1);
     BTN_WaitAll();
 
     update_display = 1;
@@ -1799,7 +1786,7 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
     uint8_t select, save, update_display, wait_btn, hwver_1, hwver_2;
     uint32_t hwver_stor;
 
-    Menu_DrawSubmenuFrame("硬件版本设置", 0);
+    Menu_DrawMenuFrame("硬件版本设置", 0);
     BTN_WaitAll();
 
     update_display = 1;
