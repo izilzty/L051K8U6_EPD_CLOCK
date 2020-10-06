@@ -49,7 +49,7 @@ static float conv_vrefint_to_vdda(uint16_t vrefint)
  */
 static float conv_adc_to_voltage(float vdda, uint16_t adc)
 {
-    return (vdda / 4095 * adc) / 1000;
+    return (vdda * adc / 4095) / 1000;
 }
 
 /**
