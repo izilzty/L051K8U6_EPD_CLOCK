@@ -397,9 +397,9 @@ static void Menu_DrawMenuFrame(char *title, uint8_t button_style)
     for (i = 0; i < 2; i++)
     {
         EPD_DrawUTF8(0, 0, 0, title, NULL, EPD_FontUTF8_24x24_B);
-        EPD_DrawImage(164, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(212, 0, EPD_Image_Arrow_8x8);
-        EPD_DrawImage(260, 0, EPD_Image_Arrow_8x8);
+        EPD_DrawImage(164, 0, EPD_Image_ArrowUp_8x8);
+        EPD_DrawImage(212, 0, EPD_Image_ArrowUp_8x8);
+        EPD_DrawImage(260, 0, EPD_Image_ArrowUp_8x8);
         switch (button_style)
         {
         case 0:
@@ -443,10 +443,10 @@ static void Menu_DrawSubmenuSaveSelect(uint8_t select)
     switch (select)
     {
     case 1:
-        EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+        EPD_DrawImage(221, 15, EPD_Image_ArrowUp_12x8);
         break;
     case 2:
-        EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+        EPD_DrawImage(268, 15, EPD_Image_ArrowUp_12x8);
         break;
     }
     if (select != 0)
@@ -854,7 +854,7 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                 }
                 else
                 {
-                    EPD_DrawImage(arrow_x, arrow_y, EPD_Image_Arrow_12x8);
+                    EPD_DrawImage(arrow_x, arrow_y, EPD_Image_ArrowUp_12x8);
                     Menu_DrawSubmenuSaveSelect(0);
                 }
 
@@ -1770,10 +1770,10 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
                 switch (select)
                 {
                 case 0:
-                    EPD_DrawImage(221, 15, EPD_Image_Arrow_12x8);
+                    EPD_DrawImage(221, 15, EPD_Image_ArrowUp_12x8);
                     break;
                 case 1:
-                    EPD_DrawImage(268, 15, EPD_Image_Arrow_12x8);
+                    EPD_DrawImage(268, 15, EPD_Image_ArrowUp_12x8);
                     break;
                 }
                 EPD_DrawUTF8(0, 4, 0, "清除数据并恢复到初始设置", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1927,10 +1927,10 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
                 switch (select)
                 {
                 case 0:
-                    EPD_DrawImage(132, 7, EPD_Image_Arrow_12x8);
+                    EPD_DrawImage(132, 7, EPD_Image_ArrowUp_12x8);
                     break;
                 case 1:
-                    EPD_DrawImage(156, 7, EPD_Image_Arrow_12x8);
+                    EPD_DrawImage(156, 7, EPD_Image_ArrowUp_12x8);
                     break;
                 }
 
