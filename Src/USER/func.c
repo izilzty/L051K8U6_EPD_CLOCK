@@ -247,16 +247,16 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date); /* RTC读出的年份省去了2000，计算农历前要手动加上 */
 
     /* 将浮点温度分为两个整数温度 */
-    if (Sensor.CEL < 0)
-    {
-        sensor_tmp = Sensor.CEL - 0.05;
-    }
-    else
+    if (Sensor.CEL > 0)
     {
         sensor_tmp = Sensor.CEL + 0.05;
     }
+    else
+    {
+        sensor_tmp = Sensor.CEL - 0.05;
+    }
     temp_value[0] = (int8_t)sensor_tmp;
-    temp_value[1] = (int8_t)((sensor_tmp - temp_value[0]) * 10);
+    temp_value[1] = abs((int8_t)((sensor_tmp - temp_value[0]) * 10));
 
     /* 将浮点湿度分为两个整数 */
     sensor_tmp = Sensor.RH + 0.05;
@@ -329,7 +329,7 @@ static void FullInit(void) /* 重新初始化全部数据 */
 {
     BUZZER_SetFrqe(4000);
     BUZZER_SetVolume(DefaultSetting.buzzer_volume);
-    
+
     BUZZER_Beep(49);
     LL_mDelay(49);
     BUZZER_Beep(49);
