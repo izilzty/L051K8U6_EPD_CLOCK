@@ -103,17 +103,14 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
         SERIAL_DebugPrint("Unknow reset");
         break;
     }
-
     Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
     Power_DisableGDEH029A1(); /* 默认关闭电子纸电源 */
-
     if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG))
     {
         FullInit();
     }
-
     /* 读取保存的设置，如果没有则使用默认设置代替 */
     ReadSetting(&Setting);
     /* 设置电池和传感器偏移量 */
@@ -160,6 +157,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
     }
 
     Power_EnableGDEH029A1();
+
     UpdateHomeDisplay();
 
     Power_DisableGDEH029A1();
@@ -331,13 +329,12 @@ static void FullInit(void) /* 重新初始化全部数据 */
 {
     BUZZER_SetFrqe(4000);
     BUZZER_SetVolume(DefaultSetting.buzzer_volume);
-
+    
     BUZZER_Beep(49);
     LL_mDelay(49);
     BUZZER_Beep(49);
     LL_mDelay(49);
     BUZZER_Beep(49);
-
     SERIAL_DebugPrint("BEGIN RESET ALL DATA");
     SERIAL_DebugPrint("RTC reset...");
     if (RTC_ResetAllRegToDefault() != 0)
@@ -376,13 +373,11 @@ static void FullInit(void) /* 重新初始化全部数据 */
         SERIAL_DebugPrint("EEPROM reset done");
     }
     SERIAL_DebugPrint("Process done");
-
 #ifdef ENABLE_DEBUG_PRINT
     DumpEEPROM();
     DumpRTCReg();
     DumpBKPR();
 #endif
-
     BUZZER_Beep(499);
 }
 
@@ -473,7 +468,6 @@ static void Menu_MainMenu(void)
     uint8_t select, exit, full_update, wait_btn, update_display;
 
     BEEP_OK();
-
     exit = 0;
     full_update = 1;
     select = 0;
@@ -643,13 +637,11 @@ static void Menu_SetTime(void) /* 时间设置页面 */
 
     Menu_DrawMenuFrame("时间设置", 0);
     BTN_WaitAll();
-
     RTC_GetTime(&new_time);
     if (RTC_GetOSF() != 0 || new_time.Month == 0)
     {
         memcpy(&new_time, &DefaultTime, sizeof(struct RTC_Time));
     }
-
     select = 0;
     update_display = 1;
     time_check = 0;
@@ -771,10 +763,8 @@ static void Menu_SetTime(void) /* 时间设置页面 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 snprintf(String, sizeof(String), "2%03d年%02d月%02d日 周%d", new_time.Year, new_time.Month, new_time.Date, new_time.Day);
                 EPD_DrawUTF8(7, 4, 5, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 if (new_time.Is_12hr != 0)
                 {
                     snprintf(String, sizeof(String), "时间格式：12小时制");
@@ -784,7 +774,6 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                     snprintf(String, sizeof(String), "时间格式：24小时制");
                 }
                 EPD_DrawUTF8(5, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 if (new_time.Is_12hr != 0)
                 {
                     if (new_time.PM != 0)
@@ -801,10 +790,8 @@ static void Menu_SetTime(void) /* 时间设置页面 */
                     snprintf(String, sizeof(String), "    ");
                 }
                 EPD_DrawUTF8(5, 12, 0, String, NULL, EPD_FontUTF8_24x24_B);
-
                 snprintf(String, sizeof(String), "%02d:%02d:%02d", new_time.Hours, new_time.Minutes, new_time.Seconds);
                 EPD_DrawUTF8(58, 12, 5, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 if (select <= 2)
                 {
                     arrow_x = 24 + (select * 17);
@@ -885,15 +872,12 @@ static void Menu_Guide(void) /* 首次使用时的引导 */
 {
     Menu_DrawMenuFrame("欢迎使用", 2);
     BTN_WaitAll();
-
     EPD_DrawImage(0, 4, EPD_Image_Welcome_296x96);
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
-
     while (BTN_ReadSET() != 0)
     {
     }
-
     BEEP_OK();
 }
 
@@ -903,7 +887,6 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
 
     Menu_DrawMenuFrame("铃声设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -987,7 +970,6 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 EPD_DrawUTF8(0, 4, 0, "蜂鸣器开启状态：", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 if (Setting.buzzer_enable != 0)
                 {
@@ -997,13 +979,10 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
                 {
                     EPD_DrawUTF8(192, 4, 0, "关闭", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 }
-
                 snprintf(String, sizeof(String), "蜂鸣器音量：%02d/%02d", Setting.buzzer_volume, BUZZER_MAX_VOL);
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(240, 4, 24, 3, 0xFF);
                 EPD_ClearArea(204, 8, 24, 3, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1013,7 +992,6 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
                     EPD_DrawUTF8(204, 8, 0, "◀", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                     break;
                 }
-
                 if (select == 2 || select == 3)
                 {
                     Menu_DrawSubmenuSaveSelect(select - 2);
@@ -1022,7 +1000,6 @@ static void Menu_SetBuzzer(void) /* 设置蜂鸣器状态 */
                 {
                     Menu_DrawSubmenuSaveSelect(3);
                 }
-
                 EPD_Show(0);
             }
         }
@@ -1052,7 +1029,6 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
 
     Menu_DrawMenuFrame("电池设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1146,7 +1122,6 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 tmp = bat_warn + 0.005;
                 snprintf(String, sizeof(String), "警告电压：%d.%02dV", (int8_t)tmp, (uint16_t)((tmp - (int8_t)tmp) * 100));
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
@@ -1156,10 +1131,8 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 tmp = ADC_GetChannel(ADC_CHANNEL_BATTERY) + 0.005;
                 snprintf(String, sizeof(String), "[实时电压：%d.%02dV]", (int8_t)(tmp), (uint16_t)(((tmp) - (int8_t)(tmp)) * 100));
                 EPD_DrawUTF8(0, 12, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(180, 4, 24, 3, 0xFF);
                 EPD_ClearArea(180, 8, 24, 3, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1178,7 +1151,6 @@ static void Menu_SetBattery(void) /* 设置电池信息 */
                 {
                     Menu_DrawSubmenuSaveSelect(3);
                 }
-
                 EPD_Show(0);
             }
         }
@@ -1219,7 +1191,6 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
 
     Menu_DrawMenuFrame("传感器设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1349,10 +1320,8 @@ static void Menu_SetSensor(void) /* 设置传感器信息 */
                     snprintf(String, sizeof(String), "湿度偏移：%+03d.%02d％", (int8_t)tmp, abs((int16_t)((tmp - (int8_t)tmp) * 100)));
                 }
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(216, 4, 24, 3, 0xFF);
                 EPD_ClearArea(216, 8, 24, 3, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1415,7 +1384,6 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
 
     Menu_DrawMenuFrame("参考电压设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1485,15 +1453,12 @@ static void Menu_SetVrefint(void) /* 设置参考电压偏移 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 vrefint_factory = ADC_GetVrefintFactory() + (ADC_GetVrefintStep() * offset) + 0.0005;
                 snprintf(String, sizeof(String), "[实际电压：%04d.%03dmV]", (int16_t)vrefint_factory, (int16_t)((vrefint_factory - (int16_t)vrefint_factory) * 1000));
                 EPD_DrawUTF8(0, 8, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(168, 4, 24, 3, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1540,12 +1505,10 @@ static void Menu_Info(void) /* 系统信息 */
 
     Menu_DrawMenuFrame("系统信息", 2);
     BTN_WaitAll();
-
     mcu_temp = ADC_GetTemp();
     eeprom_tmp = EEPROM_ReadDWORD(EEPROM_ADDR_DWORD_HWVERSION) & 0x00FFFFFF;
     TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &th_value);
     rtc_temp = RTC_GetTemp();
-
     for (i = 0; i < 2; i++)
     {
         snprintf(String, sizeof(String), "软件版本  : %s", SOFT_VERSION);
@@ -1599,7 +1562,6 @@ static void Menu_Info(void) /* 系统信息 */
             LP_EnterStop(EPD_TIMEOUT_MS);
         }
     }
-
     btn_cnt = 0;
     while (BTN_ReadSET() != 0)
     {
@@ -1624,7 +1586,6 @@ static void Menu_Info(void) /* 系统信息 */
             break;
         }
     }
-
     BEEP_OK();
 }
 
@@ -1635,7 +1596,6 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
 
     Menu_DrawMenuFrame("时钟老化设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1704,13 +1664,10 @@ static void Menu_SetRTCAging(void) /* 设置实时时钟老化偏移 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 snprintf(String, sizeof(String), "偏移数值：%+04d", offset);
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 EPD_DrawUTF8(0, 8, 1, "[每个偏移约为0.1ppm]", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(168, 4, 24, 3, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1752,7 +1709,6 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
 
     Menu_DrawMenuFrame("恢复设置", 1);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1813,25 +1769,20 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
         if (save == 2)
         {
             BEEP_OK();
-
             memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
             Setting.available = SETTING_AVALIABLE_FLAG;
             SaveSetting(&Setting);
-
             EPD_WaitBusy();
-
             EPD_ClearArea(0, 4, 296, 12, 0xFF);
             EPD_DrawUTF8(0, 4, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
             EPD_DrawUTF8(0, 8, 0, "三秒后返回主菜单", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
             EPD_Show(0);
-
             if (Setting.buzzer_enable != 0)
             {
                 BUZZER_SetFrqe(4000);
                 BUZZER_SetVolume(Setting.buzzer_volume);
                 BUZZER_Beep(499);
             }
-
             LP_EnterStop(EPD_TIMEOUT_MS);
             LP_DelayStop(3000);
             return;
@@ -1853,7 +1804,6 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
 
     Menu_DrawMenuFrame("硬件版本设置", 0);
     BTN_WaitAll();
-
     update_display = 1;
     wait_btn = 0;
     save = 0;
@@ -1941,14 +1891,11 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
             if (EPD_GetBusy() == 0)
             {
                 update_display = 0;
-
                 snprintf(String, sizeof(String), "硬件版本：V%d.%d", hwver_1, hwver_2);
                 EPD_DrawUTF8(0, 4, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 EPD_DrawUTF8(0, 8, 0, "[注意：设置保存后不会再", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
                 EPD_DrawUTF8(0, 12, 0, "显示此菜单]", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-
                 EPD_ClearArea(132, 7, 36, 1, 0xFF);
-
                 switch (select)
                 {
                 case 0:
@@ -1958,7 +1905,6 @@ static void Menu_SetHWVer(void) /* 设置硬件版本 */
                     EPD_DrawImage(156, 7, EPD_Image_ArrowUp_12x8);
                     break;
                 }
-
                 if (select == 2 || select == 3)
                 {
                     Menu_DrawSubmenuSaveSelect(select - 2);
@@ -2041,6 +1987,7 @@ static void SaveSetting(const struct FUNC_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
+
     setting_ptr = (uint8_t *)setting;
     for (i = 0; i < sizeof(struct FUNC_Setting); i++)
     {
@@ -2055,6 +2002,7 @@ static void ReadSetting(struct FUNC_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
+
     setting_ptr = (uint8_t *)setting;
     for (i = 0; i < sizeof(struct FUNC_Setting); i++)
     {
@@ -2155,6 +2103,7 @@ static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint
 {
     double pow_tmp;
     uint8_t digit_value;
+
     if (BTN_ReadUP() == 0)
     {
         pow_tmp = pow(10, modify_digit);
@@ -2314,6 +2263,7 @@ static void DumpRTCReg(void)
 {
     uint8_t i, j, reg_tmp;
     char byte_str[9];
+
     SERIAL_SendStringRN("");
     SERIAL_SendStringRN("DS3231 REG DUMP:");
     for (i = 0; i < 19; i++)
@@ -2343,6 +2293,7 @@ static void DumpEEPROM(void)
 {
     uint16_t i;
     char str_buffer[10];
+
     SERIAL_SendStringRN("");
     SERIAL_SendStringRN("EEPROM DUMP:");
     SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
@@ -2369,6 +2320,7 @@ static void DumpBKPR(void)
 {
     uint16_t i;
     char str_buffer[10];
+
     SERIAL_SendStringRN("");
     SERIAL_SendStringRN("BKPR DUMP:");
     SERIAL_SendStringRN("INDEX:    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F");
