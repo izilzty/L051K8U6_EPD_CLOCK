@@ -186,7 +186,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 {
     uint32_t battery_stor;
-    float battery_voltage, sensor_tmp;
+    float battery_voltage, cel_tmp, rh_tmp;
     int8_t temp_value[2], rh_value[2];
 
     RTC_GetTime(&Time); /* 获取当前时间 */
@@ -249,19 +249,19 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     /* 将浮点温度分为两个整数温度 */
     if (Sensor.CEL > 0)
     {
-        sensor_tmp = Sensor.CEL + 0.05;
+        cel_tmp = Sensor.CEL + 0.05;
     }
     else
     {
-        sensor_tmp = Sensor.CEL - 0.05;
+        cel_tmp = Sensor.CEL - 0.05;
     }
-    temp_value[0] = (int8_t)sensor_tmp;
-    temp_value[1] = abs((int8_t)((sensor_tmp - temp_value[0]) * 10));
+    temp_value[0] = (int8_t)cel_tmp;
+    temp_value[1] = abs((int8_t)((cel_tmp - temp_value[0]) * 10));
 
     /* 将浮点湿度分为两个整数 */
-    sensor_tmp = Sensor.RH + 0.05;
-    rh_value[0] = (int8_t)sensor_tmp;
-    rh_value[1] = (int8_t)((sensor_tmp - rh_value[0]) * 10);
+    rh_tmp = Sensor.RH + 0.05;
+    rh_value[0] = (int8_t)rh_tmp;
+    rh_value[1] = (int8_t)((rh_tmp - rh_value[0]) * 10);
 
     EPD_DrawHLine(0, 28, 296, 2);
     EPD_DrawHLine(0, 104, 296, 2);
@@ -291,20 +291,24 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     {
         EPD_DrawUTF8(22, 5, 6, String, EPD_FontAscii_27x56, EPD_FontUTF8_24x24_B);
     }
-    if (temp_value[0] < -9)
+    if (cel_tmp <= -10.0)
     {
         snprintf(String, sizeof(String), "%02d ℃", temp_value[0]);
     }
-    else if (temp_value[0] < 100)
+    else if (cel_tmp < 0 && cel_tmp > -1.0)
     {
-        snprintf(String, sizeof(String), "%02d.%d℃", temp_value[0], temp_value[1]);
+        snprintf(String, sizeof(String), "-%01d.%d℃", temp_value[0], temp_value[1]);
     }
-    else
+    else if (cel_tmp >= 100.0)
     {
         snprintf(String, sizeof(String), "%03d ℃", temp_value[0]);
     }
+    else
+    {
+        snprintf(String, sizeof(String), "%02d.%d℃", temp_value[0], temp_value[1]);
+    }
     EPD_DrawUTF8(213, 5, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
-    if (rh_value[0] < 100)
+    if (rh_tmp < 100)
     {
         snprintf(String, sizeof(String), "%02d.%d％", rh_value[0], rh_value[1]);
     }
@@ -1500,7 +1504,7 @@ static void Menu_Info(void) /* 系统信息 */
     uint32_t eeprom_tmp;
     float mcu_temp, rtc_temp;
     struct TH_Value th_value;
-    char date_tmp[sizeof(__DATE__)];
+    char date_tmp[sizeof(__DATE__)], sig[2];
     uint8_t i, btn_cnt;
 
     Menu_DrawMenuFrame("系统信息", 2);
@@ -1530,8 +1534,17 @@ static void Menu_Info(void) /* 系统信息 */
         {
             mcu_temp -= 0.005;
         }
-        snprintf(String, sizeof(String), "MCU信息   : 0x%03X 0x%04X %02d.%02d℃",
-                 LL_DBGMCU_GetDeviceID(), LL_DBGMCU_GetRevisionID(), (int8_t)mcu_temp, abs((int16_t)((mcu_temp - (int8_t)mcu_temp) * 100)));
+        if (mcu_temp < 0 && mcu_temp > -1.0)
+        {
+            sig[0] = '-';
+            sig[1] = '\0';
+        }
+        else
+        {
+            sig[0] = '\0';
+        }
+        snprintf(String, sizeof(String), "MCU信息   : 0x%03X 0x%04X %s%02d.%02d℃",
+                 LL_DBGMCU_GetDeviceID(), LL_DBGMCU_GetRevisionID(), sig, (int8_t)mcu_temp, abs((int16_t)((mcu_temp - (int8_t)mcu_temp) * 100)));
         EPD_DrawUTF8(0, 10, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
         if (th_value.CEL > 0)
         {
@@ -1541,8 +1554,17 @@ static void Menu_Info(void) /* 系统信息 */
         {
             th_value.CEL -= 0.005;
         }
-        snprintf(String, sizeof(String), "SHT30状态 : 0x%02X %02d.%02d℃ %02d.%02d％",
-                 TH_GetStatus(), (int8_t)th_value.CEL, abs((int16_t)((th_value.CEL - (int8_t)th_value.CEL) * 100)), (int8_t)th_value.RH, (int16_t)((th_value.RH - (int8_t)th_value.RH) * 100));
+        if (th_value.CEL < 0 && th_value.CEL > -1.0)
+        {
+            sig[0] = '-';
+            sig[1] = '\0';
+        }
+        else
+        {
+            sig[0] = '\0';
+        }
+        snprintf(String, sizeof(String), "SHT30状态 : 0x%02X %s%02d.%02d℃ %02d.%02d％",
+                 TH_GetStatus(), sig, (int8_t)th_value.CEL, abs((int16_t)((th_value.CEL - (int8_t)th_value.CEL) * 100)), (int8_t)th_value.RH, (int16_t)((th_value.RH - (int8_t)th_value.RH) * 100));
         EPD_DrawUTF8(0, 12, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
         if (rtc_temp > 0)
         {
@@ -1552,8 +1574,17 @@ static void Menu_Info(void) /* 系统信息 */
         {
             rtc_temp -= 0.005;
         }
-        snprintf(String, sizeof(String), "DS3231状态: 0x%02X 0x%02X 0x%02X %02d.%02d℃",
-                 RTC_ReadREG(RTC_REG_CTL), RTC_ReadREG(RTC_REG_STA), RTC_ReadREG(RTC_REG_AGI), (int8_t)rtc_temp, abs((int16_t)((rtc_temp - (int8_t)rtc_temp) * 100)));
+        if (rtc_temp < 0 && rtc_temp > -1.0)
+        {
+            sig[0] = '-';
+            sig[1] = '\0';
+        }
+        else
+        {
+            sig[0] = '\0';
+        }
+        snprintf(String, sizeof(String), "DS3231状态: 0x%02X 0x%02X 0x%02X %s%02d.%02d℃",
+                 RTC_ReadREG(RTC_REG_CTL), RTC_ReadREG(RTC_REG_STA), RTC_ReadREG(RTC_REG_AGI), sig, (int8_t)rtc_temp, abs((int16_t)((rtc_temp - (int8_t)rtc_temp) * 100)));
         EPD_DrawUTF8(0, 14, 0, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16);
 
         if (i == 0)
