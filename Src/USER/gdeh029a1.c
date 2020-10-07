@@ -492,6 +492,7 @@ void EPD_DrawUTF8(uint16_t x, uint8_t y_x8, uint8_t gap, const char *str, const 
 void EPD_DrawImage(uint16_t x, uint8_t y_x8, const uint8_t *image)
 {
     uint8_t y_size;
+    
     y_size = image[2] / 8;
     EPD_SetWindow(x, y_x8, image[0] + image[1], y_size);
     EPD_SendRAM(image + 3, (image[0] + image[1]) * y_size);

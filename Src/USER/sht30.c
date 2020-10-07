@@ -318,6 +318,7 @@ uint8_t TH_BreakCommand(void)
 uint8_t TH_SoftReset(void)
 {
     uint8_t th_ret;
+
     th_ret = TH_WriteCmd(0x3041);
     if (th_ret == 0)
     {
@@ -508,6 +509,7 @@ uint8_t TH_GetDataChecksum(void)
 uint8_t TH_ClearStatus(void)
 {
     uint8_t th_ret;
+    
     th_ret = TH_WriteCmd(0x3041);
     if (th_ret == 0)
     {

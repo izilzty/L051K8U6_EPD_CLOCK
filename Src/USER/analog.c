@@ -319,7 +319,6 @@ float ADC_GetChannel(uint32_t channel)
  */
 void ADC_EnableVrefintOutput(void)
 {
-
     LL_SYSCFG_VREFINT_EnableADC();
     LL_SYSCFG_VREFINT_SetConnection(ADC_VREFINT_OUT_PIN);
 }

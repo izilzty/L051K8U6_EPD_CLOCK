@@ -10,6 +10,7 @@
 static uint8_t bin_to_bcd(uint8_t bin)
 {
     uint8_t tmp;
+
     tmp = bin % 10;
     tmp += bin / 10 * 16;
     return tmp;
@@ -23,6 +24,7 @@ static uint8_t bin_to_bcd(uint8_t bin)
 static uint8_t bcd_to_bin(uint8_t bcd)
 {
     uint8_t tmp;
+
     tmp = bcd % 16;
     tmp += bcd / 16 * 10;
     return tmp;
@@ -94,6 +96,7 @@ uint8_t RTC_WriteREG(uint8_t reg, uint8_t data)
 uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_data)
 {
     uint8_t i;
+
     if (I2C_Start(RTC_I2C_ADDR, 0, 1) != 0 ||
         I2C_WriteByte(start_reg) != 0 ||
         I2C_Start(RTC_I2C_ADDR, 1, read_size) != 0)
@@ -118,6 +121,7 @@ uint8_t RTC_ReadREG_Multi(uint8_t start_reg, uint8_t read_size, uint8_t *read_da
 uint8_t RTC_WriteREG_Multi(uint8_t start_reg, uint8_t write_size, const uint8_t *write_data)
 {
     uint8_t i, err;
+
     if (I2C_Start(RTC_I2C_ADDR, 0, write_size + 1) != 0 ||
         I2C_WriteByte(start_reg) != 0)
     {
@@ -146,6 +150,7 @@ uint8_t RTC_WriteREG_Multi(uint8_t start_reg, uint8_t write_size, const uint8_t 
 uint8_t RTC_ModifyREG(uint8_t reg, uint8_t mask, uint8_t new_val)
 {
     uint8_t status_tmp;
+    
     status_tmp = RTC_ReadREG(reg);
     status_tmp &= ~mask;
     status_tmp |= new_val & mask;
@@ -516,6 +521,7 @@ uint8_t RTC_SetAlarm2(const struct RTC_Alarm *alarm)
 uint8_t RTC_GetAM1Mask(void)
 {
     uint8_t i, alarm_mask;
+
     alarm_mask = 0x00;
     if (RTC_TestREG(RTC_REG_AL1_DDT, 0x40) != 0)
     {
@@ -536,6 +542,7 @@ uint8_t RTC_GetAM1Mask(void)
 uint8_t RTC_ModifyAM1Mask(uint8_t alarm_mask)
 {
     uint8_t i, ret;
+
     for (i = 0; i < 4; i++)
     {
         if ((alarm_mask & (0x01 << i)) != 0)
@@ -582,6 +589,7 @@ uint8_t RTC_GetAM2Mask(void)
 uint8_t RTC_ModifyAM2Mask(uint8_t alarm_mask)
 {
     uint8_t i, ret;
+
     for (i = 0; i < 3; i++)
     {
         if ((alarm_mask & (0x01 << i)) != 0)

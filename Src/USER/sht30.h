@@ -54,4 +54,5 @@ void TH_SetTemperatureOffset(float offset);
 void TH_SetHumidityOffset(float offset);
 float TH_GetTemperatureOffset(void);
 float TH_GetHumidityOffset(void);
+
 #endif

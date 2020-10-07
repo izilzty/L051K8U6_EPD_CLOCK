@@ -15,8 +15,10 @@ static struct TH_Value Sensor;
 static struct Func_Setting Setting;
 static char String[256];
 
+/* 软延时 */
 static void Delay_100ns(volatile uint16_t nsX100);
 
+/* 菜单相关 */
 static void UpdateHomeDisplay(void);
 static void FullInit(void);
 static void Menu_DrawMenuFrame(char *title, uint8_t button_style);
@@ -34,9 +36,11 @@ static void Menu_ResetAll(void);
 static void Menu_SetHWVer(void);
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
 
+/* 设置保存 */
 static void SaveSetting(const struct Func_Setting *setting);
 static void ReadSetting(struct Func_Setting *setting);
 
+/* 按键消抖读取 */
 static uint8_t BTN_ReadUP(void);
 static uint8_t BTN_ReadUPFast(void);
 static uint8_t BTN_ReadDOWN(void);
@@ -45,20 +49,23 @@ static void BTN_WaitSET(void);
 static void BTN_WaitAll(void);
 static uint8_t BTN_ModifySingleDigit(uint8_t *number, uint8_t modify_digit, uint8_t max_val, uint8_t min_val);
 
+/* 蜂鸣器控制 */
 static void BEEP_Fast(void);
 static void BEEP_Button(void);
 static void BEEP_OK(void);
 
+/* 电源控制 */
 static void Power_EnableGDEH029A1(void);
-static void Power_DisableGDEH029A1(void);
 static void Power_Enable_SHT30_I2C(void);
-static void Power_Disable_I2C_SHT30(void);
 static uint8_t Power_EnableADC(void);
-static uint8_t Power_DisableADC(void);
 static void Power_EnableBUZZER(void);
+static void Power_DisableGDEH029A1(void);
+static void Power_Disable_I2C_SHT30(void);
+static uint8_t Power_DisableADC(void);
 static void Power_DisableBUZZER(void);
 static void Power_DisableUSART(void);
 
+/* 调制辅助功能，需要串口输出 */
 static void DumpRTCReg(void);
 static void DumpEEPROM(void);
 static void DumpBKPR(void);
@@ -80,19 +87,24 @@ static void Delay_100ns(volatile uint16_t nsX100)
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
-    ResetInfo = LP_GetResetInfo();
+    ResetInfo = LP_GetResetInfo(); /* 获取复位信息并保存 */
 
     Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
+
     Power_DisableUSART();     /* 默认关闭串口 */
     Power_DisableGDEH029A1(); /* 默认关闭电子纸电源 */
+
+    /* 如果同时按了“上”和“下”键，在复位以后擦除全部数据 */
     if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG))
     {
         FullInit();
     }
+
     /* 读取保存的设置，如果没有则使用默认设置代替 */
     ReadSetting(&Setting);
+
     /* 设置电池和传感器偏移量 */
     TH_SetTemperatureOffset(Setting.sensor_temp_offset);
     TH_SetHumidityOffset(Setting.sensor_rh_offset);
@@ -103,32 +115,32 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     }
 }
 
-void Loop(void) /* 在Init()执行完成后循环执行 */
+void Loop(void) /* 在Init()执行完成后循环执行，这里只执行一次就进入Standby模式 */
 {
     switch (ResetInfo)
     {
-    case LP_RESET_POWERON:
-    case LP_RESET_NORMALRESET:
-        BKPR_ResetAll();
-        if (RTC_GetOSF() != 0 || Setting.available != SETTING_AVALIABLE_FLAG)
+    case LP_RESET_POWERON:                                                    /* 安装电池或按下复位按键 */
+    case LP_RESET_NORMALRESET:                                                /* 安装电池或按下复位按键 */
+        BKPR_ResetAll();                                                      /* 复位备份寄存器 */
+        if (RTC_GetOSF() != 0 || Setting.available != SETTING_AVALIABLE_FLAG) /* 根据RTC的振荡器停止标志和设定完成标志决定是否显示欢迎界面 */
         {
             Power_EnableGDEH029A1();
-            if (EEPROM_ReadDWORD(EEPROM_ADDR_DWORD_HWVERSION) == 0x00000000)
+            if (EEPROM_ReadDWORD(EEPROM_ADDR_DWORD_HWVERSION) == 0x00000000) /* 如果EEPROM的硬件版本地址全为0则显示硬件版本设置界面，用于新芯片首次使用 */
             {
                 Menu_SetHWVer();
             }
             Menu_Guide();
             Menu_SetTime();
-            Setting.available = SETTING_AVALIABLE_FLAG;
-            SaveSetting(&Setting);
+            Setting.available = SETTING_AVALIABLE_FLAG; /* 设置完成以后标记设置已完成并保存 */
+            SaveSetting(&Setting);                      /* 设置完成以后标记设置已完成并保存 */
         }
         break;
-    case LP_RESET_WKUPSTANDBY:
+    case LP_RESET_WKUPSTANDBY:                                               /* 由“设置”按钮或RTC闹钟从Standby模式唤醒 */
         if (RTC_GetA2F() != 0 || (BTN_ReadUP() != 0 && BTN_ReadDOWN() == 0)) /* 同时按下“菜单”和“上”按钮立刻更新显示 */
         {
-            RTC_ClearA2F();
+            RTC_ClearA2F(); /* 清除RTC闹钟中断 */
         }
-        else
+        else /* 单独按下菜单键则显示主菜单 */
         {
             Power_EnableGDEH029A1();
             Menu_MainMenu();
@@ -138,16 +150,16 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
     Power_EnableGDEH029A1();
 
-    UpdateHomeDisplay();
+    UpdateHomeDisplay(); /* 更新主界面显示内容 */
 
-    Power_DisableGDEH029A1();
+    Power_DisableGDEH029A1(); /* 关闭电源，准备在“设置”按钮释放以后进入Standby模式 */
     Power_Disable_I2C_SHT30();
     Power_DisableADC();
     Power_DisableBUZZER();
 
-    BTN_WaitSET(); /* 等待设置按钮释放 */
+    BTN_WaitSET(); /* 等待“设置”按钮释放 */
 
-    LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
+    LP_EnterStandby(); /* 进入Standby模式，等待下一次唤醒 */
 
     /* 正常情况下进入Standby模式后，程序会停止在此处，直到下次复位或唤醒再重头开始执行 */
 
@@ -158,7 +170,7 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
 /* ==================== 主要功能 ==================== */
 
-static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
+static void UpdateHomeDisplay(void) /* 更新主界面显示内容 */
 {
     uint32_t battery_stor;
     float battery_voltage, cel_tmp, rh_tmp;
@@ -167,20 +179,20 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     RTC_GetTime(&Time); /* 获取当前时间 */
 
     RTC_ModifyAM2Mask(0x07); /* 设置闹钟2每分钟产生中断 */
-    RTC_ModifyA2IE(1);       /* 打开闹钟2 */
+    RTC_ModifyA2IE(1);       /* 打开闹钟2中断 */
     RTC_ClearA2F();          /* 清除闹钟2中断标志 */
-    RTC_ModifyA1IE(0);       /* 关闭闹钟1 */
+    RTC_ModifyA1IE(0);       /* 关闭闹钟1中断 */
     RTC_ClearA1F();          /* 清除闹钟1中断标志 */
     RTC_ModifyINTCN(1);      /* 打开中断输出 */
 
     TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor); /* 获取当前温度 */
 
-    EPD_Init(EPD_UPDATE_MODE_FAST);
+    EPD_Init(EPD_UPDATE_MODE_FAST); /* 电子纸快速全局刷新模式 */
     EPD_ClearRAM();
 
     battery_stor = BKPR_ReadDWORD(BKPR_ADDR_DWORD_ADCVAL); /* 读取上次屏幕刷新完成后的电量 */
-    battery_voltage = *(float *)&battery_stor;
-    if (battery_voltage < 0.1 || battery_voltage > 3.6) /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
+    battery_voltage = *(float *)&battery_stor;             /* 存储的uint32_t转float */
+    if (battery_voltage < 0.1 || battery_voltage > 3.6)    /* 超出此范围则判断为备份寄存器数据失效，重新读取当前电池数据 */
     {
         battery_voltage = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     }
@@ -190,20 +202,20 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
         {
             EPD_DrawImage(0, 0, EPD_Image_BatteryLow_296x128);
             EPD_Show(0);
-            LP_EnterStop(EPD_TIMEOUT_MS);
+            LP_EnterStop(EPD_TIMEOUT_MS); /* 进入Stop模式，由电子纸BUSY引脚上升沿唤醒 */
             EPD_EnterDeepSleep();
             RTC_WriteREG(RTC_REG_AL1_DDT, 0xAA); /* 借用RTC未使用的寄存器，存储低电量画面已显示标志 */
         }
 
-        RTC_ModifyA2IE(0);
-        RTC_ClearA2F();
+        RTC_ModifyA2IE(0); /* 关闭闹钟2中断，防止中断引脚消耗电流 */
+        RTC_ClearA2F();    /* 清除闹钟2中断标志 */
 
-        Power_DisableGDEH029A1();
+        Power_DisableGDEH029A1(); /* 尽可能关闭电源 */
         Power_DisableADC();
         Power_DisableBUZZER();
         Power_Disable_I2C_SHT30();
 
-        while (1)
+        while (1) /* 进入Stop模式并定时唤醒闪烁LED，同时消耗一定的电量，保证换电池后可以触发上电复位 */
         {
             LL_GPIO_ResetOutputPin(LED_GPIO_Port, LED_Pin);
             LP_DelayStop(50);
@@ -211,7 +223,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
             LP_DelayStop(5000);
         }
     }
-    RTC_WriteREG(RTC_REG_AL1_DDT, 0x00); /* 清除低电量画面已显示标志 */
+    RTC_WriteREG(RTC_REG_AL1_DDT, 0x00); /* 电量高于设定值，清除低电量画面已显示标志并正常执行 */
 
     LUNAR_SolarToLunar(&Lunar, Time.Year + 2000, Time.Month, Time.Date); /* RTC读出的年份省去了2000，计算农历前要手动加上 */
 
@@ -236,10 +248,11 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawHLine(0, 104, 296, 2);
     EPD_DrawHLine(213, 67, 76, 2);
     EPD_DrawVLine(202, 39, 56, 2);
-    EPD_DrawBattery(258, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_voltage);
+    EPD_DrawBattery(258, 0, BAT_MAX_VOLTAGE, Setting.battery_warn, battery_voltage); /* 根据电量绘制电池标志 */
 
     snprintf(String, sizeof(String), "2%03d/%02d/%02d 星期%s", Time.Year, Time.Month, Time.Date, Lunar_DayString[Time.Day]);
     EPD_DrawUTF8(0, 0, 1, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+
     if (Time.Is_12hr != 0)
     {
         if (Time.PM != 0)
@@ -252,6 +265,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
         }
     }
     snprintf(String, sizeof(String), "%02d:%02d", Time.Hours, Time.Minutes);
+
     if (Time.Is_12hr != 0)
     {
         EPD_DrawUTF8(34, 5, 6, String, EPD_FontAscii_27x56, EPD_FontUTF8_24x24_B);
@@ -260,6 +274,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     {
         EPD_DrawUTF8(22, 5, 6, String, EPD_FontAscii_27x56, EPD_FontUTF8_24x24_B);
     }
+
     if (cel_tmp <= -10.0)
     {
         snprintf(String, sizeof(String), "%02d ℃", temp_value[0]);
@@ -277,6 +292,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
         snprintf(String, sizeof(String), "%02d.%d℃", temp_value[0], temp_value[1]);
     }
     EPD_DrawUTF8(213, 5, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+
     if (rh_tmp < 100)
     {
         snprintf(String, sizeof(String), "%02d.%d％", rh_value[0], rh_value[1]);
@@ -286,20 +302,24 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
         snprintf(String, sizeof(String), "%03d ％", rh_value[0]);
     }
     EPD_DrawUTF8(213, 9, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
+
     snprintf(String, sizeof(String), "农历：%s%s%s", Lunar_MonthLeapString[Lunar.IsLeap], Lunar_MonthString[Lunar.Month], Lunar_DateString[Lunar.Date]);
     EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16_B);
+
     snprintf(String, sizeof(String), "%s%s年【%s年】", Lunar_StemStrig[LUNAR_GetStem(&Lunar)], Lunar_BranchStrig[LUNAR_GetBranch(&Lunar)], Lunar_ZodiacString[LUNAR_GetZodiac(&Lunar)]);
     EPD_DrawUTF8(172, 14, 2, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
+
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
 
+    /* 读取电子纸刚刷新完成后的电池电压并存入备份寄存器，供下次唤醒后使用 */
     battery_voltage = ADC_GetChannel(ADC_CHANNEL_BATTERY);
     BKPR_WriteDWORD(BKPR_ADDR_DWORD_ADCVAL, *(uint32_t *)&battery_voltage);
 
     EPD_EnterDeepSleep();
 }
 
-static void FullInit(void) /* 重新初始化全部数据 */
+static void FullInit(void) /* 清除除硬件版本外的全部数据 */
 {
     BUZZER_SetFrqe(4000);
     BUZZER_SetVolume(DefaultSetting.buzzer_volume);
@@ -832,6 +852,7 @@ static void Menu_Guide(void) /* 首次使用时的引导 */
     LP_EnterStop(EPD_TIMEOUT_MS);
     while (BTN_ReadSET() != 0)
     {
+        LP_DelayStop(50);
     }
     BEEP_OK();
 }
@@ -2171,18 +2192,6 @@ static void Power_EnableGDEH029A1(void)
     }
 }
 
-static void Power_DisableGDEH029A1(void)
-{
-    if (LL_SPI_IsEnabled(SPI1) != 0)
-    {
-        LL_SPI_Disable(SPI1);
-    }
-    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
-    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
-    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
-    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
-}
-
 static void Power_Enable_SHT30_I2C(void)
 {
     LL_GPIO_ResetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin); /* 打开SHT30电源 */
@@ -2199,6 +2208,30 @@ static void Power_Enable_SHT30_I2C(void)
     }
 }
 
+static uint8_t Power_EnableADC(void)
+{
+    ADC_Disable();
+    ADC_StartCal();
+    return ADC_Enable();
+}
+
+static void Power_EnableBUZZER(void)
+{
+    BUZZER_Enable();
+}
+
+static void Power_DisableGDEH029A1(void)
+{
+    if (LL_SPI_IsEnabled(SPI1) != 0)
+    {
+        LL_SPI_Disable(SPI1);
+    }
+    LL_GPIO_ResetOutputPin(EPD_RST_PORT, EPD_RST_PIN);
+    LL_GPIO_ResetOutputPin(EPD_DC_PORT, EPD_DC_PIN);
+    LL_GPIO_ResetOutputPin(EPD_CS_PORT, EPD_CS_PIN);
+    LL_GPIO_SetOutputPin(EPD_POWER_GPIO_Port, EPD_POWER_Pin);
+}
+
 static void Power_Disable_I2C_SHT30(void)
 {
     if (LL_I2C_IsEnabled(I2C1) != 0) /* 关闭I2C */
@@ -2210,21 +2243,9 @@ static void Power_Disable_I2C_SHT30(void)
     LL_GPIO_SetOutputPin(SHT30_POWER_GPIO_Port, SHT30_POWER_Pin);   /* 关闭SHT30电源 */
 }
 
-static uint8_t Power_EnableADC(void)
-{
-    ADC_Disable();
-    ADC_StartCal();
-    return ADC_Enable();
-}
-
 static uint8_t Power_DisableADC(void)
 {
     return ADC_Disable();
-}
-
-static void Power_EnableBUZZER(void)
-{
-    BUZZER_Enable();
 }
 
 static void Power_DisableBUZZER(void)
@@ -2232,7 +2253,7 @@ static void Power_DisableBUZZER(void)
     BUZZER_Disable();
 }
 
-static void Power_DisableUSART(void)
+static void Power_DisableUSART(void) /* 关闭串口，下次使用需要重新初始化 */
 {
     LL_USART_Disable(SERIAL_NUM);
     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_9, LL_GPIO_MODE_ANALOG);
@@ -2326,19 +2347,3 @@ static void DumpBKPR(void)
     SERIAL_SendStringRN("BKPR DUMP END");
     SERIAL_SendStringRN("");
 }
-
-/*
-
- RTC_GetTime(&Time);
-    snprintf(String, sizeof(String), "RTC: 2%03d %d %d %d PM:%d %02d:%02d:%02d TEMP:%5.2f", Time.Year, Time.Month, Time.Date, Time.Day, Time.PM, Time.Hours, Time.Minutes, Time.Seconds, RTC_GetTemp());
-    SERIAL_SendStringRN(String);
-
-    TH_GetValue_SingleShotWithCS(TH_ACC_HIGH, &Sensor);
-    snprintf(String, sizeof(String), "TH : TEMP:%5.2f RH:%5.2f STATUS:0x%02X", Sensor.CEL, Sensor.RH, TH_GetStatus());
-    SERIAL_SendStringRN(String);
-
-    snprintf(String, sizeof(String), "ADC: VDDA:%5.2f TEMP:%5.2f CH1:%5.2f", ADC_GetVDDA(), ADC_GetTemp(), ADC_GetChannel(ADC_CHANNEL_BATTERY));
-    SERIAL_SendStringRN(String);
-
-
-*/

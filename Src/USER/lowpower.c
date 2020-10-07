@@ -100,7 +100,7 @@ uint8_t LP_GetResetInfo(void)
 }
 
 /**
- * @brief  进入Sleep模式。
+ * @brief  进入Sleep模式，等待中断唤醒。
  * @param  ms 超时时间，0为永不超时，每增加1超时时间大约增加1毫秒。
  * @note   进入后所有IO状态保持不变。
  * @note   唤醒最快，电力消耗较多。
@@ -135,7 +135,7 @@ void LP_EnterSleep(uint16_t ms)
 }
 
 /**
- * @brief  进入Stop模式，进入前需确保I2C没有数据传输或暂时关闭I2C，详见 dm00114897 第16页 2.5.1。
+ * @brief  进入Stop模式，等待中断唤醒，进入前需确保I2C没有数据传输或暂时关闭I2C，详见 dm00114897 第16页 2.5.1。
  * @param  ms 超时时间，0为永不超时，每增加1超时时间大约增加1毫秒。
  * @note   进入后所有IO状态保持不变。
  * @note   唤醒较快，电力消耗较少。
@@ -177,7 +177,7 @@ void LP_EnterStop(uint16_t ms)
 }
 
 /**
- * @brief  进入Standby模式。
+ * @brief  进入Standby模式，等待WKUP引脚或复位唤醒。
  * @note   进入后除唤醒IO以外的IO均自动变为高阻状态。
  * @note   唤醒最慢，电力消耗最少。
  * @note   唤醒后类似按键复位，程序重头开始执行。
