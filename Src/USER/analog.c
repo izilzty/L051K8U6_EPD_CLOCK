@@ -38,7 +38,7 @@ void delay_100ns(volatile uint16_t nsX100)
  */
 static float conv_vrefint_to_vdda(uint16_t vrefint)
 {
-    return (VREFINT_CAL_VREF * ((*VREFINT_CAL_ADDR) + VREFINT_offset) / (float)vrefint);
+    return VREFINT_CAL_VREF * ((*VREFINT_CAL_ADDR) + VREFINT_offset) / (float)vrefint;
 }
 
 /**
@@ -338,7 +338,7 @@ void ADC_DisableVrefintOutput(void)
  */
 float ADC_GetVrefintFactory(void)
 {
-    return (VREFINT_CAL_VREF / (float)0x0FFF) * (*VREFINT_CAL_ADDR);
+    return VREFINT_CAL_VREF * *VREFINT_CAL_ADDR / 4095.0;
 }
 
 /**
@@ -347,7 +347,7 @@ float ADC_GetVrefintFactory(void)
  */
 float ADC_GetVrefintStep(void)
 {
-    return (VREFINT_CAL_VREF / (float)0x0FFF);
+    return VREFINT_CAL_VREF / 4095.0;
 }
 
 /**
