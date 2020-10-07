@@ -85,7 +85,7 @@ void Init(void) /* 系统复位后首先进入此函数并执行一次 */
     LL_mDelay(199);
     LP_DisableDebug();
 #else
-    Power_DisableUSART();
+    // Power_DisableUSART();
 #endif
     ResetInfo = LP_GetResetInfo();
     switch (ResetInfo)

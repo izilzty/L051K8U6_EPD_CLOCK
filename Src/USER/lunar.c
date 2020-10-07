@@ -143,10 +143,10 @@ uint8_t LUNAR_GetZodiac(const struct Lunar_Date *lunar)
 
 uint8_t LUNAR_GetStem(const struct Lunar_Date *lunar)
 {
-    return (lunar->Year - 3) % 10;
+    return lunar->Year % 10;
 }
 
 uint8_t LUNAR_GetBranch(const struct Lunar_Date *lunar)
 {
-    return (lunar->Year - 3) % 12;
+    return lunar->Year % 12;
 }
