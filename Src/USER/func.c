@@ -5,14 +5,14 @@
 #include <stdlib.h>
 #include <math.h>
 
-const struct FUNC_Setting DefaultSetting = {0x00, 1, 3, 1.50, 1.20, 0.00, 0.00, 0, 0}; /* 设置未完成，蜂鸣器开关，蜂鸣器音量，警告电压，关机电压，温度传感器偏移，湿度传感器偏移，内置参考电压偏移，实时时钟老化偏移 */
+const struct Func_Setting DefaultSetting = {0x00, 1, 3, 1.50, 1.20, 0.00, 0.00, 0, 0}; /* 设置未完成，蜂鸣器开关，蜂鸣器音量，警告电压，关机电压，温度传感器偏移，湿度传感器偏移，内置参考电压偏移，实时时钟老化偏移 */
 const struct RTC_Time DefaultTime = {0, 0, 12, 4, 1, 10, 20, 0, 0};                    /* 2020年10月1日，星期4，12:00:00，Is_12hr = 0，PM = 0  */
 
 static uint8_t ResetInfo;
 static struct RTC_Time Time;
 static struct Lunar_Date Lunar;
 static struct TH_Value Sensor;
-static struct FUNC_Setting Setting;
+static struct Func_Setting Setting;
 static char String[256];
 
 static void Delay_100ns(volatile uint16_t nsX100);
@@ -34,8 +34,8 @@ static void Menu_ResetAll(void);
 static void Menu_SetHWVer(void);
 static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float min_voltage, float voltage);
 
-static void SaveSetting(const struct FUNC_Setting *setting);
-static void ReadSetting(struct FUNC_Setting *setting);
+static void SaveSetting(const struct Func_Setting *setting);
+static void ReadSetting(struct Func_Setting *setting);
 
 static uint8_t BTN_ReadUP(void);
 static uint8_t BTN_ReadUPFast(void);
@@ -1747,7 +1747,7 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
         if (save == 2)
         {
             BEEP_OK();
-            memcpy(&Setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+            memcpy(&Setting, &DefaultSetting, sizeof(struct Func_Setting));
             Setting.available = SETTING_AVALIABLE_FLAG;
             SaveSetting(&Setting);
             EPD_WaitBusy();
@@ -1961,13 +1961,13 @@ static void EPD_DrawBattery(uint16_t x, uint8_t y_x8, float max_voltage, float m
 
 /* ==================== 设置存储 ==================== */
 
-static void SaveSetting(const struct FUNC_Setting *setting)
+static void SaveSetting(const struct Func_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
 
     setting_ptr = (uint8_t *)setting;
-    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    for (i = 0; i < sizeof(struct Func_Setting); i++)
     {
         if (EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i) != setting_ptr[i])
         {
@@ -1976,20 +1976,20 @@ static void SaveSetting(const struct FUNC_Setting *setting)
     }
 }
 
-static void ReadSetting(struct FUNC_Setting *setting)
+static void ReadSetting(struct Func_Setting *setting)
 {
     uint16_t i;
     uint8_t *setting_ptr;
 
     setting_ptr = (uint8_t *)setting;
-    for (i = 0; i < sizeof(struct FUNC_Setting); i++)
+    for (i = 0; i < sizeof(struct Func_Setting); i++)
     {
         setting_ptr[i] = EEPROM_ReadByte(EEPROM_ADDR_BYTE_SETTING + i);
     }
     if (setting->available != SETTING_AVALIABLE_FLAG)
     {
         BUZZER_Beep(49);
-        memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
+        memcpy(setting, &DefaultSetting, sizeof(struct Func_Setting));
     }
 }
 

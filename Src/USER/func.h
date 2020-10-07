@@ -31,7 +31,7 @@
 #define REQUEST_RESET_ALL_FLAG 0x55
 #define SETTING_AVALIABLE_FLAG 0xAA
 
-struct FUNC_Setting
+struct Func_Setting
 {
     uint8_t available;
     uint8_t buzzer_enable;
