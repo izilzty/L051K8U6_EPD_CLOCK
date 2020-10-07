@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-// #define ENABLE_DEBUG_PRINT
-
 #include "lowpower.h"
 #include "analog.h"
 #include "bkpr.h"

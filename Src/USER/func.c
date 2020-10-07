@@ -80,32 +80,12 @@ static void Delay_100ns(volatile uint16_t nsX100)
 
 void Init(void) /* 系统复位后首先进入此函数并执行一次 */
 {
-#ifdef ENABLE_DEBUG_PRINT
-    SERIAL_SendStringRN("\r\n\r\n***** SYSTEM RESET *****\r\n");
-    LL_mDelay(199);
-    LP_DisableDebug();
-#else
-    // Power_DisableUSART();
-#endif
     ResetInfo = LP_GetResetInfo();
-    switch (ResetInfo)
-    {
-    case LP_RESET_POWERON:
-        SERIAL_DebugPrint("Power on reset");
-        break;
-    case LP_RESET_NORMALRESET:
-        SERIAL_DebugPrint("Normal reset");
-        break;
-    case LP_RESET_WKUPSTANDBY:
-        SERIAL_DebugPrint("Wakeup from standby");
-        break;
-    default:
-        SERIAL_DebugPrint("Unknow reset");
-        break;
-    }
+
     Power_Enable_SHT30_I2C(); /* 默认打开SHT30和I2C电源 */
     Power_EnableADC();        /* 默认打开ADC电源 */
     Power_EnableBUZZER();     /* 默认打开蜂鸣器定时器 */
+    Power_DisableUSART();     /* 默认关闭串口 */
     Power_DisableGDEH029A1(); /* 默认关闭电子纸电源 */
     if (ResetInfo == LP_RESET_NORMALRESET && ((BTN_ReadUP() == 0 && BTN_ReadDOWN() == 0) || BKPR_ReadByte(BKPR_ADDR_BYTE_REQINIT) == REQUEST_RESET_ALL_FLAG))
     {
@@ -167,17 +147,12 @@ void Loop(void) /* 在Init()执行完成后循环执行 */
 
     BTN_WaitSET(); /* 等待设置按钮释放 */
 
-    SERIAL_DebugPrint("Ready to enter standby mode");
     LP_EnterStandby(); /* 程序停止，等待下一次唤醒复位 */
 
     /* 正常情况下进入Standby模式后，程序会停止在此处，直到下次复位或唤醒再重头开始执行 */
 
-    SERIAL_DebugPrint("Enter standby mode fail");
-    LL_mDelay(999); /* 等待1000ms */
-    SERIAL_DebugPrint("Try to enter standby mode again");
-    LP_EnterStandby(); /* 再次尝试进入Standby模式 */
-    SERIAL_DebugPrint("Enter standby mode fail");
-    SERIAL_DebugPrint("Try to reset the system");
+    LL_mDelay(999);     /* 未成功进入Standby模式，等待1000ms */
+    LP_EnterStandby();  /* 再次尝试进入Standby模式 */
     NVIC_SystemReset(); /* 两次未成功进入Standby模式，执行软复位 */
 }
 
@@ -217,12 +192,7 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
             EPD_Show(0);
             LP_EnterStop(EPD_TIMEOUT_MS);
             EPD_EnterDeepSleep();
-            RTC_WriteREG(RTC_REG_AL1_DDT, 0xAA);
-            SERIAL_DebugPrint("Lowpower display update done");
-        }
-        else
-        {
-            SERIAL_DebugPrint("Lowpower display already updated");
+            RTC_WriteREG(RTC_REG_AL1_DDT, 0xAA); /* 借用RTC未使用的寄存器，存储低电量画面已显示标志 */
         }
 
         RTC_ModifyA2IE(0);
@@ -235,7 +205,6 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
 
         while (1)
         {
-            SERIAL_DebugPrint("Battery low, lock display update");
             LL_GPIO_ResetOutputPin(LED_GPIO_Port, LED_Pin);
             LP_DelayStop(50);
             LL_GPIO_SetOutputPin(LED_GPIO_Port, LED_Pin);
@@ -340,49 +309,26 @@ static void FullInit(void) /* 重新初始化全部数据 */
     BUZZER_Beep(49);
     LL_mDelay(49);
     BUZZER_Beep(49);
-    SERIAL_DebugPrint("BEGIN RESET ALL DATA");
-    SERIAL_DebugPrint("RTC reset...");
     if (RTC_ResetAllRegToDefault() != 0)
     {
-        SERIAL_DebugPrint("RTC reset fail");
+        BUZZER_Beep(999);
+        LL_mDelay(999);
     }
-    else
-    {
-        SERIAL_DebugPrint("RTC reset done");
-    }
-    SERIAL_DebugPrint("SENSOR reset...");
     if (TH_SoftReset() != 0)
     {
-        SERIAL_DebugPrint("SENSOR reset fail");
+        BUZZER_Beep(999);
+        LL_mDelay(999);
     }
-    else
-    {
-        SERIAL_DebugPrint("SENSOR reset done");
-    }
-    SERIAL_DebugPrint("BKPR reset...");
     if (BKPR_ResetAll() != 0)
     {
-        SERIAL_DebugPrint("BKPR reset fail");
+        BUZZER_Beep(999);
+        LL_mDelay(999);
     }
-    else
-    {
-        SERIAL_DebugPrint("BKPR reset done");
-    }
-    SERIAL_DebugPrint("EEPROM reset...");
     if (EEPROM_EraseRange(0, 510) != 0)
     {
-        SERIAL_DebugPrint("EEPROM reset fail");
+        BUZZER_Beep(999);
+        LL_mDelay(999);
     }
-    else
-    {
-        SERIAL_DebugPrint("EEPROM reset done");
-    }
-    SERIAL_DebugPrint("Process done");
-#ifdef ENABLE_DEBUG_PRINT
-    DumpEEPROM();
-    DumpRTCReg();
-    DumpBKPR();
-#endif
     BUZZER_Beep(499);
 }
 
@@ -2042,7 +1988,7 @@ static void ReadSetting(struct FUNC_Setting *setting)
     }
     if (setting->available != SETTING_AVALIABLE_FLAG)
     {
-        SERIAL_DebugPrint("Read setting fail, load default setting");
+        BUZZER_Beep(49);
         memcpy(setting, &DefaultSetting, sizeof(struct FUNC_Setting));
     }
 }
