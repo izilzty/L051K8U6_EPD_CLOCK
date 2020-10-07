@@ -303,6 +303,7 @@ uint8_t TH_GetValue_Periodic_ART(struct TH_Value *value)
 uint8_t TH_BreakCommand(void)
 {
     uint8_t th_ret;
+    
     th_ret = TH_WriteCmd(0x3093);
     if (th_ret == 0)
     {
@@ -353,7 +354,7 @@ uint8_t TH_ModifyHeater(uint8_t enable)
 
 /**
  * @brief  获取传感器状态。
- * @return 传感器状态（从左往右分别是：0 警报待处理 加热器状态 湿度警报状态 温度警报状态 系统复位状态 命令执行状态 数据校验状态）。
+ * @return 传感器状态（从左往右分别是：未使用 警报待处理 加热器状态 湿度警报状态 温度警报状态 系统复位状态 命令执行状态 数据校验状态）。
  */
 uint8_t TH_GetStatus(void)
 {

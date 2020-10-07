@@ -905,6 +905,7 @@ uint8_t RTC_ModifyAging(int8_t aging)
 float RTC_GetTemp(void)
 {
     uint16_t temp_tmp;
+
     temp_tmp = ((uint16_t)RTC_ReadREG(RTC_REG_TPM)) << 2;
     temp_tmp |= RTC_ReadREG(RTC_REG_TPL) >> 6;
     if ((temp_tmp & 0x0200) != 0)
@@ -932,5 +933,6 @@ uint8_t RTC_ResetAllRegToDefault(void)
         0x00, 0x00, 0x00,                         /* 闹钟2寄存器 */
         0x1C, 0x8B, 0x00                          /* 控制寄存器 */
     };
+    
     return RTC_WriteREG_Multi(RTC_REG_SEC, sizeof(default_reg), default_reg);
 }

@@ -210,6 +210,8 @@ void LP_EnterStandby(void)
  */
 void LP_DelayStop(uint16_t ms)
 {
+    uint32_t voltage_scale;
+
     if (ms == 0)
     {
         return;
@@ -221,6 +223,8 @@ void LP_DelayStop(uint16_t ms)
     wkup_exti_deinit();
     lptim_init(ms); /* 初始化低功耗定时器 */
 
+    voltage_scale = LL_PWR_GetRegulVoltageScaling();             /* 保存当前电压等级 */
+    LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);   /* 设置Vcore电压等级到二级，CPU最高允许8Mhz */
     LL_PWR_EnableUltraLowPower();                                /* 进入低功耗模式后，关闭VREFINT */
     LL_PWR_DisableFastWakeUp();                                  /* 唤醒后等待VREFINT恢复 */
     LL_RCC_SetClkAfterWakeFromStop(LL_RCC_STOP_WAKEUPCLOCK_HSI); /* 设置唤醒后的系统时钟源为HSI16，默认唤醒后为MSI */
@@ -228,6 +232,7 @@ void LP_DelayStop(uint16_t ms)
     LL_PWR_SetPowerMode(LL_PWR_MODE_STOP);                       /* 设置DeepSleep为Stop模式 */
     LL_LPM_EnableDeepSleep();                                    /* 准备进入Stop模式 */
     __WFI();                                                     /* 进入Stop模式，等待中断唤醒 */
+    LL_PWR_SetRegulVoltageScaling(voltage_scale);                /* 恢复Vcore电压等级 */
 
     LL_PWR_DisableUltraLowPower(); /* 恢复电源配置 */
     lptim_deinit();                /* 关闭低功耗定时器 */
