@@ -309,27 +309,31 @@ static void FullInit(void) /* 重新初始化全部数据 */
     BUZZER_Beep(49);
     LL_mDelay(49);
     BUZZER_Beep(49);
+    LL_mDelay(999);
     if (RTC_ResetAllRegToDefault() != 0)
     {
-        BUZZER_Beep(999);
-        LL_mDelay(999);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(499);
+        LL_mDelay(499);
     }
     if (TH_SoftReset() != 0)
     {
-        BUZZER_Beep(999);
-        LL_mDelay(999);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(499);
+        LL_mDelay(499);
     }
     if (BKPR_ResetAll() != 0)
     {
-        BUZZER_Beep(999);
-        LL_mDelay(999);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(499);
+        LL_mDelay(499);
     }
     if (EEPROM_EraseRange(0, 510) != 0)
     {
-        BUZZER_Beep(999);
-        LL_mDelay(999);
+        BUZZER_SetFrqe(1000);
+        BUZZER_Beep(499);
+        LL_mDelay(499);
     }
-    BUZZER_Beep(499);
 }
 
 /* ==================== 主菜单 ==================== */
@@ -1988,7 +1992,9 @@ static void ReadSetting(struct Func_Setting *setting)
     }
     if (setting->available != SETTING_AVALIABLE_FLAG)
     {
-        BUZZER_Beep(49);
+        BUZZER_SetFrqe(4000);
+        BUZZER_SetVolume(DefaultSetting.buzzer_volume);
+        BUZZER_Beep(499);
         memcpy(setting, &DefaultSetting, sizeof(struct Func_Setting));
     }
 }
