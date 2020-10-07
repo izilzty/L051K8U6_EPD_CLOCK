@@ -30,6 +30,18 @@ const static char Lunar_DayString[8][4] = {
     "  ",
     "一", "二", "三", "四", "五", "六", "日"};
 
+const static char Lunar_ZodiacString[12][4] = {
+    "猴", "鸡", "狗", "猪", "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊"};
+
+const static char Lunar_StemStrig[10][4] = {
+    "癸", "甲", "乙", "丙", "丁", "戊", "已", "庚", "辛", "壬"};
+
+const static char Lunar_BranchStrig[12][4] = {
+    "亥", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌"};
+
 void LUNAR_SolarToLunar(struct Lunar_Date *lunar, uint16_t solar_year, uint8_t solar_month, uint8_t solar_date);
+uint8_t LUNAR_GetZodiac(const struct Lunar_Date *lunar);
+uint8_t LUNAR_GetStem(const struct Lunar_Date *lunar);
+uint8_t LUNAR_GetBranch(const struct Lunar_Date *lunar);
 
 #endif

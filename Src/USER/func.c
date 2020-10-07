@@ -319,7 +319,8 @@ static void UpdateHomeDisplay(void) /* 更新显示时间和温度等数据 */
     EPD_DrawUTF8(213, 9, 0, String, EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
     snprintf(String, sizeof(String), "农历：%s%s%s", Lunar_MonthLeapString[Lunar.IsLeap], Lunar_MonthString[Lunar.Month], Lunar_DateString[Lunar.Date]);
     EPD_DrawUTF8(0, 14, 2, String, NULL, EPD_FontUTF8_16x16_B);
-
+    snprintf(String, sizeof(String), "%s%s年【%s年】", Lunar_StemStrig[LUNAR_GetStem(&Lunar)], Lunar_BranchStrig[LUNAR_GetBranch(&Lunar)], Lunar_ZodiacString[LUNAR_GetZodiac(&Lunar)]);
+    EPD_DrawUTF8(172, 14, 2, String, EPD_FontAscii_8x16, EPD_FontUTF8_16x16_B);
     EPD_Show(0);
     LP_EnterStop(EPD_TIMEOUT_MS);
 

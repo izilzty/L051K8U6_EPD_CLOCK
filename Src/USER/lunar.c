@@ -135,3 +135,18 @@ void LUNAR_SolarToLunar(struct Lunar_Date *lunar, uint16_t solar_year, uint8_t s
     lunar->Date = offset;
     lunar->Year = lunarY;
 }
+
+uint8_t LUNAR_GetZodiac(const struct Lunar_Date *lunar)
+{
+    return lunar->Year % 12;
+}
+
+uint8_t LUNAR_GetStem(const struct Lunar_Date *lunar)
+{
+    return (lunar->Year - 3) % 10;
+}
+
+uint8_t LUNAR_GetBranch(const struct Lunar_Date *lunar)
+{
+    return (lunar->Year - 3) % 12;
+}
