@@ -23,8 +23,7 @@
                 "STM32L051xx"
             ],
             "cStandard": "c99",
-            "intelliSenseMode": "clang-arm",
-            "compilerPath": "D:/Keil_v5/ARM/ARMCLANG/bin/armclang.exe"
+            "intelliSenseMode": "clang-arm"
         }
     ],
     "version": 4
