@@ -1775,6 +1775,14 @@ static void Menu_ResetAll(void) /* 恢复初始设置 */
             memcpy(&Setting, &DefaultSetting, sizeof(struct Func_Setting));
             Setting.available = SETTING_AVALIABLE_FLAG;
             SaveSetting(&Setting);
+            /* 设置电池和传感器偏移量 */
+            TH_SetTemperatureOffset(Setting.sensor_temp_offset);
+            TH_SetHumidityOffset(Setting.sensor_rh_offset);
+            ADC_SetVrefintOffset(Setting.vrefint_offset);
+            if (RTC_GetAging() != Setting.rtc_aging_offset)
+            {
+                RTC_ModifyAging(Setting.rtc_aging_offset);
+            }
             EPD_WaitBusy();
             EPD_ClearArea(0, 4, 296, 12, 0xFF);
             EPD_DrawUTF8(0, 4, 0, "恢复完成", EPD_FontAscii_12x24_B, EPD_FontUTF8_24x24_B);
