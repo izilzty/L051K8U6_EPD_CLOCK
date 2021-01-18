@@ -1,0 +1,32 @@
+# 忽略Keil中间文件
+*.bak
+*.ddk
+*.edk
+*.lst
+*.lnp
+*.mpf
+*.mpj
+*.obj
+*.omf
+*.plg
+*.rpt
+*.tmp
+*.__i
+*.crf
+*.o
+*.d
+*.axf
+*.tra
+*.dep
+*.iex
+*.htm
+*.sct
+*.map
+JLinkLog.txt
+
+# 忽略其他文件
+*.mxproject
+*.izilzty
+
+# 不忽略的文件
+!资源/**
