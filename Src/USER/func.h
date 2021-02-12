@@ -31,6 +31,21 @@
 #define REQUEST_RESET_ALL_FLAG 0x55
 #define SETTING_AVALIABLE_FLAG 0xAA
 
+#define ALARM_FLAG_EN 0x80
+#define ALARM_FLAG_LED 0x40
+#define ALARM_FLAG_BUZZER 0x20
+#define ALARM_FLAG_ASTOP 0x10
+#define ALARM_FLAG_12HR 0x08
+#define ALARM_FLAG_ISPM 0x04
+
+struct Func_Alarm
+{
+    uint8_t flag; /* 闹钟启用 使用LED 使用蜂鸣器 自动停止 使用12小时制 12小时制下午 0 0 */
+    uint8_t day; /* 0 周一 周二 周三 周四 周五 周六 周日 */
+    uint8_t hour;
+    uint8_t minutes;
+};
+
 struct Func_Setting
 {
     uint8_t available;
@@ -42,14 +57,7 @@ struct Func_Setting
     float sensor_rh_offset;
     int16_t vrefint_offset;
     int8_t rtc_aging_offset;
-};
-
-struct Func_Alarm
-{
-    uint8_t flag; /* 闹钟启用 使用LED 使用蜂鸣器 自动停止 使用12小时制 12小时制下午 0 0 */
-    uint8_t week; /* 周一 周二 周三 周四 周五 周六 周日 0 */
-    uint8_t hour;
-    uint8_t min;
+    struct Func_Alarm Alarm[3];
 };
 
 void Init(void);
