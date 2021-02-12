@@ -44,6 +44,14 @@ struct Func_Setting
     int8_t rtc_aging_offset;
 };
 
+struct Func_Alarm
+{
+    uint8_t flag; /* 闹钟启用 使用LED 使用蜂鸣器 自动停止 使用12小时制 12小时制下午 0 0 */
+    uint8_t week; /* 周一 周二 周三 周四 周五 周六 周日 0 */
+    uint8_t hour;
+    uint8_t min;
+};
+
 void Init(void);
 void Loop(void);
 
