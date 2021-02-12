@@ -4,7 +4,6 @@
             "name": "STM32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Drivers/CMSIS/Include/",
                 "D:/Keil_v5/ARM/ARMCLANG/include/"
             ],
             "defines": [
@@ -20,7 +19,8 @@
                 "PREFETCH_ENABLE=0",
                 "INSTRUCTION_CACHE_ENABLE=1",
                 "DATA_CACHE_ENABLE=1",
-                "STM32L051xx"
+                "STM32L051xx",
+                "__CC_ARM"
             ],
             "cStandard": "c99",
             "intelliSenseMode": "clang-arm"
