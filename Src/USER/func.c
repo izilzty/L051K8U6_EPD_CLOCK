@@ -159,17 +159,28 @@ void Loop(void) /* 在Init()执行完成后循环执行，这里只执行一次�
     BTN_WaitSET(); /* 等待“设置”按钮释放 */
 
     Setting.Alarm[2].flag = 0x80;
-    Setting.Alarm[2].day = 0x04;
-    Setting.Alarm[2].hour = 23;
-    Setting.Alarm[2].minutes = 52;
+    Setting.Alarm[2].day = 0x08;
+    Setting.Alarm[2].hour = 12;
+    Setting.Alarm[2].minutes = 25;
 
     for (i = 0; i < sizeof(Setting.Alarm) / sizeof(struct Func_Alarm); i++)
     {
-        if ((Setting.Alarm[i].flag & ALARM_FLAG_EN) != 0x00 && (Setting.Alarm[i].day & (0x80 >> (Time.Day - 1))) != 0x00)
+        if ((Setting.Alarm[i].flag & ALARM_FLAG_EN) != 0x00 && (Setting.Alarm[i].day & (0x80 >> Time.Day)) != 0x00)
         {
             if (Setting.Alarm[i].hour == Time.Hours && Setting.Alarm[i].minutes == Time.Minutes)
             {
-                BUZZER_Beep(5000);
+                BUZZER_SetVolume(Setting.buzzer_volume);
+                while (RTC_GetA2F() == 0)
+                {
+                    BUZZER_Beep(100);
+                    LP_DelayStop(33);
+                    BUZZER_Beep(100);
+                    LP_DelayStop(33);
+                    BUZZER_Beep(100);
+                    LP_DelayStop(33);
+                    BUZZER_Beep(100);
+                    LP_DelayStop(500);
+                }
             }
         }
     }
